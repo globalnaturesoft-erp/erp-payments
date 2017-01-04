@@ -1,0 +1,32 @@
+<% content_for :title do %>
+    <%= t('.create') %>
+<% end %>
+
+<% content_for :page_title do %>    
+    <a href="<%= erp_payments.backend_payment_terms_path %>">
+    <i class="fa fa-list"></i> <%= t('.payment_terms') %>
+    </a> / <%= t('.create') %>
+<% end %>
+
+<% content_for :page_toolbar do %>
+    <div class="btn-group">
+        <div class="clearfix">
+        </div>
+    </div>
+<% end %>
+
+<div class="row">
+    <div class="col-md-6">
+        <% if @payment_term.errors.any? %>
+            <%= erp_form_control("form_error_message") %>
+        <% end %>
+        
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <%= render 'form', payment_term: @payment_term %>
+            </div>
+        </div>
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>
+</div>

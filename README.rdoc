@@ -1,0 +1,3 @@
+= Erp::Payments
+
+This project rocks and uses MIT-LICENSE.

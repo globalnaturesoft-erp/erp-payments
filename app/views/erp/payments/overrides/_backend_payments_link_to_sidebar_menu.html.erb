@@ -1,0 +1,24 @@
+<li class="nav-item <%= "active open" if ["erp/payments/backend/payment_terms", "erp/payments/backend/payment_methods"].include?(params[:controller]) %>">
+    <a href="javascript:;" class="nav-link nav-toggle">
+        <i class="fa fa-credit-card"></i>
+        <span class="title"><%= t('.payment') %></span>
+        <% if ["erp/payments/backend/payment_terms", "erp/payments/backend/payment_methods"].include?(params[:controller]) %>
+            <span class="selected"></span>
+            <span class="arrow open"></span>
+        <% else %>
+            <span class="arrow"></span>
+        <% end %>
+    </a>
+    <ul class="sub-menu">
+        <li class="nav-item">
+            <a href="<%= erp_payments.backend_payment_terms_path %>" class="nav-link">
+                <span class="title"><%= t('.payment_term') %></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<%= erp_payments.backend_payment_methods_path %>" class="nav-link">
+                <span class="title"><%= t('.payment_method') %></span>
+            </a>
+        </li>
+    </ul>
+</li>

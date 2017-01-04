@@ -1,0 +1,31 @@
+<%= form_for([erp_payments, :backend, payment_method]) do |f| %>    
+    <%= erp_form_control("text", {
+        name: 'payment_method[name]',
+        value: payment_method.name,                   
+        label: t('.name'),
+        required: true,
+        errors: payment_method.errors.full_messages_for(:name)
+    }) %>
+    <%= erp_form_control('select', {
+        label: t('.type_method'),
+        name: 'payment_method[type_method]',
+        value: payment_method.type_method,
+        options: Erp::Payments::PaymentMethod.get_type_method_options(),
+        required: true,
+        errors: payment_method.errors.full_messages_for(:type_method)
+    }) %>
+    <%= erp_form_control('checkbox', {
+        name: 'payment_method[is_default]',
+        id: 'payment_method_is_default',
+        value: payment_method.is_default,
+        not_selected_value: 'false',
+        options: [{value: 'true', text: t('.is_default')}]
+    }) %>
+    <%= erp_component('button/save', {
+        text: t('submit')
+    }) %>
+    <%= erp_component('button/cancel', {
+        text: t('cancel'),
+        href: erp_payments.backend_payment_methods_path
+    }) %>
+<% end %>

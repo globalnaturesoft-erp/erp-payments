@@ -1,0 +1,117 @@
+vi:
+  cash: "Tiền mặt"
+  transfer: "Chuyển khoản"
+  cod: "COD"
+  point: "Điểm"
+  order_created: "Ngày tạo hóa đơn"
+  last_month: "Ngày cuối tháng"
+  layouts:
+    erp:
+      backend:
+        sidebar:
+          payment: "Thanh toán"
+          payment_term: "Kỳ hạn thanh toán"
+          payment_method: "Hình thức thanh toán"
+  erp:
+    payments:
+      backend:
+        payment_methods:
+          create:
+            success: "Thêm hình thức thanh toán thành công."
+          update:
+            success: "Cập nhật hình thức thanh toán thành công."
+          destroy:
+            success: "Xóa hình thức thanh toán thành công."
+          delete_all:
+            success: "Xóa hình thức thanh toán được chọn thành công."
+          archive_all:
+            success: "Ẩn hình thức thanh toán được chọn thành công."
+          unarchive_all:
+            success: "Hiện hình thức thanh toán được chọn thành công."
+          index:
+            payment_methods: "Hình thức thanh toán"
+            create: "Thêm hình thức thanh toán"
+            delete: "Xóa hình thức thanh toán"
+            payment_method_archived: "Hình thức thanh toán đã bị ẩn"
+            name: "Tên"
+            type_method: "Loại hình thức"
+            is_default: "Áp dụng mặc định"
+          list:
+            name: "Tên"
+            type_method: "Loại hình thức"
+            is_default: "Áp dụng mặc định"
+            delete: "Xóa hình thức thanh toán"
+            no_matching_records_found: "Danh sách hình thức thanh toán hiện tại đang trống."
+          new:
+            payment_methods: "Hình thức thanh toán"
+            create: "Thêm hình thức thanh toán"
+          edit:
+            payment_methods: "Hình thức thanh toán"
+            create: "Thêm hình thức thanh toán"
+          form:
+            name: "Tên"
+            type_method: "Loại hình thức"
+            is_default: "Áp dụng mặc định"
+        payment_terms:
+          create:
+            success: "Thêm kỳ hạn thanh toán thành công."
+          update:
+            success: "Cập nhật kỳ hạn thanh toán thành công."
+          destroy:
+            success: "Xóa kỳ hạn thanh toán thành công."
+          delete_all:
+            success: "Xóa kỳ hạn thanh toán được chọn thành công."
+          archive_all:
+            success: "Ẩn kỳ hạn thanh toán được chọn thành công."
+          unarchive_all:
+            success: "Hiện kỳ hạn thanh toán được chọn thành công."
+          index:
+            payment_terms: "Kỳ hạn thanh toán"
+            create: "Thêm kỳ hạn thanh toán"
+            delete: "Xóa kỳ hạn thanh toán"
+            payment_term_archived: "Kỳ hạn thanh toán đã bị ẩn"
+            name: "Tên"
+            timeout: "Thời hạn"
+            is_default: "Áp dụng mặc định"
+          list:
+            name: "Tên"
+            timeout: "Thời hạn"
+            is_default: "Áp dụng mặc định"
+            delete: "Xóa kỳ hạn thanh toán"
+            no_matching_records_found: "Danh sách kỳ hạn thanh toán hiện tại đang trống."
+          new:
+            payment_terms: "Kỳ hạn thanh toán"
+            create: "Thêm kỳ hạn thanh toán"
+          edit:
+            payment_terms: "Kỳ hạn thanh toán"
+            create: "Thêm kỳ hạn thanh toán"
+          form:
+            name: "Tên"
+            timeout: "Thời hạn"
+            started_on: "Bắt đầu từ"
+            is_default: "Áp dụng mặc định"
+  activerecord:
+    errors:
+      models:
+        erp/payments/payment_term:
+          attributes:
+            name:
+              blank: "không được trống."
+            timeout:
+              blank: "không được trống."
+            started_on:
+              blank: "không được trống."
+        erp/payments/payment_method:
+          attributes:
+            name:
+              blank: "không được trống."
+            type_method:
+              blank: "không được trống."
+    attributes:
+      erp/payments/payment_term:
+        name: "Tên"
+        timeout: "Thời hạn"
+        started_on: "Bắt đầu từ"
+      erp/payments/payment_method:
+        name: "Tên"
+        type_method: "Loại hình thức"

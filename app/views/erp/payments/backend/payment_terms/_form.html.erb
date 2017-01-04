@@ -1,0 +1,38 @@
+<%= form_for([erp_payments, :backend, payment_term]) do |f| %>    
+    <%= erp_form_control("text", {
+        name: 'payment_term[name]',
+        value: payment_term.name,                   
+        label: t('.name'),
+        required: true,
+        errors: payment_term.errors.full_messages_for(:name)
+    }) %>
+    <%= erp_form_control("text", {
+        name: 'payment_term[timeout]',
+        value: payment_term.timeout,                   
+        label: t('.timeout'),
+        required: true,
+        errors: payment_term.errors.full_messages_for(:timeout)
+    }) %>
+    <%= erp_form_control('select', {
+        label: t('.started_on'),
+        name: 'payment_term[started_on]',
+        value: payment_term.started_on,
+        options: Erp::Payments::PaymentTerm.get_started_on_options(),
+        required: true,
+        errors: payment_term.errors.full_messages_for(:started_on)
+    }) %>
+    <%= erp_form_control('checkbox', {
+        name: 'payment_term[is_default]',
+        id: 'payment_term_is_default',
+        value: payment_term.is_default,
+        not_selected_value: 'false',
+        options: [{value: 'true', text: t('.is_default')}]
+    }) %>
+    <%= erp_component('button/save', {
+        text: t('submit')
+    }) %>
+    <%= erp_component('button/cancel', {
+        text: t('cancel'),
+        href: erp_payments.backend_payment_terms_path
+    }) %>
+<% end %>
