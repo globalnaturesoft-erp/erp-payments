@@ -1,113 +1,113 @@
-<div class="">
-    <table class="table table-advance table-hover table-striped table-checkable order-column" id="">
-        <thead>
-            <tr>
-                <th width='1%'>
-                    <%= erp_datalist_check_all %>
+<table class="table table-advance table-hover table-striped table-checkable order-column">
+    <thead>
+        <tr>
+            <th width='1%'>
+                <%= erp_datalist_check_all %>
+            </th>
+            <% if get_columns(params).include?("name") %>
+                <th class="sortable" sort-by='erp_payments_payment_terms.name'>
+                    <%= t('.name') %>
                 </th>
+            <% end %>
+            <% if get_columns(params).include?("timeout") %>
+                <th>
+                    <%= t('.timeout') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("is_default") %>
+                <th>
+                    <%= t('.is_default') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("status") %>
+                <th>
+                    <%= t('status') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("creator") %>
+                <th>
+                    <%= t('creator') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("created_at") %>
+                <th class="sortable" sort-by='erp_payments_payment_terms.created_at'>
+                    <%= t('created_at') %>
+                </th>
+            <% end %>
+            <th width="7%"><%= t('actions') %></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if @payment_terms.each do |payment_term| %>
+            <tr class="odd gradeX">
+                <td>
+                    <%= erp_datalist_check_row(id: payment_term.id) %>
+                </td>
                 <% if get_columns(params).include?("name") %>
-                    <th class="sortable" sort-by='erp_payments_payment_terms.name'>
-                        <%= t('.name') %>
-                    </th>
+                    <td><%= link_to payment_term.name, erp_payments.edit_backend_payment_term_path(payment_term) %></td>
                 <% end %>
                 <% if get_columns(params).include?("timeout") %>
-                    <th>
-                        <%= t('.timeout') %>
-                    </th>
+                    <td><%= payment_term.timeout %></td>
                 <% end %>
                 <% if get_columns(params).include?("is_default") %>
-                    <th>
-                        <%= t('.is_default') %>
-                    </th>
+                    <td><% if payment_term.is_default == true %><i class="fa fa-check"></i><% end %></td>
                 <% end %>
                 <% if get_columns(params).include?("status") %>
-                    <th>
-                        <%= t('status') %>
-                    </th>
+                <td>
+                    <% if payment_term.archived == true %>
+                    <span class="label label-sm label-danger"><%= t('archived') %></span>
+                    <% else %>
+                    <span class="label label-sm label-success"><%= t('active') %></span>
+                    <% end %> 
+                </td>
                 <% end %>
                 <% if get_columns(params).include?("creator") %>
-                    <th>
-                        <%= t('creator') %>
-                    </th>
+                    <td></td>
                 <% end %>
                 <% if get_columns(params).include?("created_at") %>
-                    <th class="sortable" sort-by='erp_payments_payment_terms.created_at'>
-                        <%= t('created_at') %>
-                    </th>
+                    <td><%= payment_term.created_at.strftime("%d/%m/%Y") %></td>
                 <% end %>
-                <th width="7%"><%= t('actions') %></th>
+                <td>
+                    <%= erp_datalist_row_actions(
+                        [
+                            {
+                                text: '<i class="fa fa-edit"></i> '+t('edit'),
+                                href: erp_payments.edit_backend_payment_term_path(payment_term)
+                            },
+                            {
+                                text: '<i class="fa fa-eye-slash"></i> '+t('archive'),
+                                url: erp_payments.archive_backend_payment_terms_path(id: payment_term),
+                                data_method: 'PUT',
+                                hide: payment_term.archived,
+                                class: 'ajax-link'
+                            },
+                            {
+                                text: '<i class="fa fa-eye"></i> '+t('unarchive'),
+                                url: erp_payments.unarchive_backend_payment_terms_path(id: payment_term),
+                                data_method: 'PUT',
+                                hide: !payment_term.archived,
+                                class: 'ajax-link'
+                            },
+                            {
+                                divider: true
+                            },
+                            {
+                                text: '<i class="fa fa-trash"></i> '+t('.delete'),
+                                url: erp_payments.backend_payment_term_path(payment_term),
+                                data_method: 'DELETE',
+                                class: 'ajax-link',
+                                data_confirm: t('delete_confirm')
+                            }
+                        ]
+                    ) %>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <% if @payment_terms.each do |payment_term| %>
-                <tr class="odd gradeX">
-                    <td>
-                        <%= erp_datalist_check_row(id: payment_term.id) %>
-                    </td>
-                    <% if get_columns(params).include?("name") %>
-                        <td><%= link_to payment_term.name, erp_payments.edit_backend_payment_term_path(payment_term) %></td>
-                    <% end %>
-                    <% if get_columns(params).include?("timeout") %>
-                        <td><%= payment_term.timeout %></td>
-                    <% end %>
-                    <% if get_columns(params).include?("is_default") %>
-                        <td><% if payment_term.is_default == true %><i class="fa fa-check"></i><% end %></td>
-                    <% end %>
-                    <% if get_columns(params).include?("status") %>
-                    <td>
-                        <% if payment_term.archived == true %>
-                        <span class="label label-sm label-danger"><%= t('archived') %></span>
-                        <% else %>
-                        <span class="label label-sm label-success"><%= t('active') %></span>
-                        <% end %> 
-                    </td>
-                    <% end %>
-                    <% if get_columns(params).include?("creator") %>
-                        <td></td>
-                    <% end %>
-                    <% if get_columns(params).include?("created_at") %>
-                        <td><%= payment_term.created_at.strftime("%d/%m/%Y") %></td>
-                    <% end %>
-                    <td>
-                        <%= erp_datalist_row_actions(
-                            [
-                                {
-                                    text: '<i class="fa fa-edit"></i> '+t('edit'),
-                                    href: erp_payments.edit_backend_payment_term_path(payment_term)
-                                },
-                                {
-                                    text: '<i class="fa fa-eye-slash"></i> '+t('archive'),
-                                    url: erp_payments.archive_backend_payment_terms_path(id: payment_term),
-                                    data_method: 'PUT',
-                                    class: 'ajax-link'
-                                },
-                                {
-                                    text: '<i class="fa fa-eye"></i> '+t('unarchive'),
-                                    url: erp_payments.unarchive_backend_payment_terms_path(id: payment_term),
-                                    data_method: 'PUT',
-                                    class: 'ajax-link'
-                                },
-                                {
-                                    divider: true
-                                },
-                                {
-                                    text: '<i class="fa fa-trash"></i> '+t('.delete'),
-                                    url: erp_payments.backend_payment_term_path(payment_term),
-                                    data_method: 'DELETE',
-                                    class: 'ajax-link',
-                                    data_confirm: t('delete_confirm')
-                                }
-                            ]
-                        ) %>
-                    </td>
-                </tr>
-            <% end.empty? %>
-                <tr>
-                    <td colspan="7"><%= t('.no_matching_records_found') %></td>
-                </tr>
-            <% end %>
-        </tbody>
-    </table>
-</div>
+        <% end.empty? %>
+            <tr>
+                <td colspan="7"><%= t('.no_matching_records_found') %></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>
         
 <%= erp_datalist_pagination(@payment_terms) %>

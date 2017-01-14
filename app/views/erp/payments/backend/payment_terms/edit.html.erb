@@ -4,15 +4,14 @@
 
 <% content_for :page_title do %>    
     <a href="<%= erp_payments.backend_payment_terms_path %>">
-    <i class="fa fa-list"></i> <%= t('.payment_terms') %>
+    <i class="fa fa-calendar"></i> <%= t('.payment_terms') %>
     </a> / <%= @payment_term.name %>
 <% end %>
 
 <% content_for :page_toolbar do %>
     <%= erp_component('button/create', {
         text: t('.create'),
-        href: erp_payments.new_backend_payment_term_path,
-        class: 'btn-sm'
+        href: erp_payments.new_backend_payment_term_path
     }) %>
 <% end %>
 

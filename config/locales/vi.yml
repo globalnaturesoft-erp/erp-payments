@@ -22,6 +22,10 @@ vi:
             success: "Cập nhật hình thức thanh toán thành công."
           destroy:
             success: "Xóa hình thức thanh toán thành công."
+          archive:
+            success: "Ẩn hình thức thanh toán thành công."
+          unarchive:
+            success: "Hiện hình thức thanh toán thành công."
           delete_all:
             success: "Xóa hình thức thanh toán được chọn thành công."
           archive_all:
@@ -59,6 +63,10 @@ vi:
             success: "Cập nhật kỳ hạn thanh toán thành công."
           destroy:
             success: "Xóa kỳ hạn thanh toán thành công."
+          archive:
+            success: "Ẩn kỳ hạn thanh toán thành công."
+          unarchive:
+            success: "Hiện kỳ hạn thanh toán thành công."
           delete_all:
             success: "Xóa kỳ hạn thanh toán được chọn thành công."
           archive_all:
@@ -96,22 +104,22 @@ vi:
         erp/payments/payment_term:
           attributes:
             name:
-              blank: "không được trống."
+              blank: "không được để trống."
             timeout:
-              blank: "không được trống."
+              blank: "không được để trống."
             started_on:
-              blank: "không được trống."
+              blank: "không được để trống."
         erp/payments/payment_method:
           attributes:
             name:
-              blank: "không được trống."
+              blank: "không được để trống."
             type_method:
-              blank: "không được trống."
+              blank: "không được để trống."
     attributes:
       erp/payments/payment_term:
-        name: "Tên"
+        name: "Tên kỳ hạn thanh toán"
         timeout: "Thời hạn"
-        started_on: "Bắt đầu từ"
+        started_on: "Thời gian áp dụng"
       erp/payments/payment_method:
-        name: "Tên"
-        type_method: "Loại hình thức"
+        name: "Tên hình thức thanh toán"
+        type_method: "Loại hình thức thanh toán"
