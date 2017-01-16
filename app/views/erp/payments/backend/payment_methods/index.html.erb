@@ -18,6 +18,14 @@
     keywords: [
         {
             text: t('.name'), name: 'erp_payments_payment_methods.name'
+        },
+        {
+            text: t('creator'),
+            name: 'erp_users.name',
+            select: {
+                name: 'erp_users.id',
+                data_url: erp.dataselect_backend_users_path
+            }
         }
     ],
     actions: [
