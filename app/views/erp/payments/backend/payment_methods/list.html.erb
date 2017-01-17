@@ -62,7 +62,11 @@
                 </td>
                 <% end %>
                 <% if get_columns(params).include?("creator") %>
-                    <td></td>
+                    <td>
+                        <%= erp_component('avatar', {
+                            user: payment_method.creator
+                        }) %>
+                    </td>
                 <% end %>
                 <% if get_columns(params).include?("created_at") %>
                     <td><%= payment_method.created_at.strftime("%d/%m/%Y") %></td>
