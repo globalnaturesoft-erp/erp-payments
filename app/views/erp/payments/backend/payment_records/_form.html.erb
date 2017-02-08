@@ -57,6 +57,11 @@
                             value: payment_record.note,                   
                             label: t('.note')
                         }) %>
+                        <%= erp_form_control("textarea", {
+                            name: 'payment_record[description]',
+                            value: payment_record.description,                   
+                            label: t('.description')
+                        }) %>
                     </div>
                 </div>
             </div>
