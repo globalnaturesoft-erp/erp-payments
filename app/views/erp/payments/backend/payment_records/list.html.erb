@@ -1,0 +1,125 @@
+<div class="">
+    <table class="table table-advance table-hover table-striped table-checkable order-column" id="">
+        <thead>
+            <tr>
+                <th width='1%'>
+                    <%= erp_datalist_check_all %>
+                </th>
+                <% if get_columns(params).include?("code") %>
+                    <th class="sortable" sort-by='erp_payments_payment_records.name'>
+                        <%= t('.code') %>
+                    </th>
+                <% end %>
+                <% if get_columns(params).include?("payment_date") %>
+                    <th>
+                        <%= t('.payment_date') %>
+                    </th>
+                <% end %>
+                <% if get_columns(params).include?("payment_type") %>
+                    <th>
+                        <%= t('.payment_type') %>
+                    </th>
+                <% end %>
+                <% if get_columns(params).include?("partner_name") %>
+                    <th>
+                        <%= t('.partner_name') %>
+                    </th>
+                <% end %>
+                <% if get_columns(params).include?("amount") %>
+                    <th>
+                        <%= t('.amount') %>
+                    </th>
+                <% end %>
+                <% if get_columns(params).include?("note") %>
+                    <th>
+                        <%= t('.note') %>
+                    </th>
+                <% end %>
+                <% if get_columns(params).include?("status") %>
+                    <th>
+                        <%= t('status') %>
+                    </th>
+                <% end %>
+                <% if get_columns(params).include?("creator") %>
+                    <th>
+                        <%= t('creator') %>
+                    </th>
+                <% end %>
+                <% if get_columns(params).include?("created_at") %>
+                    <th class="sortable" sort-by='erp_payments_payment_records.created_at'>
+                        <%= t('created_at') %>
+                    </th>
+                <% end %>
+                <th width="7%"><%= t('actions') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if @payment_records.each do |payment_record| %>
+                <tr class="odd gradeX">
+                    <td>
+                        <%= erp_datalist_check_row(id: payment_record.id) %>
+                    </td>
+                    <% if get_columns(params).include?("code") %>
+                        <td><%= link_to payment_record.code, erp_payments.edit_backend_payment_record_path(payment_record, order_id: Erp::Sales::Order.first, payment_type: payment_record.payment_type) %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("payment_date") %>
+                        <td><%= format_date(payment_record.payment_date) %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("payment_type") %>
+                        <td><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.pay') : t('.receive') %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("partner_name") %>
+                        <td><%= payment_record.contact.name %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("amount") %>
+                        <td><%= payment_record.amount %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("note") %>
+                        <td><%= payment_record.note %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("status") %>
+                    <td>
+                        
+                    </td>
+                    <% end %>
+                    <% if get_columns(params).include?("creator") %>
+                        <td>
+                            <%= erp_component('avatar', {
+                                user: payment_record.creator
+                            }) %>
+                        </td>
+                    <% end %>
+                    <% if get_columns(params).include?("created_at") %>
+                        <td><%= format_date(payment_record.created_at) %></td>
+                    <% end %>
+                    <td>
+                        <%= erp_datalist_row_actions(
+                            [
+                                {
+                                    text: '<i class="fa fa-file-pdf-o"></i> '+t('.show'),
+                                    url: erp_payments.backend_payment_record_path(payment_record)
+                                },
+                                {
+                                    divider: true
+                                },
+                                {
+                                    text: '<i class="fa fa-trash"></i> '+t('.delete'),
+                                    url: erp_payments.backend_payment_record_path(payment_record),
+                                    data_method: 'DELETE',
+                                    class: 'ajax-link',
+                                    data_confirm: t('delete_confirm')
+                                }
+                            ]
+                        ) %>
+                    </td>
+                </tr>
+            <% end.empty? %>
+                <tr>
+                    <td colspan="7"><%= t('.no_matching_records_found') %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+        
+<%= erp_datalist_pagination(@payment_records) %>

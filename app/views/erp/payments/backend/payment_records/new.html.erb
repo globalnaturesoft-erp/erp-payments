@@ -1,0 +1,30 @@
+<% content_for :title do %>
+    <%= params[:payment_type] == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.create_pay') : t('.create_receive') %>
+<% end %>
+
+<% content_for :page_title do %>    
+    <a href="<%= erp_payments.backend_payment_records_path %>">
+    <i class="fa fa-credit-card"></i> <%= t('.payment_records') %>
+    </a> / <%= params[:payment_type] == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.create_pay') : t('.create_receive') %>
+<% end %>
+
+<% content_for :page_toolbar do %>
+    <div class="btn-group">
+        <div class="clearfix">
+        </div>
+    </div>
+<% end %>
+
+<div class="row">
+    <div class="col-md-12">
+        <% if @payment_record.errors.any? %>
+            <%= erp_form_control("form_error_message") %>
+        <% end %>
+        
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        
+                <%= render 'form', payment_record: @payment_record %>
+        
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>
+</div>
