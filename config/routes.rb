@@ -23,6 +23,11 @@ Erp::Payments::Engine.routes.draw do
 					put 'unarchive_all'
 				end
 			end
+			resources :payment_records do
+				collection do
+					post 'list'
+				end
+			end
 		end
 	end
 end
