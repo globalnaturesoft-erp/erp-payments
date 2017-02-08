@@ -5,6 +5,8 @@ vi:
   point: "Điểm"
   order_created: "Ngày tạo hóa đơn"
   last_month: "Ngày cuối tháng"
+  receive: "Phiếu thu"
+  pay: "Phiếu chi"
   layouts:
     erp:
       backend:
@@ -12,6 +14,7 @@ vi:
           payment: "Thanh toán"
           payment_term: "Kỳ hạn thanh toán"
           payment_method: "Hình thức thanh toán"
+          payment_record: "Quản lý thu - chi"
   erp:
     payments:
       backend:
@@ -98,6 +101,57 @@ vi:
             timeout: "Thời hạn"
             started_on: "Bắt đầu từ"
             is_default: "Áp dụng mặc định"
+        payment_records:
+          create:
+            success: "Phiếu thu/chi được tạo thành công."
+          update:
+            success: "Phiếu thu/chi được cập nhật thành công."
+          destroy:
+            success: "Phiếu thu/chi được xóa thành công."
+          index:
+            delete: "Xóa phiếu đã chọn"
+            payment_records: "Phiếu thu - chi"
+            code: "Mã phiếu"
+            payment_date: "Ngày thanh toán"
+            payment_type: "Loại thu - chi"
+            partner_name: "Người nộp/nhận"
+            amount: "Chi phí"
+            note: "Ghi chú"
+            create_sale_customer: "Tạo phiếu thu KH"
+            create_purchase_customer: "Tạo phiếu chi KH"
+            create_sale_manufacturer: "Tạo phiếu thu NCC"
+            create_purchase_manufacturer: "Tạo phiếu chi NCC"
+          list:
+            code: "Mã phiếu"
+            payment_date: "Ngày thanh toán"
+            payment_type: "Loại phiếu"
+            partner_name: "Người nộp/nhận"
+            amount: "Chi phí"
+            note: "Ghi chú"
+            receive: "Phiếu thu"
+            pay: "Phiếu chi"
+            delete: "Xóa phiếu"
+            show: "Xem chi tiết"
+          new:
+            payment_records: "Phiếu thu - chi"
+            create_receive: "Thêm phiếu thu"
+            create_pay: "Thêm phiếu chi"
+          edit:
+            payment_records: "Phiếu thu - chi"
+          form:
+            code: "Mã phiếu"
+            payment_date: "Ngày thanh toán"
+            amount: "Giá trị"
+            contact_pay: "Người nộp"
+            contact_receive: "Người nhận"
+            help_contact_pay: "Thu tiền từ ai?"
+            help_contact_receive: "Chi tiền cho ai?"
+            accountant: "Thu ngân - kế toán"
+            note: "Ghi chú"
+            description: "Mô tả"
+            type_record: "Loại phiếu thanh toán"
+            choose_contact: "Chọn người nhận/nộp"
+            choose_accountant: "Chọn kế toán - thu ngân"
   activerecord:
     errors:
       models:
