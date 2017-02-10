@@ -1,0 +1,54 @@
+<% content_for :title do %>
+    <%= @payment_record.code %>
+<% end %>
+
+<% content_for :page_title do %>    
+    <a href="<%= erp_payments.backend_payment_records_path %>">
+        <i class="icon-credit-card"></i> <%= t('.payment_records') %>
+    </a> / <%= @payment_record.code %> / <%= t('.show') %>
+<% end %>
+
+<% content_for :page_toolbar do %>
+    <%= erp_component('button/edit', {
+        text: t('.edit'),
+        href: erp_payments.edit_backend_payment_record_path(@payment_record, order_id: Erp::Sales::Order.first, payment_type: @payment_record.payment_type)
+    }) %>
+    <%= erp_component('button/actions', {
+        actions:
+        [
+            {
+                text: '<i class="fa fa-eye"></i> '+t('print'),
+                url: '',
+                class: 'link-method'
+            },
+            {
+                text: '<i class="fa fa-eye-slash"></i> '+t('export'),
+                url: '',
+                class: 'link-method'
+            },
+            {divider: true},
+            {
+                text: '<i class="glyphicon glyphicon-trash"></i> '+t('.delete'),
+                href: erp_payments.backend_payment_record_path(@payment_record),
+                data_method: 'DELETE',
+                data_confirm: t('delete_confirm'),
+                class: 'link-method'
+            }
+        ],
+        text: t('actions'),
+        class: 'btn-noborder'
+    }) %>
+<% end %>
+
+<% content_for :page_toolbar do %>
+    <div class="btn-group">
+        <div class="clearfix">
+        </div>
+    </div>
+<% end %>
+
+<!--<div class="row">-->
+<!--    <div class="col-md-12">-->
+        <%= render 'detail', payment_record: @payment_record %>            
+<!--    </div>-->
+<!--</div>-->
