@@ -138,6 +138,11 @@ vi:
             create_pay: "Thêm phiếu chi"
           edit:
             payment_records: "Phiếu thu - chi"
+          show:
+            payment_records: "Phiếu thu - chi"
+            show: "Xem chi tiết"
+            edit: "Chỉnh sửa"
+            delete: "Xóa phiếu"
           form:
             code: "Mã phiếu"
             payment_date: "Ngày thanh toán"
