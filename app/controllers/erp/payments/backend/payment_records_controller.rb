@@ -25,6 +25,10 @@ module Erp
         # GET /payment_records/1/edit
         def edit
         end
+        
+        # GET /payment_records/1/show
+        def show
+        end
     
         # POST /payment_records
         def create
