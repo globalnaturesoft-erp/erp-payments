@@ -69,7 +69,7 @@
                         <td><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.pay') : t('.receive') %></td>
                     <% end %>
                     <% if get_columns(params).include?("partner_name") %>
-                        <td><%= payment_record.contact.name %></td>
+                        <td><%= payment_record.contact_name %></td>
                     <% end %>
                     <% if get_columns(params).include?("amount") %>
                         <td><%= payment_record.amount %></td>
