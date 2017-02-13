@@ -79,7 +79,11 @@
                     <% end %>
                     <% if get_columns(params).include?("status") %>
                     <td>
-                        
+                        <% if payment_record.pending? == true %>
+                        <span class="label label-sm label-info"><%= t('.pending') %></span>
+                        <% else %>
+                        <span class="label label-sm label-success"><%= t('.done') %></span>
+                        <% end %> 
                     </td>
                     <% end %>
                     <% if get_columns(params).include?("creator") %>
@@ -98,6 +102,14 @@
                                 {
                                     text: '<i class="fa fa-file-pdf-o"></i> '+t('.show'),
                                     url: erp_payments.backend_payment_record_path(payment_record)
+                                },
+                                {
+                                    text: '<i class="fa fa-check"></i> '+t('confirm'),
+                                    url: erp_payments.confirm_backend_payment_records_path(id: payment_record),
+                                    data_method: 'PUT',
+                                    hide: !payment_record.done?,
+                                    class: 'ajax-link',
+                                    data_confirm: t('.confirm_confirm')
                                 },
                                 {
                                     divider: true
