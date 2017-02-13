@@ -20,6 +20,7 @@ module Erp
         # GET /payment_records/new
         def new
           @payment_record = PaymentRecord.new
+          @payment_record.payment_date = Time.now
         end
     
         # GET /payment_records/1/edit
