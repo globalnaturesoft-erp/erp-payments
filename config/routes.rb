@@ -26,6 +26,7 @@ Erp::Payments::Engine.routes.draw do
 			resources :payment_records do
 				collection do
 					post 'list'
+					put 'confirm'
 				end
 			end
 		end
