@@ -21,6 +21,9 @@ module Erp
         def new
           @payment_record = PaymentRecord.new
           @payment_record.payment_date = Time.now
+          if Erp::Core.available?("sales")
+            @payment_record.amount = Erp::Sales::Order.find(params[:order_id]).remain_amount
+          end
         end
     
         # GET /payment_records/1/edit
