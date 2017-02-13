@@ -1,6 +1,7 @@
 <%= form_for([erp_payments, :backend, payment_record]) do |f| %>    
     <input type="hidden" name="payment_record[order_id]" value="<%= params[:order_id] %>">
     <input type="hidden" name="payment_record[payment_type]" value="<%= params[:payment_type] %>">
+    <input type="hidden" name="payment_record[status]" value="<%= payment_record.status %>">
     <div class="form-body">
         <div class="row">
             <div class="col-md-12">
