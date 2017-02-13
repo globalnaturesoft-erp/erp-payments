@@ -13,6 +13,8 @@ module Erp::Payments
       belongs_to :order, class_name: "Erp::Sales::Order"
     end
     
+    after_save :order_update_cache_payment_status
+    
     # class const
     PAYMENT_TYPE_RECEIVE = 'receive'
     PAYMENT_TYPE_PAY = 'pay'
@@ -92,6 +94,12 @@ module Erp::Payments
         Erp::Sales::Order.find(params[:order_id]).remain_amount
       end
     end
+    
+    def order_update_cache_payment_status
+			if order.present?
+				order.update_cache_payment_status
+			end
+		end
     
   end
 end
