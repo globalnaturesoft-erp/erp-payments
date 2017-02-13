@@ -19,6 +19,9 @@ module Erp::Payments
     PAYMENT_TYPE_RECEIVE = 'receive'
     PAYMENT_TYPE_PAY = 'pay'
     
+    STATUS_PENDING = 'pending'
+    STATUS_DONE = 'done'
+    
     # get type method options
     def self.get_type_record_options()
       [
@@ -100,6 +103,18 @@ module Erp::Payments
 				order.update_cache_payment_status
 			end
 		end
+    
+    def confirm
+      self.update_columns(status: Erp::Payments::PaymentRecord::STATUS_DONE)
+    end
+    
+    def done?
+      self.status == Erp::Payments::PaymentRecord::STATUS_DONE ? true : false
+    end
+    
+    def pending?
+      self.status == Erp::Payments::PaymentRecord::STATUS_PENDING ? true : false
+    end
     
   end
 end
