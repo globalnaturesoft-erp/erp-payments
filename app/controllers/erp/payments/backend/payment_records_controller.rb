@@ -4,7 +4,7 @@ module Erp
   module Payments
     module Backend
       class PaymentRecordsController < Erp::Backend::BackendController
-        before_action :set_payment_record, only: [:show, :edit, :update, :destroy]
+        before_action :set_payment_record, only: [:confirm, :show, :edit, :update, :destroy]
     
         # GET /payment_records
         def index
@@ -21,6 +21,7 @@ module Erp
         def new
           @payment_record = PaymentRecord.new
           @payment_record.payment_date = Time.now
+          @payment_record.status = Erp::Payments::PaymentRecord::STATUS_PENDING
           if Erp::Core.available?("sales")
             @payment_record.amount = Erp::Sales::Order.find(params[:order_id]).remain_amount
           end
@@ -47,7 +48,7 @@ module Erp
                 value: @payment_record.id
               }
             else
-              redirect_to erp_payments.edit_backend_payment_record_path(@payment_record), notice: t('.success')
+              redirect_to erp_payments.backend_payment_record_path(@payment_record), notice: t('.success')
             end
           else
             render :new
@@ -64,7 +65,7 @@ module Erp
                 value: @payment_record.id
               }              
             else
-              redirect_to erp_payments.edit_backend_payment_record_path(@payment_record), notice: t('.success')
+              redirect_to erp_payments.backend_payment_record_path(@payment_record), notice: t('.success')
             end
           else
             render :edit
@@ -85,6 +86,19 @@ module Erp
             }
           end
         end
+        
+        def confirm
+          @payment_record.confirm
+          respond_to do |format|
+            format.html { redirect_to erp_payments.backend_payment_records_path, notice: t('.success') }
+            format.json {
+              render json: {
+                'message': t('.success'),
+                'type': 'success'
+              }
+            }
+          end
+        end
     
         private
           # Use callbacks to share common setup or constraints between actions.
@@ -94,7 +108,7 @@ module Erp
     
           # Only allow a trusted parameter "white list" through.
           def payment_record_params
-            params.fetch(:payment_record, {}).permit(:code, :amount, :payment_date, :payment_type, :description, :note, :order_id, :accountant_id, :contact_id)
+            params.fetch(:payment_record, {}).permit(:code, :amount, :payment_date, :payment_type, :description, :note, :status, :order_id, :accountant_id, :contact_id)
           end
       end
     end
