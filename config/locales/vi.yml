@@ -144,7 +144,8 @@ vi:
             edit: "Chỉnh sửa"
             delete: "Xóa phiếu"
           form:
-            code: "Mã phiếu"
+            code_receive: "Mã phiếu thu"
+            code_pay: "Mã phiếu chi"
             payment_date: "Ngày thanh toán"
             amount: "Giá trị"
             contact_pay: "Người nộp"
@@ -155,8 +156,10 @@ vi:
             note: "Ghi chú"
             description: "Mô tả"
             type_record: "Loại phiếu thanh toán"
-            choose_contact: "Chọn người nhận/nộp"
+            choose_contact: "Chọn liên hệ"
             choose_accountant: "Chọn kế toán - thu ngân"
+            help_code: "Mã phiếu được tạo tự động nếu bỏ trống"
+            placeholder_code: "Mã phiếu tự động"
   activerecord:
     errors:
       models:
