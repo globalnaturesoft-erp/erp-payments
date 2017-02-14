@@ -1,0 +1,32 @@
+<% content_for :title do %>
+    <%= t('.create') %>
+<% end %>
+
+<% content_for :page_title do %>    
+    <a href="<%= erp_payments.backend_debts_path %>">
+    <i class="fa fa-life-ring"></i> <%= t('.debts') %>
+    </a> / <%= t('.create') %>
+<% end %>
+
+<% content_for :page_toolbar do %>
+    <div class="btn-group">
+        <div class="clearfix">
+        </div>
+    </div>
+<% end %>
+
+<div class="row">
+    <div class="col-md-4">
+        <% if @debt.errors.any? %>
+            <%= erp_form_control("form_error_message") %>
+        <% end %>
+        
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <%= render 'form', debt: @debt %>
+            </div>
+        </div>
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<%= form_for([erp_payments, :backend, debt]) do |f| %>
+    <input type="hidden" name="debt[order_id]" value="1" />
+    <%= erp_form_control("date", {
+        name: 'debt[deadline]',
+        value: debt.deadline,
+        label: t('.deadline')
+    }) %>
+    <%= erp_form_control("textarea", {
+        name: 'debt[note]',
+        value: debt.note,                   
+        label: t('.note')
+    }) %>
+    
+    <%= erp_component('button/save', {
+        text: t('submit')
+    }) %>
+<% end %>
