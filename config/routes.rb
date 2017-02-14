@@ -29,6 +29,17 @@ Erp::Payments::Engine.routes.draw do
 					put 'confirm'
 				end
 			end
+			resources :debts do
+				collection do
+					post 'list'
+					get 'dataselect'
+					delete 'delete_all'
+					put 'archive'
+					put 'unarchive'
+					put 'archive_all'
+					put 'unarchive_all'
+				end
+			end
 		end
 	end
 end
