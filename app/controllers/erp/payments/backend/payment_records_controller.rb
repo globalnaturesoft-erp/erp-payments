@@ -22,8 +22,8 @@ module Erp
           @payment_record = PaymentRecord.new
           @payment_record.payment_date = Time.now
           @payment_record.status = Erp::Payments::PaymentRecord::STATUS_PENDING
-          if Erp::Core.available?("sales")
-            @payment_record.amount = Erp::Sales::Order.find(params[:order_id]).remain_amount
+          if Erp::Core.available?("orders")
+            @payment_record.amount = Erp::Orders::Order.find(params[:order_id]).remain_amount
           end
         end
     

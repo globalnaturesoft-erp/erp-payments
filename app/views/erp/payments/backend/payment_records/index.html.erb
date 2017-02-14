@@ -9,7 +9,7 @@
 <% content_for :page_toolbar do %>
     <%= erp_component('button/create', {
         text: t('.create_sale_customer'),
-        href: erp_payments.new_backend_payment_record_path(order_id: Erp::Sales::Order.first, payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE),
+        href: erp_payments.new_backend_payment_record_path(order_id: Erp::Orders::Order.first, payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE),
         class: 'btn-sm'
     }) %>
 <% end %>
@@ -17,7 +17,7 @@
 <% content_for :page_toolbar do %>
     <%= erp_component('button/create', {
         text: t('.create_purchase_customer'),
-        href: erp_payments.new_backend_payment_record_path(order_id: Erp::Sales::Order.first, payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY),
+        href: erp_payments.new_backend_payment_record_path(order_id: Erp::Orders::Order.first, payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY),
         class: 'btn-sm'
     }) %>
 <% end %>
@@ -25,7 +25,7 @@
 <% content_for :page_toolbar do %>
     <%= erp_component('button/create', {
         text: t('.create_sale_manufacturer'),
-        href: erp_payments.new_backend_payment_record_path(order_id: Erp::Sales::Order.first, payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE),
+        href: erp_payments.new_backend_payment_record_path(order_id: Erp::Orders::Order.first, payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE),
         class: 'btn-sm'
     }) %>
 <% end %>
@@ -33,7 +33,7 @@
 <% content_for :page_toolbar do %>
     <%= erp_component('button/create', {
         text: t('.create_purchase_manufacturer'),
-        href: erp_payments.new_backend_payment_record_path(order_id: Erp::Sales::Order.first, payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY),
+        href: erp_payments.new_backend_payment_record_path(order_id: Erp::Orders::Order.first, payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY),
         class: 'btn-sm'
     }) %>
 <% end %>

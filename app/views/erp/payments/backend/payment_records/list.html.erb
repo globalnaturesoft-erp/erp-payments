@@ -60,7 +60,7 @@
                         <%= erp_datalist_check_row(id: payment_record.id) %>
                     </td>
                     <% if get_columns(params).include?("code") %>
-                        <td><%= link_to payment_record.code, erp_payments.edit_backend_payment_record_path(payment_record, order_id: Erp::Sales::Order.first, payment_type: payment_record.payment_type) %></td>
+                        <td><%= link_to payment_record.code, erp_payments.edit_backend_payment_record_path(payment_record, order_id: Erp::Orders::Order.first, payment_type: payment_record.payment_type) %></td>
                     <% end %>
                     <% if get_columns(params).include?("payment_date") %>
                         <td><%= format_date(payment_record.payment_date) %></td>

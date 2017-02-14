@@ -9,8 +9,8 @@ module Erp::Payments
         contact.present? ? contact.contact_name : ''
       end
     end
-    if Erp::Core.available?("sales")
-      belongs_to :order, class_name: "Erp::Sales::Order"
+    if Erp::Core.available?("orders")
+      belongs_to :order, class_name: "Erp::Orders::Order"
     end
     
     after_save :order_update_cache_payment_status
@@ -40,7 +40,7 @@ module Erp::Payments
       if order.present?
         order.order_date
       elsif params[:order_id].present?
-        Erp::Sales::Order.find(params[:order_id]).order_date
+        Erp::Orders::Order.find(params[:order_id]).order_date
       end
     end
     
@@ -49,7 +49,7 @@ module Erp::Payments
       if order.present?
         order.expiration_date
       elsif params[:order_id].present?
-        Erp::Sales::Order.find(params[:order_id]).expiration_date
+        Erp::Orders::Order.find(params[:order_id]).expiration_date
       end
     end
     
@@ -58,7 +58,7 @@ module Erp::Payments
       if order.present?
         order.code
       elsif params[:order_id].present?
-        Erp::Sales::Order.find(params[:order_id]).code
+        Erp::Orders::Order.find(params[:order_id]).code
       end
     end
     
@@ -67,7 +67,7 @@ module Erp::Payments
       if order.present?
         order.customer_name
       elsif params[:order_id].present?
-        Erp::Sales::Order.find(params[:order_id]).customer_name
+        Erp::Orders::Order.find(params[:order_id]).customer_name
       end
     end
     
@@ -76,7 +76,7 @@ module Erp::Payments
       if order.present?
         order.paid_amount
       elsif params[:order_id].present?
-        Erp::Sales::Order.find(params[:order_id]).paid_amount
+        Erp::Orders::Order.find(params[:order_id]).paid_amount
       end
     end
     
@@ -85,7 +85,7 @@ module Erp::Payments
       if order.present?
         order.total
       elsif params[:order_id].present?
-        Erp::Sales::Order.find(params[:order_id]).total
+        Erp::Orders::Order.find(params[:order_id]).total
       end
     end
     
@@ -94,7 +94,7 @@ module Erp::Payments
       if order.present?
         order.remain_amount
       elsif params[:order_id].present?
-        Erp::Sales::Order.find(params[:order_id]).remain_amount
+        Erp::Orders::Order.find(params[:order_id]).remain_amount
       end
     end
     

@@ -8,7 +8,7 @@ class CreateErpPaymentsPaymentRecords < ActiveRecord::Migration[5.0]
       t.text :description
       t.text :note
       t.string :status
-      t.references :order, index: true, references: :erp_sales_orders
+      t.references :order, index: true, references: :erp_orders_orders
       t.references :accountant, index: true, references: :erp_users
       t.references :contact, index: true, references: :erp_contacts_contacts
       t.references :creator, index: true, references: :erp_users
