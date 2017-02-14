@@ -7,6 +7,7 @@ vi:
   last_month: "Ngày cuối tháng"
   receive: "Phiếu thu"
   pay: "Phiếu chi"
+  confirm: "Xác nhận"
   layouts:
     erp:
       backend:
@@ -108,6 +109,8 @@ vi:
             success: "Phiếu thu/chi được cập nhật thành công."
           destroy:
             success: "Phiếu thu/chi được xóa thành công."
+          confirm:
+            success: "Xác nhận thành công"
           index:
             delete: "Xóa phiếu đã chọn"
             payment_records: "Phiếu thu - chi"
@@ -132,6 +135,10 @@ vi:
             pay: "Phiếu chi"
             delete: "Xóa phiếu"
             show: "Xem chi tiết"
+            confirm: "Xác nhận"
+            confirm_confirm: "Bạn đồng ý xác nhận phiếu?"
+            pending: "Chưa xác nhận"
+            done: "Đã xác nhận"
           new:
             payment_records: "Phiếu thu - chi"
             create_receive: "Thêm phiếu thu"
@@ -143,6 +150,7 @@ vi:
             show: "Xem chi tiết"
             edit: "Chỉnh sửa"
             delete: "Xóa phiếu"
+            confirm_confirm: "Bạn đồng ý xác nhận phiếu?"
           form:
             code_receive: "Mã phiếu thu"
             code_pay: "Mã phiếu chi"
@@ -160,6 +168,45 @@ vi:
             choose_accountant: "Chọn kế toán - thu ngân"
             help_code: "Mã phiếu được tạo tự động nếu bỏ trống"
             placeholder_code: "Mã phiếu tự động"
+        debts:
+          create:
+            success: "Gia hạn công nợ được tạo thành công."
+          update:
+            success: "Gia hạn công nợ được cập nhật thành công."
+          destroy:
+            success: "Gia hạn công nợ được xóa thành công."
+          archive:
+            success: "Gia hạn công nợ được ẩn thành công."
+          unarchive:
+            success: "Gia hạn công nợ được hiển thị thành công."
+          archive_all:
+            success: "Gia hạn công nợ được ẩn thành công."
+          unarchive_all:
+            success: "Gia hạn công nợ được hiển thị thành công."
+          delete_all:
+            success: "Gia hạn công nợ được xóa thành công."
+          index:
+            debts: "Công nợ"
+            create: "Gia hạn thời gian công nợ"
+            delete: "Xóa hạn công nợ"
+            debt_archived: "Hiện công nợ đã ẩn"
+            order: "Đơn hàng"
+            deadline: "Hạn thanh toán"
+            note: "Ghi chú"
+          list:
+            order: "Đơn hàng"
+            deadline: "Hạn thanh toán"
+            note: "Ghi chú"
+            no_matching_records_found: "Danh sách hiện tại đang trống" 
+          new:
+            debts: "Công nợ"
+            create: "Gia hạn công nợ"
+          edit:
+            debts: "Công nợ"
+            create: "Gia hạn công nợ"
+          form:
+            deadline: "Hạn thanh toán"
+            note: "Ghi chú"
   activerecord:
     errors:
       models:
