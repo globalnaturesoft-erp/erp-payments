@@ -7,11 +7,6 @@ module Erp
         before_action :set_debt, only: [:archive, :unarchive, :edit, :update, :destroy]
         before_action :set_debts, only: [:delete_all, :archive_all, :unarchive_all]
     
-        # GET /debts
-        def index
-          @debts = Debt.all
-        end
-    
         # POST /debts/list
         def list
           @debts = Debt.search(params).paginate(:page => params[:page], :per_page => 3)
@@ -37,7 +32,7 @@ module Erp
             if request.xhr?
               render json: {
                 status: 'success',
-                text: @debt.name,
+                text: @debt.deadline,
                 value: @debt.id
               }
             else
