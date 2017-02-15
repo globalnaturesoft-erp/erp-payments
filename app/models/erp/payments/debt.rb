@@ -7,6 +7,8 @@ module Erp::Payments
       belongs_to :order, class_name: 'Erp::Orders::Order', foreign_key: :order_id
     end
     
+    after_save :order_update_cache_payment_status
+    
     # Filters
     def self.filter(query, params)
       params = params.to_unsafe_hash
@@ -113,6 +115,13 @@ module Erp::Payments
     
     def self.unarchive_all
 			update_all(archived: false)
+		end
+    
+    # update order cache payment status
+    def order_update_cache_payment_status
+			if order.present?
+				order.update_cache_payment_status
+			end
 		end
   end
 end
