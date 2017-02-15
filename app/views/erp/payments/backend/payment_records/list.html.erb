@@ -107,7 +107,7 @@
                                     text: '<i class="fa fa-check"></i> '+t('confirm'),
                                     url: erp_payments.confirm_backend_payment_records_path(id: payment_record),
                                     data_method: 'PUT',
-                                    hide: !payment_record.done?,
+                                    hide: payment_record.done?,
                                     class: 'ajax-link',
                                     data_confirm: t('.confirm_confirm')
                                 },
