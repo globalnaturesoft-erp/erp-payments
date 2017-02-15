@@ -1,5 +1,5 @@
 <%= form_for([erp_payments, :backend, debt]) do |f| %>
-    <input type="hidden" name="debt[order_id]" value="1" />
+    <input type="hidden" name="debt[order_id]" value="<%= params[:order_id]%>" />
     <%= erp_form_control("date", {
         name: 'debt[deadline]',
         value: debt.deadline,
