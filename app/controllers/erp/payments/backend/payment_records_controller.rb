@@ -16,6 +16,12 @@ module Erp
           
           render layout: nil
         end
+        
+        def order_payment_record_list
+          @payment_records = PaymentRecord.get_order_payment_records(params).paginate(:page => params[:page], :per_page => 3)
+          
+          render layout: nil
+        end
     
         # GET /payment_records/new
         def new
