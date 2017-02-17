@@ -1,0 +1,77 @@
+<div>
+    <table class="table table-advance table-hover table-striped order-column">
+        <thead>
+            <tr>
+                <th>
+                    <%= t('.payment_record_code') %>
+                </th>
+                <th>
+                    <%= t('.payment_type') %>
+                </th>
+                <th>
+                    <%= t('.partner_name') %>
+                </th>
+                <th>
+                    <%= t('.amount') %>
+                </th>
+                <th>
+                    <%= t('.payment_date') %>
+                </th>
+                <th>
+                    <%= t('.note') %>
+                </th>
+                <th>
+                    <%= t('.creator') %>
+                </th>
+                <th width="7%"><%= t('.actions') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @payment_records.each do |payment_record| %>
+                <tr class="odd gradeX">
+                    <td><%= payment_record.code %></td>
+                    <td><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.pay') : t('.receive') %></td>
+                    <td><%= payment_record.contact_name %></td>
+                    <td><%= payment_record.amount %></td>
+                    <td><%= format_date(payment_record.payment_date) %></td>
+                    <td><%= payment_record.note %></td>
+                    <td>
+                        <%= erp_component('avatar', {
+                            user: payment_record.creator
+                        }) %>
+                    </td>
+                    <td>
+                        <%= erp_datalist_row_actions(
+                            [
+                                {
+                                    text: '<i class="icon-docs"></i> '+t('.view'),
+                                    url: erp_payments.backend_payment_record_path(payment_record),
+                                    class: "modal-link"
+                                },
+                                {
+                                    text: '<i class="fa fa-edit"></i> '+t('.edit'),
+                                    url: erp_payments.edit_backend_payment_record_path(payment_record),
+                                    class: "modal-link"
+                                },
+                                {   divider: true   },
+                                {
+                                    text: '<i class="fa fa-trash"></i> '+t('.delete'),
+                                    url: erp_payments.backend_payment_record_path(payment_record),
+                                    data_method: 'DELETE',
+                                    data_confirm: t('.delete_confirm'),
+                                    class: 'ajax-link'
+                                }
+                            ]
+                        ) %>
+                    </td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+    <% if @payment_records.empty? %>
+        <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
+    <% end %>
+</div>
+<% if !@payment_records.empty? %>
+    <%= erp_datalist_pagination(@payment_records) %>
+<% end %>

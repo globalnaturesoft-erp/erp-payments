@@ -1,0 +1,60 @@
+<div>
+    <table class="table table-advance table-hover table-striped order-column">
+        <thead>
+            <tr>
+                <th class="sortable" sort-by='erp_payments_debts.deadline'>
+                    <%= t('.deadline') %>
+                </th>
+                <th>
+                    <%= t('.note') %>
+                </th>
+                <th>
+                    <%= t('.creator') %>
+                </th>
+                <th>
+                    <%= t('.created_at') %>
+                </th>
+                <th width="7%"><%= t('.actions') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @debts.each do |debt| %>
+                <tr class="odd gradeX">
+                    <td><%= format_date(debt.deadline) %></td>
+                    <td><%= debt.note %></td>
+                    <td>
+                        <%= erp_component('avatar', {
+                            user: debt.creator
+                        }) %>
+                    </td>
+                    <td><%= format_date(debt.created_at) %></td>
+                    <td>
+                        <%= erp_datalist_row_actions(
+                            [
+                                {
+                                    text: '<i class="fa fa-edit"></i> '+t('.edit'),
+                                    url: erp_payments.edit_backend_debt_path(debt, order_id: debt.order_id),
+                                    class: "modal-link"
+                                },
+                                {   divider: true   },
+                                {
+                                    text: '<i class="fa fa-trash"></i> '+t('.delete'),
+                                    url: erp_payments.backend_debt_path(debt),
+                                    data_method: 'DELETE',
+                                    data_confirm: t('.delete_confirm'),
+                                    class: 'ajax-link'
+                                }
+                            ]
+                        ) %>
+                    </td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+    <% if @debts.empty? %>
+        <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
+    <% end %>
+</div>
+<% if !@debts.empty? %>
+    <%= erp_datalist_pagination(@debts) %>
+<% end %>
