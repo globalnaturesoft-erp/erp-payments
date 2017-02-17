@@ -27,6 +27,7 @@ Erp::Payments::Engine.routes.draw do
 				collection do
 					post 'list'
 					put 'confirm'
+					post 'order_payment_record_list'
 				end
 			end
 			resources :debts do
@@ -38,6 +39,7 @@ Erp::Payments::Engine.routes.draw do
 					put 'unarchive'
 					put 'archive_all'
 					put 'unarchive_all'
+					post 'order_debt_list'
 				end
 			end
 		end
