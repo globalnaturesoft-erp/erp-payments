@@ -168,6 +168,23 @@ vi:
             choose_accountant: "Chọn kế toán - thu ngân"
             help_code: "Mã phiếu được tạo tự động nếu bỏ trống"
             placeholder_code: "Mã phiếu tự động"
+          order_payment_record_list:
+            payment_record_code: "Mã phiếu"
+            payment_type: "Loại phiếu"
+            partner_name: "Người nhận/nộp"
+            amount: "Chi phí"
+            note: "Ghi chú"
+            creator: "Người tạo"
+            payment_date: "Ngày thanh toán"
+            created_at: "Ngày tạo"
+            actions: "Hành động"
+            no_matching_records_found: "Danh sách thanh toán hiện đang trống"
+            pay: "Phiếu chi"
+            receive: "Phiếu thu"
+            view: "Xem chi tiết"
+            edit: "Chỉnh sửa"
+            delete: "Xóa phiếu"
+            delete_confirm: "Bạn chắc chắn muốn xóa?"
         debts:
           create:
             success: "Gia hạn công nợ được tạo thành công."
@@ -207,6 +224,16 @@ vi:
           form:
             deadline: "Hạn thanh toán"
             note: "Ghi chú"
+          order_debt_list:
+            deadline: "Hạn thanh toán"
+            note: "Ghi chú"
+            creator: "Người tạo"
+            created_at: "Ngày gia hạn"
+            actions: "Thao tác"
+            delete: "Xóa hạn nợ"
+            delete_confirm: "Bạn chắc chắn muốn xóa thời hạn công nợ này?"
+            edit: "Chỉnh sửa"
+            view: "Xem chi tiết"
   activerecord:
     errors:
       models:
