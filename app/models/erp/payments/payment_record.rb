@@ -116,5 +116,9 @@ module Erp::Payments
       self.status == Erp::Payments::PaymentRecord::STATUS_PENDING ? true : false
     end
     
+    def self.get_order_payment_records(params)
+      self.where(order_id: params[:order_id])
+    end
+    
   end
 end
