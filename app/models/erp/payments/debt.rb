@@ -123,5 +123,21 @@ module Erp::Payments
 				order.update_cache_payment_status
 			end
 		end
+    
+    # get debts with params order
+    def self.get_order_debts(params)
+      query = self.where(order_id: params[:order_id])
+      query = self.filter(query, params)
+      
+      # order
+      if params[:sort_by].present?
+        order = params[:sort_by]
+        order += " #{params[:sort_direction]}" if params[:sort_direction].present?
+        
+        query = query.order(order)
+      end
+      
+      return query
+    end
   end
 end
