@@ -15,7 +15,7 @@ module Erp
         end
         
         def order_debt_list
-          @debts = Debt.get_order_debts(params).paginate(:page => params[:page], :per_page => 3)
+          @debts = Debt.get_order_debts(params).search(params).paginate(:page => params[:page], :per_page => 3)
           
           render layout: nil
         end
