@@ -45,11 +45,11 @@ module Erp::Payments
     end
     
     # order expiration date
-    def expiration_date(params)
+    def payment_deadline(params)
       if order.present?
-        order.expiration_date
+        order.get_payment_deadline
       elsif params[:order_id].present?
-        Erp::Orders::Order.find(params[:order_id]).expiration_date
+        Erp::Orders::Order.find(params[:order_id]).get_payment_deadline
       end
     end
     
