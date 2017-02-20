@@ -50,7 +50,7 @@ module Erp
             if request.xhr?
               render json: {
                 status: 'success',
-                text: @payment_record.name,
+                text: @payment_record.code,
                 value: @payment_record.id
               }
             else
@@ -67,7 +67,7 @@ module Erp
             if request.xhr?
               render json: {
                 status: 'success',
-                text: @payment_record.name,
+                text: @payment_record.code,
                 value: @payment_record.id
               }              
             else
