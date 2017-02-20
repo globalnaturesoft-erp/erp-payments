@@ -13,7 +13,7 @@
                                     <li>Mã đơn hàng: <strong><%= payment_record.order_code(params) %></strong></li>
                                     <li>Khách hàng: <strong><%= payment_record.order_customer(params) %></strong></li>
                                     <li>Ngày đặt hàng: <strong><%= format_date(payment_record.order_date(params)) %></strong></li>
-                                    <li>Ngày hết hạn: <strong><%= format_date(payment_record.expiration_date(params)) %></strong></li>
+                                    <li>Hạn thanh toán: <strong><%= format_date(payment_record.payment_deadline(params)) %></strong></li>
                                 </ul>
                             </div>
                             <div class="col-md-6">
