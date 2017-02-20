@@ -14,6 +14,7 @@ module Erp::Payments
     end
     
     after_save :order_update_cache_payment_status
+    after_destroy :order_update_cache_payment_status
     
     # class const
     PAYMENT_TYPE_RECEIVE = 'receive'
