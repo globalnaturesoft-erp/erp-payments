@@ -106,7 +106,7 @@ module Erp::Payments
 		end
     
     def confirm
-      self.update_columns(status: Erp::Payments::PaymentRecord::STATUS_DONE)
+      self.update_attributes(status: Erp::Payments::PaymentRecord::STATUS_DONE)
     end
     
     def done?
@@ -121,5 +121,19 @@ module Erp::Payments
       self.where(order_id: params[:order_id])
     end
     
+    # Get all done payment_records
+    def self.all_done
+      self.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
+    end
+    
+    # Get receive payment record
+    def self.all_received
+      self.where(payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE)
+    end
+    
+    # Get pay payment record
+    def self.all_paid
+      self.where(payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY)
+    end
   end
 end
