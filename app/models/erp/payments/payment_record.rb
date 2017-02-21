@@ -13,6 +13,8 @@ module Erp::Payments
       belongs_to :order, class_name: "Erp::Orders::Order"
     end
     
+    validates :payment_date, :contact_id, :accountant_id, :presence => true
+    
     after_save :order_update_cache_payment_status
     after_destroy :order_update_cache_payment_status
     
