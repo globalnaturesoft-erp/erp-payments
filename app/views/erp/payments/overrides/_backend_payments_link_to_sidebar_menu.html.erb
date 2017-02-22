@@ -1,8 +1,8 @@
-<li class="nav-item <%= "active open" if ["erp/payments/backend/payment_terms", "erp/payments/backend/payment_methods", "erp/payments/backend/payment_records"].include?(params[:controller]) %>">
+<li class="nav-item <%= "active open" if ["erp/payments/backend/payment_terms", "erp/payments/backend/payment_methods", "erp/payments/backend/payment_records", "erp/payments/backend/accounts"].include?(params[:controller]) %>">
     <a href="javascript:;" class="nav-link nav-toggle">
         <i class="fa fa-credit-card"></i>
         <span class="title"><%= t('.payment') %></span>
-        <% if ["erp/payments/backend/payment_terms", "erp/payments/backend/payment_methods", "erp/payments/backend/payment_records"].include?(params[:controller]) %>
+        <% if ["erp/payments/backend/payment_terms", "erp/payments/backend/payment_methods", "erp/payments/backend/payment_records", "erp/payments/backend/accounts"].include?(params[:controller]) %>
             <span class="selected"></span>
             <span class="arrow open"></span>
         <% else %>
@@ -10,6 +10,11 @@
         <% end %>
     </a>
     <ul class="sub-menu">
+        <li class="nav-item">
+            <a href="<%= erp_payments.backend_payment_records_path %>" class="nav-link">
+                <span class="title"><%= t('.payment_record') %></span>
+            </a>
+        </li>
         <li class="nav-item">
             <a href="<%= erp_payments.backend_payment_terms_path %>" class="nav-link">
                 <span class="title"><%= t('.payment_term') %></span>
@@ -21,8 +26,8 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="<%= erp_payments.backend_payment_records_path %>" class="nav-link">
-                <span class="title"><%= t('.payment_record') %></span>
+            <a href="<%= erp_payments.backend_accounts_path %>" class="nav-link">
+                <span class="title"><%= t('.bank_account') %></span>
             </a>
         </li>
     </ul>
