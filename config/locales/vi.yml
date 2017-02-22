@@ -16,6 +16,7 @@ vi:
           payment_term: "Kỳ hạn thanh toán"
           payment_method: "Hình thức thanh toán"
           payment_record: "Quản lý thu - chi"
+          bank_account: "Tài khoản ngân hàng"
   erp:
     payments:
       backend:
@@ -234,6 +235,49 @@ vi:
             delete_confirm: "Bạn chắc chắn muốn xóa thời hạn công nợ này?"
             edit: "Chỉnh sửa"
             view: "Xem chi tiết"
+        accounts:
+          create:
+            success: "Tài khoản được tạo thành công."
+          update:
+            success: "Tài khoản được cập nhật thành công."
+          destroy:
+            success: "Tài khoản được xóa thành công."
+          archive:
+            success: "Tài khoản được ẩn thành công."
+          unarchive:
+            success: "Tài khoản được hiển thị thành công."
+          archive_all:
+            success: "Tài khoản được ẩn thành công."
+          unarchive_all:
+            success: "Tài khoản được hiển thị thành công."
+          delete_all:
+            success: "Tài khoản được xóa thành công."
+          index:
+            accounts: "Tài khoản ngân hàng"
+            name: "Tên ngân hàng"
+            owner: "Chủ tài khoản"
+            account_number: "Số tài khoản"
+            account_archived: "Tài khoản đã ẩn"
+            create: "Thêm tài khoản"
+            delete: "Xóa tài khoản"
+            delete_confirm: "Bạn có chắc muốn xóa?"
+            archive_confirm: "Bạn có chắc muốn ẩn tài khoản?"
+            unarchive_confirm: "Bạn có chắc muốn hiện tài khoản?"
+          list:
+            name: "Tên ngân hàng"
+            owner: "Chủ tài khoản"
+            account_number: "Số tài khoản"
+            delete: "Xóa tài khoản"
+            delete_confirm: "Bạn có chắc muốn xóa?"
+          new:
+            accounts: "Tài khoản ngân hàng"
+            create: "Thêm tài khoản"
+          edit:
+            accounts: "Tài khoản ngân hàng"
+          form:
+            name: "Tên ngân hàng (nơi mở tài khoản)"
+            owner: "Chủ tài khoản"
+            account_number: "Số tài khoản"
   activerecord:
     errors:
       models:
@@ -251,6 +295,14 @@ vi:
               blank: "không được để trống."
             type_method:
               blank: "không được để trống."
+        erp/payments/payment_record:
+          attributes:
+            contact_id:
+              blank: "không được để trống."
+            accountant_id:
+              blank: "không được để trống."
+            payment_date:
+              blank: "không được để trống."
     attributes:
       erp/payments/payment_term:
         name: "Tên kỳ hạn thanh toán"
@@ -259,3 +311,7 @@ vi:
       erp/payments/payment_method:
         name: "Tên hình thức thanh toán"
         type_method: "Loại hình thức thanh toán"
+      erp/payments/payment_record:
+        contact_id: "Liên hệ này"
+        accountant_id: "Thu ngân - kế toán"
+        payment_date: "Ngày thanh toán"
