@@ -42,6 +42,17 @@ Erp::Payments::Engine.routes.draw do
 					post 'order_debt_list'
 				end
 			end
+			resources :accounts do
+				collection do
+					post 'list'
+					get 'dataselect'
+					delete 'delete_all'
+					put 'archive'
+					put 'unarchive'
+					put 'archive_all'
+					put 'unarchive_all'
+				end
+			end
 		end
 	end
 end
