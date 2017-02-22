@@ -55,7 +55,7 @@ module Erp
             if request.xhr?
               render json: {
                 status: 'success',
-                text: @debt.name,
+                text: @debt.deadline,
                 value: @debt.id
               }              
             else
