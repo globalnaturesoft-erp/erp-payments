@@ -1,0 +1,25 @@
+<%= form_for([erp_payments, :backend, account]) do |f| %>
+    <%= erp_form_control("text", {
+        name: 'account[name]',
+        value: account.name,                   
+        label: t('.name')
+    }) %>
+    <%= erp_form_control("text", {
+        name: 'account[owner]',
+        value: account.owner,                   
+        label: t('.owner')
+    }) %>
+    <%= erp_form_control("text", {
+        name: 'account[account_number]',
+        value: account.account_number,                   
+        label: t('.account_number')
+    }) %>
+    
+    <%= erp_component('button/save', {
+        text: t('submit')
+    }) %>
+    <%= erp_component('button/cancel', {
+        text: t('cancel'),
+        href: erp_payments.backend_accounts_path
+    }) %>
+<% end %>

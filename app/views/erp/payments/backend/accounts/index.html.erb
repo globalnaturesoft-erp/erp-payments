@@ -1,0 +1,84 @@
+<% content_for :title do %>
+    <%= t('.accounts') %>
+<% end %>
+
+<% content_for :page_title do %>
+    <i class="fa fa-bank"></i> <%= t('.accounts') %>
+<% end %>
+
+<% content_for :page_toolbar do %>
+    <%= erp_component('button/create', {
+        text: t('.create'),
+        href: erp_payments.new_backend_account_path,
+        class: 'btn-sm'
+    }) %>
+<% end %>
+
+<%= erp_datalist(
+    url: erp_payments.list_backend_accounts_path,
+    keywords: [
+        {
+            text: t('.name'), name: 'erp_payments_accounts.name'
+        },
+        {
+            text: t('.owner'), name: 'erp_payments_accounts.owner'
+        },
+        {
+            text: t('creator'),
+            name: 'erp_users.name',
+            select: {
+                name: 'erp_users.id',
+                data_url: erp.dataselect_backend_users_path
+            }
+        }
+    ],
+    actions: [
+        {
+            text: '<i class="fa fa-eye-slash"></i> '+t('archive'),
+            url: erp_payments.archive_all_backend_accounts_path,
+            data_method: 'PUT',
+            data_confirm: t('.archive_confirm')
+        },
+        {
+            text: '<i class="fa fa-eye"></i> '+t('unarchive'),
+            url: erp_payments.unarchive_all_backend_accounts_path,
+            data_method: 'PUT',
+            data_confirm: t('.unarchive_confirm')
+        },
+        {
+            divider: true
+        },
+        {
+            text: '<i class="fa fa-trash"></i> '+t('.delete'),
+            url: erp_payments.delete_all_backend_accounts_path,
+            data_method: 'DELETE',
+            data_confirm: t('delete_confirm')
+        }
+    ],
+    filters: [
+        {
+            text: t('.account_archived'), name: 'show_archived', value: true, checked: false
+        }
+    ],
+    columns: [
+        {
+            text: t('.name'), name: 'name', value: true, checked: true
+        },
+        {
+            text: t('.account_number'), name: 'account_number', value: true, checked: true
+        },
+        {
+            text: t('.owner'), name: 'owner', value: true, checked: true
+        },
+        {
+            text: t('status'), name: 'status', value: true, checked: true
+        },
+        {
+            text: t('creator'), name: 'creator', value: true, checked: false
+        },
+        {
+            text: t('created_at'), name: 'created_at', value: true, checked: true
+        }
+    ],
+    sort: { sort_by: 'erp_payments_accounts.created_at', sort_direction: 'desc' }
+) %>
