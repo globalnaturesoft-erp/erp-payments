@@ -16,13 +16,17 @@
         </div>
         <div class="col-xs-5">
             <div class="order-detail">
-                <span class="bold">Mã số phiếu:</span> PT-001
+                <span class="bold"><%= t('.code') %>:
+                </span> <%= payment_record.code %>
                 <br/>
-                <span class="bold">Mã đơn hàng: </span> O-002
+                <span class="bold"><%= t('.order_code') %>:
+                </span> <%= payment_record.order_code(params) %>
                 <br/>
-                <span class="bold">Ngày đặt hàng: </span> 2017-02-07
+                <span class="bold"><%= t('.order_date') %>:
+                </span> <%= format_date(payment_record.order_date(params)) %>
                 <br/>
-                <span class="bold">Hiệu lực đến: </span> 2017-02-21
+                <span class="bold"><%= t('.payment_deadline') %>:
+                </span> <%= format_date(payment_record.payment_deadline(params)) %>
                 <br/>
             </div>
         </div>
@@ -30,63 +34,66 @@
     <div class="row invoice-head head">
         <div class="col-xs-12">
             <div class="invoice-title title">
-                <h1 class="uppercase">Phiếu thu</h1>
-                <h2>Ngày 09 tháng 02 năm 2017</h2>
+                <h1 class="uppercase">
+                    <%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.receipt_voucher') : t('.payment_voucher') %>
+                </h1>
+                <h2><%= t('.dd') %> ... <%= t('.mm') %> ... <%= t('.yyyy') %> ....</h2>
             </div>
         </div>
     </div>
     <div class="row invoice-content">
         <div class="col-xs-7">
-            <h2 class="invoice-title title">Người nộp tiền: <strong>Marry Jane</strong></h2>
+            <h2 class="invoice-title title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.payer') : t('.receiver') %>:
+            <strong><%= payment_record.contact_name %></strong></h2>
         </div>
         
         <div class="col-xs-5">
-            <h2 class="invoice-title title">Điện thoại: <strong>091 234 5678</strong></h2>
+            <h2 class="invoice-title title"><%= t('.phone') %>:
+            <strong><%= payment_record.contact_phone %></strong></h2>
         </div>
         
         <div class="col-xs-12">
-            <h2 class="invoice-title title">Địa chỉ: <strong>25, Lorem Lis Street, Orange C, California, US</strong></h2>
+            <h2 class="invoice-title title"><%= t('.address') %>:
+            <strong><%= payment_record.contact_address %></strong></h2>
         </div>
         <div class="col-xs-12">
-            <h2 class="invoice-title title">Lý do nộp tiền: Thanh toán tiền cho đơn hàng</h2>
+            <h2 class="invoice-title title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.receive_description') : t('.pay_description') %>:
+            <%= payment_record.description %>
         </div>
         <div class="col-xs-4">
-            <h2 class="invoice-title title">Số tiền: <strong>1,950,000</strong></h2>
+            <h2 class="invoice-title title"><%= t('.total_amount') %>:
+            <strong><%= payment_record.amount %></strong></h2>
         </div>
         <div class="col-xs-8">
-            <h2 class="invoice-title title">Viết bằng chữ: <strong>Một triệu chín trăm năm mươi nghìn đồng</strong></h2>
+            <h2 class="invoice-title title"><%= t('.in_words') %>:
+            <strong><%= docso(payment_record.amount) %></strong></h2>
         </div>
         <div class="col-xs-4">
-            <h2 class="invoice-title title">Đính kèm đơn hàng: <strong>PT-001</strong></h2>
-        </div>
-        <div class="col-xs-4">
-            <h2 class="invoice-title title">Ngày đặt hàng: <strong>2017-02-07</strong></h2>
-        </div>
-        <div class="col-xs-4">
-            <h2 class="invoice-title title">Hạn thanh toán: <strong>2017-02-21</strong></h2>
+            <h2 class="invoice-title title"><%= t('.attached_business_documents') %>:
+            <strong>@TODO</strong></h2>
         </div>
     </div>
     
     <div class="row sign">
         <div class="col-xs-3 center">
-            <h2 class="invoice-title sign title">Người tạo phiếu</h2>
-            <span class="inv-sign">(Ký, họ tên)</span>
-            <p class="invoice-desc">Super Ad</p>
+            <h2 class="invoice-title sign title"><%= t('.prepared_by') %></h2>
+            <span class="inv-sign"><%= t('.sign_name') %></span>
+            <p class="invoice-desc"><%= payment_record.creator_name %></p>
         </div>
         <div class="col-xs-3 center">
-            <h2 class="invoice-title sign title">Người nộp tiền</h2>
-            <span class="inv-sign">(Ký, họ tên)</span>
-            <p class="invoice-desc">Marry Jane</p>
+            <h2 class="invoice-title sign title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.payer') : t('.receiver') %></h2>
+            <span class="inv-sign"><%= t('.sign_name') %></span>
+            <p class="invoice-desc"><%= payment_record.contact_name %></p>
         </div>
         <div class="col-xs-3 center">
-            <h2 class="invoice-title sign title">Kế toán/Thu ngân</h2>
-            <span class="inv-sign">(Ký, họ tên)</span>
-            <p class="invoice-desc">Super Admin</p>
+            <h2 class="invoice-title sign title"><%= t('.chief_accountant_cashier') %></h2>
+            <span class="inv-sign"><%= t('.sign_name') %></span>
+            <p class="invoice-desc"><%= payment_record.accountant_name %></p>
         </div>
         <div class="col-xs-3 center">
-            <h2 class="invoice-title sign title">Giám đốc</h2>
-            <span class="inv-sign">(Ký, họ tên, đóng dấu)</span>
-            <p class="invoice-desc">ABC </p>
+            <h2 class="invoice-title sign title"><%= t('.director') %></h2>
+            <span class="inv-sign"><%= t('.sign_name_seal') %></span>
+            <p class="invoice-desc">@TODO </p>
         </div>
     </div>
 </div>
@@ -101,7 +108,9 @@
         <div class="col-md-7 col-xs-6">
             <div class="invoice-logo">
                 <img src="http://globalnaturesoft.com/frontend/assets/images/logo_main.png" style="height: 70px" />
-                <h1 class="uppercase head">Phiếu thu<br/><span>Số: PT-001</span></h1>
+                <h1 class="uppercase head">
+                    <%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.receipt_voucher') : t('.payment_voucher') %><br/>
+                    <span><%= t('.number') %>: <%= payment_record.code %></span></h1>
             </div>
         </div>
         <div class="col-md-5 col-xs-6">
@@ -121,62 +130,72 @@
     </div>
     <div class="row invoice-content">
         <div class="col-xs-7">
-            <h2 class="invoice-title title">Người nộp tiền: <strong>Marry Jane</strong></h2>
+            <h2 class="invoice-title title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.payer') : t('.receiver') %>:
+            <strong><%= payment_record.contact_name %></strong></h2>
         </div>
         
         <div class="col-xs-5">
-            <h2 class="invoice-title title">Điện thoại: <strong>091 234 5678</strong></h2>
+            <h2 class="invoice-title title"><%= t('.phone') %>:
+            <strong><%= payment_record.contact_phone %></strong></h2>
         </div>
         
         <div class="col-xs-12">
-            <h2 class="invoice-title title">Địa chỉ: <strong>25, Lorem Lis Street, Orange C, California, US</strong></h2>
+            <h2 class="invoice-title title"><%= t('.address') %>:
+            <strong><%= payment_record.contact_address %></strong></h2>
         </div>
         <div class="col-xs-12">
-            <h2 class="invoice-title title">Lý do nộp tiền: Thanh toán tiền cho đơn hàng</h2>
+            <h2 class="invoice-title title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.receive_description') : t('.pay_description') %>:
+            <%= payment_record.description %></h2>
         </div>
         <div class="col-xs-4">
-            <h2 class="invoice-title title">Số tiền: <strong>1,950,000</strong></h2>
+            <h2 class="invoice-title title"><%= t('.total_amount') %>:
+            <strong><%= payment_record.amount %></strong></h2>
         </div>
         <div class="col-xs-8">
-            <h2 class="invoice-title title">Viết bằng chữ: <strong>Một triệu chín trăm năm mươi nghìn đồng</strong></h2>
+            <h2 class="invoice-title title"><%= t('.in_words') %>:
+            <strong><%= docso(payment_record.amount) %></strong></h2>
         </div>
         <div class="col-xs-4">
-            <h2 class="invoice-title title">Đính kèm đơn hàng: <strong>PT-001</strong></h2>
+            <h2 class="invoice-title title"><%= t('.attached_business_documents') %>:
+            <strong>@TODO</strong></h2>
         </div>
         <div class="col-xs-4">
-            <h2 class="invoice-title title">Ngày đặt hàng: <strong>2017-02-07</strong></h2>
+            <h2 class="invoice-title title"><%= t('.order_date') %>:
+            <strong><%= format_date(payment_record.order_date(params)) %></strong></h2>
         </div>
         <div class="col-xs-4">
-            <h2 class="invoice-title title">Hạn thanh toán: <strong>2017-02-21</strong></h2>
+            <h2 class="invoice-title title"><%= t('.payment_deadline') %>:
+            <strong><%= format_date(payment_record.payment_deadline(params)) %></strong></h2>
         </div>
     </div>
     
     <div class="row date">
         <div class="col-xs-12">
-            <h2 class="invoice-title title">Ngày <i>10</i> tháng <i>02</i> năm <i>2017</i></h2>
+            <h2 class="invoice-title title">
+            <%= t('.dd') %> <i>...</i> <%= t('.mm') %> <i>...</i> <%= t('.yyyy') %> <i>...</i></h2>
         </div>
     </div>
     
     <div class="row sign">
         <div class="col-xs-3 center">
-            <h2 class="invoice-title sign title">Người tạo phiếu</h2>
-            <span class="inv-sign">(Ký, họ tên)</span>
-            <p class="invoice-desc">Super Ad</p>
+            <h2 class="invoice-title sign title"><%= t('.prepared_by') %></h2>
+            <span class="inv-sign"><%= t('.sign_name') %></span>
+            <p class="invoice-desc"><%= payment_record.creator_name %></p>
         </div>
         <div class="col-xs-3 center">
-            <h2 class="invoice-title sign title">Người nộp tiền</h2>
-            <span class="inv-sign">(Ký, họ tên)</span>
-            <p class="invoice-desc">Marry Jane</p>
+            <h2 class="invoice-title sign title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.payer') : t('.receiver') %></h2>
+            <span class="inv-sign"><%= t('.sign_name') %></span>
+            <p class="invoice-desc"><%= payment_record.contact_name %></p>
         </div>
         <div class="col-xs-3 center">
-            <h2 class="invoice-title sign title">Kế toán/Thu ngân</h2>
-            <span class="inv-sign">(Ký, họ tên)</span>
-            <p class="invoice-desc">Super Admin</p>
+            <h2 class="invoice-title sign title"><%= t('.chief_accountant_cashier') %></h2>
+            <span class="inv-sign"><%= t('.sign_name') %></span>
+            <p class="invoice-desc"><%= payment_record.accountant_name %></p>
         </div>
         <div class="col-xs-3 center">
-            <h2 class="invoice-title sign title">Giám đốc</h2>
-            <span class="inv-sign">(Ký, họ tên, đóng dấu)</span>
-            <p class="invoice-desc">ABC </p>
+            <h2 class="invoice-title sign title"><%= t('.director') %></h2>
+            <span class="inv-sign"><%= t('.sign_name_seal') %></span>
+            <p class="invoice-desc">@TODO </p>
         </div>
     </div>
 </div>
