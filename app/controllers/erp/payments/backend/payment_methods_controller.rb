@@ -81,8 +81,8 @@ module Erp
         
         def archive
           @payment_method.archive
+          
           respond_to do |format|
-            format.html { redirect_to erp_payments.backend_payment_methods_path, notice: t('.success') }
             format.json {
               render json: {
                 'message': t('.success'),
@@ -94,8 +94,8 @@ module Erp
         
         def unarchive
           @payment_method.unarchive
+          
           respond_to do |format|
-            format.html { redirect_to erp_payments.backend_payment_methods_path, notice: t('.success') }
             format.json {
               render json: {
                 'message': t('.success'),
