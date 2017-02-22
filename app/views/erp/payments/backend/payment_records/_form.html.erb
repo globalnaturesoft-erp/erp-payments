@@ -85,14 +85,14 @@
                             errors: payment_record.errors.full_messages_for(:accountant_id)
                         }) %>
                         <%= erp_form_control("textarea", {
+                            name: 'payment_record[description]',
+                            value: payment_record.description,
+                            label: params[:payment_type] == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.pay_description') : t('.receive_description')
+                        }) %>
+                        <%= erp_form_control("textarea", {
                             name: 'payment_record[note]',
                             value: payment_record.note,
                             label: t('.note')
-                        }) %>
-                        <%= erp_form_control("textarea", {
-                            name: 'payment_record[description]',
-                            value: payment_record.description,
-                            label: t('.description')
                         }) %>
                     </div>
                 </div>
