@@ -8,7 +8,20 @@ module Erp::Payments
       def contact_name
         contact.present? ? contact.contact_name : ''
       end
+      
+      def contact_address
+        contact.present? ? contact.address : ''
+      end
+      
+      def contact_phone
+        contact.present? ? contact.phone : ''
+      end
     end
+    
+    def creator_name
+      creator.name
+    end
+    
     if Erp::Core.available?("orders")
       belongs_to :order, class_name: "Erp::Orders::Order"
     end
