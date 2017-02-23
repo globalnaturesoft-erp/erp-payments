@@ -28,8 +28,16 @@ module Erp
           @payment_record = PaymentRecord.new
           @payment_record.payment_date = Time.now
           @payment_record.status = Erp::Payments::PaymentRecord::STATUS_PENDING
+          @payment_record.accountant_id = current_user.id
           if Erp::Core.available?("orders")
-            @payment_record.amount = Erp::Orders::Order.find(params[:order_id]).remain_amount
+            if params[:order_id].present?
+              if Erp::Orders::Order.find(params[:order_id]).sales?
+                @payment_record.contact_id = Erp::Orders::Order.find(params[:order_id]).customer_id
+              elsif Erp::Orders::Order.find(params[:order_id]).purchase?
+                @payment_record.contact_id = Erp::Orders::Order.find(params[:order_id]).supplier_id
+              end
+              @payment_record.amount = Erp::Orders::Order.find(params[:order_id]).remain_amount
+            end
           end
         end
     
