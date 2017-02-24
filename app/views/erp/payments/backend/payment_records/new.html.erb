@@ -4,7 +4,7 @@
 
 <% content_for :page_title do %>    
     <a href="<%= erp_payments.backend_payment_records_path %>">
-    <i class="fa fa-credit-card"></i> <%= t('.payment_records') %>
+    <i class="fa fa-usd"></i> <%= t('.payment_records') %>
     </a> / <%= params[:payment_type] == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.create_pay') : t('.create_receive') %>
 <% end %>
 
