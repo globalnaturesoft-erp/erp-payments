@@ -156,7 +156,7 @@ module Erp
     
           # Only allow a trusted parameter "white list" through.
           def payment_record_params
-            params.fetch(:payment_record, {}).permit(:code, :amount, :payment_date, :payment_type, :description, :note, :status, :order_id, :accountant_id, :contact_id)
+            params.fetch(:payment_record, {}).permit(:code, :amount, :payment_date, :payment_type, :description, :status, :order_id, :accountant_id, :contact_id)
           end
       end
     end

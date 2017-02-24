@@ -6,8 +6,8 @@ class CreateErpPaymentsPaymentRecords < ActiveRecord::Migration[5.0]
       t.decimal :amount
       t.datetime :payment_date
       t.text :description
-      t.text :note
       t.string :status
+      t.boolean :archived, default: false
       t.references :order, index: true, references: :erp_orders_orders
       t.references :accountant, index: true, references: :erp_users
       t.references :contact, index: true, references: :erp_contacts_contacts
