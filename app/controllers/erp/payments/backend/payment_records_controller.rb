@@ -5,6 +5,7 @@ module Erp
     module Backend
       class PaymentRecordsController < Erp::Backend::BackendController
         before_action :set_payment_record, only: [:confirm, :show, :edit, :update, :destroy]
+        before_action :set_payment_records, only: [:confirm_all, :delete_all]
     
         # GET /payment_records
         def index
@@ -101,8 +102,37 @@ module Erp
           end
         end
         
+        # DELETE /payment_records/delete_all?ids=1,2,3
+        def delete_all         
+          @payment_records.destroy_all
+          
+          respond_to do |format|
+            format.json {
+              render json: {
+                'message': t('.success'),
+                'type': 'success'
+              }
+            }
+          end          
+        end
+        
+        # CONFIRM /payment_records/1
         def confirm
           @payment_record.confirm
+          respond_to do |format|
+            format.html { redirect_to erp_payments.backend_payment_records_path, notice: t('.success') }
+            format.json {
+              render json: {
+                'message': t('.success'),
+                'type': 'success'
+              }
+            }
+          end
+        end
+        
+        # CONFIRM /payment_records/confirm_all?ids=1,2,3
+        def confirm_all
+          @payment_records.confirm_all
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_payment_records_path, notice: t('.success') }
             format.json {
@@ -118,6 +148,10 @@ module Erp
           # Use callbacks to share common setup or constraints between actions.
           def set_payment_record
             @payment_record = PaymentRecord.find(params[:id])
+          end
+          
+          def set_payment_records
+            @payment_records = PaymentRecord.where(id: params[:ids])
           end
     
           # Only allow a trusted parameter "white list" through.
