@@ -121,7 +121,11 @@ module Erp::Payments
 		end
     
     def confirm
-      self.update_attributes(status: Erp::Payments::PaymentRecord::STATUS_DONE)
+      update_attributes(status: Erp::Payments::PaymentRecord::STATUS_DONE)
+    end
+    
+    def self.confirm_all
+      update_all(status: Erp::Payments::PaymentRecord::STATUS_DONE)
     end
     
     def done?
