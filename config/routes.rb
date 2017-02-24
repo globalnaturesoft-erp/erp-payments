@@ -27,6 +27,8 @@ Erp::Payments::Engine.routes.draw do
 				collection do
 					post 'list'
 					put 'confirm'
+					put 'confirm_all'
+					delete 'delete_all'
 					post 'order_payment_record_list'
 				end
 			end
