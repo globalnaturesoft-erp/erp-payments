@@ -146,13 +146,57 @@ module Erp::Payments
     end
     
     # Get receive payment record
-    def self.all_received
-      self.where(payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE)
+    def self.all_received(from_date=nil, to_date=nil)
+      query = self.where(payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE)
+      
+      if from_date.present?
+        query = query.where("payment_date >= ?", from_date.beginning_of_day)
+      end
+      
+      if to_date.present?
+        query = query.where("payment_date <= ?", to_date.end_of_day)
+      end
+      
+      return query
     end
     
     # Get pay payment record
-    def self.all_paid
-      self.where(payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY)
+    def self.all_paid(from_date=nil, to_date=nil)
+      query = self.where(payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY)
+      
+      if from_date.present?
+        query = query.where("payment_date >= ?", from_date.beginning_of_day)
+      end
+      
+      if to_date.present?
+        query = query.where("payment_date <= ?", to_date.end_of_day)
+      end
+      
+      return query
+    end
+    
+    # get total recieved amount
+    def self.received_amount
+      self.all_done.all_received.sum(:amount)
+    end
+    
+    # get total paid amount
+    def self.paid_amount
+      self.all_done.all_paid.sum(:amount)
+    end
+    
+    # Beginning of period
+    def self.remain_amount(from_date=nil, to_date=nil)
+      self.all_done.all_received(from_date, to_date).sum(:amount) - self.all_done.all_paid(from_date, to_date).sum(:amount)
+    end
+    
+    # @TODO: Updating...
+    # Search
+    def self.search(params)
+      query = self.all
+      #query = self.filter(query, params)
+      
+      return query
     end
   end
 end
