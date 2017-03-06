@@ -1,9 +1,9 @@
 <div class="portlet m-grid m-grid-demo">
     <div class="m-grid-row">
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.opening_funds') %>: <strong>0</strong></div>
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_received') %>: <strong>11,467,000</strong></div>
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_paid') %>: <strong>11,467,000</strong></div>
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.closing_funds') %>: <strong>0</strong></div>
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.opening_funds') %>: <strong><%= @begin_period_amount %></strong></div>
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_received') %>: <strong><%= @total_received %></strong></div>
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_paid') %>: <strong><%= @total_paid %></strong></div>
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.closing_funds') %>: <strong><%= @end_period_amount %></strong></div>
     </div>
 </div>
 
