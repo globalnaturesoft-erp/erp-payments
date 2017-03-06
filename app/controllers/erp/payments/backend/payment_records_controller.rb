@@ -13,7 +13,25 @@ module Erp
     
         # POST /payment_records/list
         def list
-          @payment_records = PaymentRecord.all.paginate(:page => params[:page], :per_page => 3)
+          records = PaymentRecord.search(params)
+          
+           #todo get dates from params
+          from_date = Time.now.beginning_of_month.beginning_of_day
+          to_date = Time.now.end_of_month.end_of_day
+          
+          # Recieved total
+          @total_received = records.received_amount(from_date, to_date)
+          
+          # Paid total
+          @total_paid = records.paid_amount(from_date, to_date)
+          
+          # Begin of period amount
+          @begin_period_amount = records.remain_amount(nil, (from_date - 1.day).end_of_day)
+          
+          # End of period amount
+          @end_period_amount = records.remain_amount(nil, to_date)
+          
+          @payment_records = records.paginate(:page => params[:page], :per_page => 3)
           
           render layout: nil
         end
@@ -28,7 +46,6 @@ module Erp
         def new
           @payment_record = PaymentRecord.new
           @payment_record.payment_date = Time.now
-          @payment_record.status = Erp::Payments::PaymentRecord::STATUS_PENDING
           @payment_record.accountant_id = current_user.id
           if Erp::Core.available?("orders")
             if params[:order_id].present?
@@ -54,6 +71,7 @@ module Erp
         def create
           @payment_record = PaymentRecord.new(payment_record_params)
           @payment_record.creator = current_user
+          @payment_record.status = Erp::Payments::PaymentRecord::STATUS_PENDING
     
           if @payment_record.save
             if request.xhr?
