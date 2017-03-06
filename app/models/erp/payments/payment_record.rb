@@ -176,18 +176,18 @@ module Erp::Payments
     end
     
     # get total recieved amount
-    def self.received_amount
-      self.all_done.all_received.sum(:amount)
+    def self.received_amount(from_date=nil, to_date=nil)
+      self.all_done.all_received(from_date, to_date).sum(:amount)
     end
     
     # get total paid amount
-    def self.paid_amount
-      self.all_done.all_paid.sum(:amount)
+    def self.paid_amount(from_date=nil, to_date=nil)
+      self.all_done.all_paid(from_date, to_date).sum(:amount)
     end
     
-    # Beginning of period
+    # get remain amount (beginning/end) of period
     def self.remain_amount(from_date=nil, to_date=nil)
-      self.all_done.all_received(from_date, to_date).sum(:amount) - self.all_done.all_paid(from_date, to_date).sum(:amount)
+      self.received_amount(from_date, to_date) - self.paid_amount(from_date, to_date)
     end
     
     # @TODO: Updating...
