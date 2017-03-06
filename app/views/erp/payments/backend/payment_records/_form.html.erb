@@ -1,10 +1,9 @@
 <%= form_for([erp_payments, :backend, payment_record]) do |f| %>    
     <input type="hidden" name="payment_record[order_id]" value="<%= params[:order_id] %>">
     <input type="hidden" name="payment_record[payment_type]" value="<%= params[:payment_type] %>">
-    <input type="hidden" name="payment_record[status]" value="<%= payment_record.status %>">
     <div class="form-body">
         <div class="row">
-            <% if params[:order_id].present? %>
+            <% if params[:order_id].present? or payment_record.order_id.present? %>
                 <div class="col-md-12">
                     <div class="portlet light bordered">
                         <div class="portlet-body form">
