@@ -316,6 +316,7 @@ vi:
             accounts: "Tài khoản ngân hàng"
             create: "Thêm tài khoản"
           edit:
+            edit: "Cập nhật"
             accounts: "Tài khoản ngân hàng"
           form:
             name: "Tên ngân hàng (nơi mở tài khoản)"
