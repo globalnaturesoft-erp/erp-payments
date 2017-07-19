@@ -1,5 +1,3 @@
-require_dependency "erp/backend/backend_controller"
-
 module Erp
   module Payments
     module Backend
