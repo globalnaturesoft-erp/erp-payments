@@ -1,0 +1,25 @@
+<% content_for :title do %>
+    <%= t('.create') %>
+<% end %>
+
+<% content_for :page_title do %>    
+    <a href="<%= erp_payments.backend_payment_types_path %>">
+    <i class="fa fa-cc-mastercard"></i> <%= t('.payment_types') %>
+    </a> / <%= t('.create') %>
+<% end %>
+
+<div class="row">
+    <div class="col-md-6">
+        <% if @payment_type.errors.any? %>
+            <%= erp_form_control("form_error_message") %>
+        <% end %>
+        
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <%= render 'form', payment_type: @payment_type %>
+            </div>
+        </div>
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>
+</div>

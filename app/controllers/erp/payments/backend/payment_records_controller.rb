@@ -44,7 +44,20 @@ module Erp
         def new
           @payment_record = PaymentRecord.new
           @payment_record.payment_date = Time.now
-          @payment_record.accountant_id = current_user.id
+          @payment_record.accountant = current_user
+          
+          if params[:contact_id].present?
+            @payment_record.contact = Erp::Contacts::Contact.find(params[:contact_id])
+          end
+          
+          if params[:payment_type].present?
+            @payment_type = Erp::Payments::PaymentType.find_by_code(params[:payment_type]).id
+          end
+          
+          if params[:pay_receive].present?
+            @payment_record.pay_receive = params[:pay_receive]
+          end
+          
           if Erp::Core.available?("orders")
             if params[:order_id].present?
               if Erp::Orders::Order.find(params[:order_id]).sales?
@@ -59,6 +72,11 @@ module Erp
     
         # GET /payment_records/1/edit
         def edit
+          if params[:payment_type].present?
+            @payment_type = Erp::Payments::PaymentType.find_by_code(params[:payment_type]).id
+          else
+            @payment_type = @payment_record.payment_type_id
+          end
         end
         
         # GET /payment_records/1/show
@@ -172,7 +190,8 @@ module Erp
     
           # Only allow a trusted parameter "white list" through.
           def payment_record_params
-            params.fetch(:payment_record, {}).permit(:code, :amount, :payment_date, :payment_type, :description, :status, :order_id, :accountant_id, :contact_id)
+            params.fetch(:payment_record, {}).permit(:code, :amount, :payment_date, :pay_receive, :description, :status,
+                                                     :order_id, :accountant_id, :contact_id, :employee_id, :account_id, :payment_type_id)
           end
       end
     end

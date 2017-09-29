@@ -1,0 +1,75 @@
+<%= form_for([erp_payments, :backend, payment_record]) do |f| %>
+    <div class="form-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-body form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <% if Erp::Core.available?("orders") %>
+                                    <%= erp_form_control("dataselect", {
+                                        name: 'payment_record[order_id]',
+                                        value: payment_record.order_id,
+                                        text: payment_record.order_code,
+                                        placeholder: t('.choose_order'),
+                                        label: t('.order'),
+                                        url: erp_orders.dataselect_backend_orders_path(format: 'json', status: Erp::Orders::Order::STATUS_CONFIRMED),
+                                        required: true,
+                                        errors: payment_record.errors.full_messages_for(:order_id)
+                                    }) %>
+                                <% end %>
+                            </div>
+                            <div class="col-md-6">
+                                <% if Erp::Core.available?("contacts") %>
+                                    <%= erp_form_control("dataselect", {
+                                        name: 'payment_record[contact_id]',
+                                        value: payment_record.contact_id,
+                                        text: payment_record.contact_name,
+                                        placeholder: t('.choose_contact'),
+                                        help: t('.help_contact_pay_receive'),
+                                        label: t('.contact_pay_receive'),
+                                        url: erp_contacts.dataselect_backend_contacts_path(format: 'json'),
+                                        required: true,
+                                        errors: payment_record.errors.full_messages_for(:contact_id),
+                                        create: {
+                                            url: erp_contacts.new_backend_contact_path,
+                                            title: t('.create'),
+                                            container_selector: '.new_contact',
+                                            input_selector: 'input[name="contact[name]"]'
+                                        }
+                                    }) %>
+                                <% end %>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul>
+                                    <li>Khách hàng: <strong>Nguyễn Hoàng Anh</strong></li>
+                                    <li>Ngày đặt hàng: <strong><%= format_date(Time.now) %></strong></li>
+                                    <li>Hạn thanh toán: <strong><%= format_date(Time.now) %></strong></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li>Tổng tiền cần thanh toán: <strong><%= format_price(5500000) %></strong></li>
+                                    <li>Tổng tiền đã thanh toán: <strong><%= format_price(500000) %></strong></li>
+                                    <li>Tổng tiền còn lại: <strong><%= format_price(5000000) %></strong></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <%= render 'form_genaral', payment_record: payment_record %>
+            </div>
+        </div>
+    </div>
+    <%= erp_component('button/save', {
+        text: t('submit')
+    }) %>
+    <%= erp_component('button/cancel', {
+        text: t('cancel'),
+        href: erp_payments.backend_payment_records_path
+    }) %>
+<% end %>

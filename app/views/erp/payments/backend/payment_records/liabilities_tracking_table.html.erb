@@ -1,0 +1,107 @@
+<table class="table table-advance table-hover table-striped table-checkable order-column">
+    <thead>
+        <tr>
+            <th width='1%'>
+                <%= erp_datalist_check_all %>
+            </th>
+            <% if get_columns(params).include?("customer") %>
+                <th>
+                    <%= t('.customer') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("begin_of_period_amount") %>
+                <th>
+                    <%= t('.begin_of_period_amount') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("total_orders") %>
+                <th>
+                    <%= t('.total_orders') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("number_of_payments") %>
+                <th>
+                    <%= t('.number_of_payments') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("paid_amount") %>
+                <th>
+                    <%= t('.paid_amount') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("remain_amount") %>
+                <th>
+                    <%= t('.remain_amount') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("end_of_period_amount") %>
+                <th>
+                    <%= t('.end_of_period_amount') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("salesperson") %>
+                <th>
+                    <%= t('.salesperson') %>
+                </th>
+            <% end %>
+            <th width="7%"><%= t('actions') %></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id).each do |contact| %>  <!-- todo update this function -->
+            <tr class="odd gradeX">
+                <td>
+                    <%= erp_datalist_check_row(id: contact.id) %>
+                </td>
+                <% if get_columns(params).include?("customer") %>
+                    <td><%= contact.name %></td>
+                <% end %>
+                <% if get_columns(params).include?("begin_of_period_amount") %>
+                    <td><%= format_price(11390000) %></td>
+                <% end %>
+                <% if get_columns(params).include?("total_orders") %>
+                    <td class="text-center"><%= rand(2..10) %></td>
+                <% end %>
+                <% if get_columns(params).include?("number_of_payments") %>
+                    <td class="text-center"><%= rand(0..5) %></td>
+                <% end %>
+                <% if get_columns(params).include?("paid_amount") %>
+                    <td><%= format_price(1300000) %></td>
+                <% end %>
+                <% if get_columns(params).include?("remain_amount") %>
+                    <td><%= format_price(11390000-1300000) %></td>
+                <% end %>
+                <% if get_columns(params).include?("creator") %>
+                    <td>
+                        <%= erp_component('avatar', {
+                            user: current_user
+                        }) %>
+                    </td>
+                <% end %>
+                <% if get_columns(params).include?("end_of_period_amount") %>
+                    <td><%= format_price(11390000-1300000) %></td>
+                <% end %>
+                <td>
+                    <%= erp_datalist_row_actions(
+                        [
+                            {
+                                text: '<i class="fa fa-plus"></i> '+t('.create_receive_for_contact'),
+                                url: erp_payments.new_backend_payment_record_path(
+                                    pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
+                                    payment_type: Erp::Payments::PaymentType::TYPE_FOR_CONTACT,
+                                    contact_id: Erp::Contacts::Contact.last.id
+                                )
+                            }
+                        ]
+                    ) %>
+                </td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>
+
+ <!--if @orders.empty? %>
+    <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
+ end %>
+
+= erp_datalist_pagination(@orders) %>-->

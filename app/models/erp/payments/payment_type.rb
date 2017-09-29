@@ -1,7 +1,11 @@
 module Erp::Payments
-  class Account < ApplicationRecord
-    belongs_to :creator, class_name: "Erp::User"
-    validates :name, :account_number, :owner, presence: true
+  class PaymentType < ApplicationRecord
+    
+    # class const
+    TYPE_FOR_ORDER = 'for_order'
+    TYPE_FOR_CONTACT = 'for_contact'
+    TYPE_COMMISSION = 'commission'
+    TYPE_CUSTOM = 'custom'
     
     # Filters
     def self.filter(query, params)
@@ -14,32 +18,18 @@ module Erp::Payments
         params["filters"].each do |ft|
           or_conds = []
           ft[1].each do |cond|
-            # in case filter is show archived
-            if cond[1]["name"] == 'show_archived'
-              show_archived = true
-            else
-              or_conds << "#{cond[1]["name"]} = '#{cond[1]["value"]}'"
-            end
+            or_conds << "#{cond[1]["name"]} = '#{cond[1]["value"]}'"
           end
           and_conds << '('+or_conds.join(' OR ')+')' if !or_conds.empty?
         end
       end
-      
-      # show archived items condition - default: false
-      show_archived = false
       
       #filters
       if params["filters"].present?
         params["filters"].each do |ft|
           or_conds = []
           ft[1].each do |cond|
-            # in case filter is show archived
-            if cond[1]["name"] == 'show_archived'
-              # show archived items
-              show_archived = true
-            else
-              or_conds << "#{cond[1]["name"]} = '#{cond[1]["value"]}'"
-            end
+            or_conds << "#{cond[1]["name"]} = '#{cond[1]["value"]}'"
           end
           and_conds << '('+or_conds.join(' OR ')+')' if !or_conds.empty?
         end
@@ -55,12 +45,6 @@ module Erp::Payments
           and_conds << '('+or_conds.join(' OR ')+')'
         end
       end
-
-      # join with users table for search creator
-      query = query.joins(:creator)
-      
-      # showing archived items if show_archived is not true
-      query = query.where(archived: false) if show_archived == false
       
       # add conditions to query
       query = query.where(and_conds.join(' AND ')) if !and_conds.empty?
@@ -69,7 +53,7 @@ module Erp::Payments
     end
     
     def self.search(params)
-      query = self.all
+      query = self.where(code: Erp::Payments::PaymentType::TYPE_CUSTOM)
       query = self.filter(query, params)
       
       # order
@@ -92,23 +76,11 @@ module Erp::Payments
         query = query.where('LOWER(name) LIKE ?', "%#{keyword}%")
       end
       
-      query = query.limit(8).map{|debt| {value: debt.id, text: debt.name} }
+      query = query.limit(8).map{|ptype| {value: ptype.id, text: ptype.name} }
     end
     
-    def archive
-			update_attributes(archived: true)
-		end
-    
-    def unarchive
-			update_attributes(archived: false)
-		end
-    
-    def self.archive_all
-			update_all(archived: true)
-		end
-    
-    def self.unarchive_all
-			update_all(archived: false)
-		end
+    def set_code_is_custom
+      self.update_columns(code: Erp::Payments::PaymentType::TYPE_CUSTOM)
+    end
   end
 end

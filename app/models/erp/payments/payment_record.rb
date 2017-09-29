@@ -1,7 +1,10 @@
 module Erp::Payments
   class PaymentRecord < ApplicationRecord
     belongs_to :creator, class_name: "Erp::User"
-    belongs_to :accountant, class_name: "Erp::User", foreign_key: :accountant_id
+    belongs_to :accountant, class_name: "Erp::User"
+    belongs_to :employee, class_name: "Erp::User", optional: true
+    belongs_to :account, class_name: "Erp::Payments::Account"
+    belongs_to :payment_type, class_name: "Erp::Payments::PaymentType"
     if Erp::Core.available?("contacts")
       belongs_to :contact, class_name: "Erp::Contacts::Contact"
       
@@ -32,8 +35,8 @@ module Erp::Payments
     after_destroy :order_update_cache_payment_status
     
     # class const
-    PAYMENT_TYPE_RECEIVE = 'receive'
-    PAYMENT_TYPE_PAY = 'pay'
+    TYPE_RECEIVE = 'receive'
+    TYPE_PAY = 'pay'
     
     STATUS_PENDING = 'pending'
     STATUS_DONE = 'done'
@@ -41,8 +44,8 @@ module Erp::Payments
     # get type method options
     def self.get_type_record_options()
       [
-        {text: I18n.t('.receive'), value: Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE},
-        {text: I18n.t('.pay'), value: Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY}
+        {text: I18n.t('.receive'), value: Erp::Payments::PaymentRecord::TYPE_RECEIVE},
+        {text: I18n.t('.pay'), value: Erp::Payments::PaymentRecord::TYPE_PAY}
       ]
     end
     
@@ -50,9 +53,26 @@ module Erp::Payments
       accountant.present? ? accountant.name : ''
     end
     
+    def employee_name
+      employee.present? ? employee.name : ''
+    end
+    
+    def account_name
+      account.present? ? account.account_number + ' - ' + account.owner + ' - ' + account.name : ''
+    end
+    
+    # order date
+    def payment_type_code(params={})
+      if payment_type.present?
+        payment_type.code
+      elsif params[:payment_type].present?
+        Erp::Payments::PaymentType.find_by_code(params[:payment_type]).code
+      end
+    end
+    
     # DISPLAY ORDER INFORMATION
     # order date
-    def order_date(params)
+    def order_date(params={})
       if order.present?
         order.order_date
       elsif params[:order_id].present?
@@ -70,7 +90,10 @@ module Erp::Payments
     end
     
     # order code
-    def order_code(params)
+    #def order_code
+    #  order.present? ? order.code : ''
+    #end
+    def order_code(params={})
       if order.present?
         order.code
       elsif params[:order_id].present?
@@ -79,7 +102,7 @@ module Erp::Payments
     end
     
     # order customer name
-    def order_customer(params)
+    def order_customer(params={})
       if order.present?
         order.customer_name
       elsif params[:order_id].present?
@@ -147,7 +170,7 @@ module Erp::Payments
     
     # Get receive payment record
     def self.all_received(from_date=nil, to_date=nil)
-      query = self.where(payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE)
+      query = self.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE)
       
       if from_date.present?
         query = query.where("payment_date >= ?", from_date.beginning_of_day)
@@ -162,7 +185,7 @@ module Erp::Payments
     
     # Get pay payment record
     def self.all_paid(from_date=nil, to_date=nil)
-      query = self.where(payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY)
+      query = self.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY)
       
       if from_date.present?
         query = query.where("payment_date >= ?", from_date.beginning_of_day)

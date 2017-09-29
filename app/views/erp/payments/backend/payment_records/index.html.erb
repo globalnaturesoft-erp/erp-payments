@@ -7,19 +7,76 @@
 <% end %>
 
 <% content_for :page_toolbar do %>
-    <%= erp_component('button/create', {
+    <%= erp_component('button/actions', {
+        actions:
+        [
+            {
+                text: '<i class=""></i> '+t('.for_order'),
+                url: erp_payments.new_backend_payment_record_path(
+                    pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
+                    payment_type: Erp::Payments::PaymentType::TYPE_FOR_ORDER
+                )
+            },
+            {
+                text: '<i class=""></i> '+t('.for_contact'),
+                url: erp_payments.new_backend_payment_record_path(
+                    pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
+                    payment_type: Erp::Payments::PaymentType::TYPE_FOR_CONTACT
+                )
+            },
+            {divider: true},
+            {
+                text: '<i class=""></i> '+t('.receive_custom'),
+                url: erp_payments.new_backend_payment_record_path(
+                    pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
+                    payment_type: Erp::Payments::PaymentType::TYPE_CUSTOM
+                )
+            }
+        ],
         text: t('.create_receive'),
-        href: erp_payments.new_backend_payment_record_path(payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE),
-        class: 'btn-sm'
+        class: 'btn-noborder btn-sm',
+        icon: 'fa fa-calendar-plus-o'
     }) %>
-<% end %>
-
-<% content_for :page_toolbar do %>
-    <%= erp_component('button/create', {
+    
+    <%= erp_component('button/actions', {
+        actions:
+        [
+            {
+                text: '<i class=""></i> '+t('.for_order'),
+                url: erp_payments.new_backend_payment_record_path(
+                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                    payment_type: Erp::Payments::PaymentType::TYPE_FOR_ORDER
+                )
+            },
+            {
+                text: '<i class=""></i> '+t('.for_contact'),
+                url: erp_payments.new_backend_payment_record_path(
+                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                    payment_type: Erp::Payments::PaymentType::TYPE_FOR_CONTACT
+                )
+            },
+            {
+                text: '<i class=""></i> '+t('.commission'),
+                url: erp_payments.new_backend_payment_record_path(
+                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                    payment_type: Erp::Payments::PaymentType::TYPE_COMMISSION
+                )
+            },
+            {divider: true},
+            {
+                text: '<i class=""></i> '+t('.pay_custom'),
+                url: erp_payments.new_backend_payment_record_path(
+                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                    payment_type: Erp::Payments::PaymentType::TYPE_CUSTOM
+                )
+            }
+        ],
         text: t('.create_pay'),
-        href: erp_payments.new_backend_payment_record_path(payment_type: Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY),
-        class: 'btn-sm'
+        class: 'btn-noborder btn-sm',
+        icon: 'fa fa-calendar-minus-o'
     }) %>
+    
+    
 <% end %>
 
 <div class="row top-datalist">

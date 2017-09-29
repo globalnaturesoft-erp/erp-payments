@@ -137,6 +137,11 @@ vi:
             other_pay: "Phiếu chi khác"
             payment_record_archived: "Phiếu không còn sử dụng"
             receiver_payer: "Người nộp/nhận"
+            for_order: "Đơn hàng"
+            for_contact: "Công nợ"
+            pay_custom: "Chi khác"
+            receive_custom: "Thu khác"
+            commission: "Hoa hồng"
           list:
             code: "Mã phiếu"
             payment_date: "Ngày thanh toán"
@@ -188,6 +193,32 @@ vi:
             choose_accountant: "Chọn kế toán - thu ngân"
             help_code: "Mã phiếu được tạo tự động nếu bỏ trống"
             placeholder_code: "Mã phiếu tự động"
+          form_commission:
+            employee: "Nhân viên"
+            choose_employee: "Chọn nhân viên thụ hưởng"
+          form_for_contact:
+            contact: "Liên hệ"
+            choose_contact: "Chọn liên hệ trong danh sách"
+            help_contact: "Người trả/nhận tiền là ai?"
+          form_for_order:
+            order: "Đơn hàng"
+            choose_order: "Chọn đơn hàng muốn thanh toán"
+            contact_pay_receive: "Người nộp/trả/nhận"
+            help_contact_pay_receive: ""
+            choose_contact: "Chọn liên hệ"
+          form_genaral:
+            payment_code: "Mã phiếu thanh toán"
+            placeholder_payment_code: "Nhập mã phiếu thanh toán"
+            payment_date: "Ngày thanh toán"
+            contact_pay_receive: "Người nộp/trả/nhận"
+            help_contact_pay_receive: ""
+            choose_contact: "Chọn liên hệ"
+            amount: "Số tiền thanh toán"
+            accountant: "Nhân viên kế toán"
+            choose_accountant: "Chọn nhân viên kế toán"
+            description: "Mô tả / Ghi chú"
+            bank_account: "Tài khoản"
+            choose_bank_account: "Chọn tài khoản thu/chi của cơ quan bạn"
           order_payment_record_list:
             payment_record_code: "Mã phiếu"
             payment_type: "Loại phiếu"
@@ -229,6 +260,27 @@ vi:
             director: "Giám đốc"
             sign_name: "(Ký, họ tên)"
             sign_name_seal: "(Ký, họ tên, đóng dấu)"
+          liabilities_tracking:
+            liabilities_tracking: "Theo dõi công nợ"
+            customer: "Khách hàng"
+            begin_of_period_amount: "Nợ đầu kỳ"
+            end_of_period_amount: "Nợ cuối kỳ"
+            total_orders: "Số đơn hàng"
+            number_of_payments: "Số lần thanh toán"
+            paid_amount: "Đã thanh toán"
+            remain_amount: "Nợ còn lại"
+            salesperson: "N.viên kinh doanh"
+          liabilities_tracking_table:
+            liabilities_tracking: "Theo dõi công nợ"
+            customer: "Khách hàng"
+            begin_of_period_amount: "Nợ đầu kỳ"
+            end_of_period_amount: "Nợ cuối kỳ"
+            total_orders: "Số đơn hàng"
+            number_of_payments: "Số lần thanh toán"
+            paid_amount: "Đã thanh toán"
+            remain_amount: "Nợ còn lại"
+            salesperson: "N.viên kinh doanh"
+            create_receive_for_contact: "Tạo phiếu thu"
         debts:
           create:
             success: "Gia hạn công nợ được tạo thành công."
@@ -322,6 +374,25 @@ vi:
             name: "Tên ngân hàng (nơi mở tài khoản)"
             owner: "Chủ tài khoản"
             account_number: "Số tài khoản"
+        payment_types:
+          index:
+            payment_types: "Loại thanh toán"
+            name: "Tên loại"
+            code: "Mã loại"
+            create: "Thêm loại thanh toán"
+          list:
+            name: "Tên loại"
+            code: "Mã loại"
+            no_matching_records_found: "Không tìm thấy kết quả phù hợp trong danh sách"
+          new:
+            payment_types: "Loại thanh toán"
+            create: "Thêm mới"
+          edit:
+            payment_types: "Loại thanh toán"
+            edit: "Chỉnh sửa"
+          form:
+            name: "Tên loại"
+            code: "Mã loại"
   activerecord:
     errors:
       models:
@@ -347,6 +418,14 @@ vi:
               blank: "không được để trống."
             payment_date:
               blank: "không được để trống."
+        erp/payments/account:
+          attributes:
+            name:
+              blank: "không được để trống."
+            owner:
+              blank: "không được để trống."
+            account_number:
+              blank: "không được để trống."
     attributes:
       erp/payments/payment_term:
         name: "Tên kỳ hạn thanh toán"
@@ -359,3 +438,7 @@ vi:
         contact_id: "Liên hệ này"
         accountant_id: "Thu ngân - kế toán"
         payment_date: "Ngày thanh toán"
+      erp/payments/account:
+        name: "Tên ngân hàng"
+        owner: "Chủ tài khoản"
+        account_number: "Số tài khoản"

@@ -1,0 +1,16 @@
+<%= form_for([erp_payments, :backend, payment_record]) do |f| %>
+    <div class="form-body">
+        <div class="row">
+            <div class="col-md-12">
+                <%= render 'form_genaral', payment_record: payment_record %>
+            </div>
+        </div>
+    </div>
+    <%= erp_component('button/save', {
+        text: t('submit')
+    }) %>
+    <%= erp_component('button/cancel', {
+        text: t('cancel'),
+        href: erp_payments.backend_payment_records_path
+    }) %>
+<% end %>

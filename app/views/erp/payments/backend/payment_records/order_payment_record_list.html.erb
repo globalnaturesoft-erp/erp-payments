@@ -30,11 +30,11 @@
             <% @payment_records.each do |payment_record| %>
                 <tr class="odd gradeX">
                     <td><%= payment_record.code %></td>
-                    <td><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.pay') : t('.receive') %></td>
+                    <td><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.pay') : t('.receive') %></td>
                     <td><%= payment_record.contact_name %></td>
                     <td><%= payment_record.amount %></td>
                     <td><%= format_date(payment_record.payment_date) %></td>
-                    <td><%= payment_record.note %></td>
+                    <td><%= payment_record.description %></td>
                     <td>
                         <%= erp_component('avatar', {
                             user: payment_record.creator

@@ -35,7 +35,7 @@
         <div class="col-xs-12">
             <div class="invoice-title title">
                 <h1 class="uppercase">
-                    <%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.receipt_voucher') : t('.payment_voucher') %>
+                    <%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.receipt_voucher') : t('.payment_voucher') %>
                 </h1>
                 <h2><%= t('.dd') %> ... <%= t('.mm') %> ... <%= t('.yyyy') %> ....</h2>
             </div>
@@ -43,7 +43,7 @@
     </div>
     <div class="row invoice-content">
         <div class="col-xs-7">
-            <h2 class="invoice-title title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.payer') : t('.receiver') %>:
+            <h2 class="invoice-title title"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.payer') : t('.receiver') %>:
             <strong><%= payment_record.contact_name %></strong></h2>
         </div>
         
@@ -57,7 +57,7 @@
             <strong><%= payment_record.contact_address %></strong></h2>
         </div>
         <div class="col-xs-12">
-            <h2 class="invoice-title title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.receive_description') : t('.pay_description') %>:
+            <h2 class="invoice-title title"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.receive_description') : t('.pay_description') %>:
             <%= payment_record.description %>
         </div>
         <div class="col-xs-4">
@@ -81,7 +81,7 @@
             <p class="invoice-desc"><%= payment_record.creator_name %></p>
         </div>
         <div class="col-xs-3 center">
-            <h2 class="invoice-title sign title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.payer') : t('.receiver') %></h2>
+            <h2 class="invoice-title sign title"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.payer') : t('.receiver') %></h2>
             <span class="inv-sign"><%= t('.sign_name') %></span>
             <p class="invoice-desc"><%= payment_record.contact_name %></p>
         </div>
@@ -109,7 +109,7 @@
             <div class="invoice-logo">
                 <img src="http://globalnaturesoft.com/frontend/assets/images/logo_main.png" style="height: 70px" />
                 <h1 class="uppercase head">
-                    <%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.receipt_voucher') : t('.payment_voucher') %><br/>
+                    <%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.receipt_voucher') : t('.payment_voucher') %><br/>
                     <span><%= t('.number') %>: <%= payment_record.code %></span></h1>
             </div>
         </div>
@@ -130,7 +130,7 @@
     </div>
     <div class="row invoice-content">
         <div class="col-xs-7">
-            <h2 class="invoice-title title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.payer') : t('.receiver') %>:
+            <h2 class="invoice-title title"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.payer') : t('.receiver') %>:
             <strong><%= payment_record.contact_name %></strong></h2>
         </div>
         
@@ -144,7 +144,7 @@
             <strong><%= payment_record.contact_address %></strong></h2>
         </div>
         <div class="col-xs-12">
-            <h2 class="invoice-title title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.receive_description') : t('.pay_description') %>:
+            <h2 class="invoice-title title"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.receive_description') : t('.pay_description') %>:
             <%= payment_record.description %></h2>
         </div>
         <div class="col-xs-4">
@@ -185,7 +185,7 @@
             <p class="invoice-desc"><%= payment_record.creator_name %></p>
         </div>
         <div class="col-xs-3 center">
-            <h2 class="invoice-title sign title"><%= payment_record.payment_type == Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE ? t('.payer') : t('.receiver') %></h2>
+            <h2 class="invoice-title sign title"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.payer') : t('.receiver') %></h2>
             <span class="inv-sign"><%= t('.sign_name') %></span>
             <p class="invoice-desc"><%= payment_record.contact_name %></p>
         </div>

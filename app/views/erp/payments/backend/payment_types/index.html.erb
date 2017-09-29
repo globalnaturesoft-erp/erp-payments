@@ -1,0 +1,44 @@
+<% content_for :title do %>
+    <%= t('.payment_types') %>
+<% end %>
+
+<% content_for :page_title do %>
+    <i class="fa fa-cc-mastercard"></i> <%= t('.payment_types') %>
+<% end %>
+
+<% content_for :page_toolbar do %>
+    <%= erp_component('button/create', {
+        text: t('.create'),
+        href: erp_payments.new_backend_payment_type_path,
+        class: 'btn-sm'
+    }) %>
+<% end %>
+
+<%= erp_datalist(
+    url: erp_payments.list_backend_payment_types_path,
+    keywords: [
+        {
+            text: t('.name'), name: 'erp_payments_payment_types.name'
+        },
+        {
+            text: t('.code'), name: 'erp_payments_payment_types.code'
+        }
+    ],
+    actions: [
+        
+    ],
+    filters: [
+        
+    ],
+    columns: [
+        {
+            text: t('.name'), name: 'name', value: true, checked: true
+        },
+        {
+            text: t('.code'), name: 'code', value: true, checked: false
+        },
+        {
+            text: t('status'), name: 'status', value: true, checked: false
+        }
+    ]
+) %>

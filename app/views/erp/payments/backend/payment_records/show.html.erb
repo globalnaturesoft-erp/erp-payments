@@ -11,7 +11,7 @@
 <% content_for :page_toolbar do %>
     <%= erp_component('button/edit', {
         text: t('.edit'),
-        href: erp_payments.edit_backend_payment_record_path(@payment_record, order_id: Erp::Orders::Order.first, payment_type: @payment_record.payment_type)
+        href: erp_payments.edit_backend_payment_record_path(@payment_record, order_id: Erp::Orders::Order.first, ptype: @payment_record.pay_receive)
     }) %>
     <%= erp_component('button/actions', {
         actions:

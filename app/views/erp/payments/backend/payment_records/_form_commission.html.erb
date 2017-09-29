@@ -1,0 +1,46 @@
+<%= form_for([erp_payments, :backend, payment_record]) do |f| %>
+    <div class="form-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-body form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <% if Erp::Core.available?("contacts") %>
+                                    <%= erp_form_control("dataselect", {
+                                        name: 'payment_record[employee_id]',
+                                        value: payment_record.employee_id,
+                                        text: payment_record.employee_name,
+                                        placeholder: t('.choose_employee'),
+                                        label: t('.employee'),
+                                        url: erp.dataselect_backend_users_path(format: 'json'),
+                                        required: true,
+                                        errors: payment_record.errors.full_messages_for(:employee_id)
+                                    }) %>
+                                <% end %>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li>Ngày công nợ: Từ <strong><%= format_date(Time.now - 1.week) %></strong> đến <strong><%= format_date(Time.now + 1.week) %></strong></li>
+                                    <li>Tiền công nợ: <strong><%= format_price(12450000) %></strong></li>
+                                    <li>Đã thanh toán: <strong><%= format_price(3000000) %></strong></li>
+                                    <li>Chưa thanh toán: <strong><%= format_price(12450000-3000000) %></strong></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <%= render 'form_genaral', payment_record: payment_record %>
+            </div>
+        </div>
+    </div>
+    <%= erp_component('button/save', {
+        text: t('submit')
+    }) %>
+    <%= erp_component('button/cancel', {
+        text: t('cancel'),
+        href: erp_payments.backend_payment_records_path
+    }) %>
+<% end %>

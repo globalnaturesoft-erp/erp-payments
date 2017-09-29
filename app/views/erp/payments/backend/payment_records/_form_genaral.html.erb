@@ -1,0 +1,63 @@
+<div class="portlet light bordered">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <input type="hidden" name="payment_record[payment_type_id]" value="<%= @payment_type %>">
+                    <input type="hidden" name="payment_record[pay_receive]" value="<%= payment_record.pay_receive %>">
+                    <div class="col-md-6">
+                        <%= erp_form_control("text", {
+                            name: 'payment_record[code]',
+                            value: payment_record.code,
+                            label: t('.payment_code'),
+                            placeholder: t('.placeholder_payment_code')
+                        }) %>
+                    </div>
+                    <div class="col-md-6">
+                        <%= erp_form_control("date", {
+                            name: 'payment_record[payment_date]',
+                            value: payment_record.payment_date,
+                            label: t('.payment_date'),
+                            required: true,
+                            errors: payment_record.errors.full_messages_for(:payment_date),
+                        }) %>
+                    </div>
+                </div>
+                <%= erp_form_control("number", {
+                    name: 'payment_record[amount]',
+                    value: payment_record.amount,
+                    label: t('.amount')
+                }) %>
+                <%= erp_form_control("dataselect", {
+                    name: 'payment_record[accountant_id]',
+                    value: payment_record.accountant_id,
+                    text: payment_record.accountant_name,
+                    placeholder: t('.choose_accountant'),
+                    label: t('.accountant'),
+                    url: erp.dataselect_backend_users_path(format: 'json'),
+                    required: true,
+                    errors: payment_record.errors.full_messages_for(:accountant_id)
+                }) %>
+            </div>
+            
+            <div class="col-md-6">
+                <%= erp_form_control("dataselect", {
+                    name: 'payment_record[account_id]',
+                    value: payment_record.account_id,
+                    text: payment_record.account_name,
+                    placeholder: t('.choose_bank_account'),
+                    label: t('.bank_account'),
+                    url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+                    required: true,
+                    errors: payment_record.errors.full_messages_for(:account_id)
+                }) %>
+                <%= erp_form_control("textarea", {
+                    name: 'payment_record[description]',
+                    value: payment_record.description,
+                    label: t('.description'),
+                    rows: 5
+                }) %>
+            </div>
+        </div>
+    </div>
+</div>

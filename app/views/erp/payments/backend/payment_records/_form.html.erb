@@ -1,6 +1,6 @@
 <%= form_for([erp_payments, :backend, payment_record]) do |f| %>    
     <input type="hidden" name="payment_record[order_id]" value="<%= params[:order_id] %>">
-    <input type="hidden" name="payment_record[payment_type]" value="<%= params[:payment_type] %>">
+    <input type="hidden" name="payment_record[ptype]" value="<%= params[:ptype] %>">
     <div class="form-body">
         <div class="row">
             <% if params[:order_id].present? or payment_record.order_id.present? %>
@@ -34,7 +34,7 @@
                         <%= erp_form_control("text", {
                             name: 'payment_record[code]',
                             value: payment_record.code,
-                            label: params[:payment_type] == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.code_pay') : t('.code_receive'),
+                            label: params[:ptype] == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.code_pay') : t('.code_receive'),
                             placeholder: t('.placeholder_code'),
                             help: t('.help_code')
                         }) %>
@@ -51,8 +51,8 @@
                                 value: payment_record.contact_id,
                                 text: payment_record.contact_name,
                                 placeholder: t('.choose_contact'),
-                                help: params[:payment_type] == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.help_contact_receive') : t('.help_contact_pay'),
-                                label: params[:payment_type] == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.contact_receive') : t('.contact_pay'),
+                                help: params[:ptype] == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.help_contact_receive') : t('.help_contact_pay'),
+                                label: params[:ptype] == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.contact_receive') : t('.contact_pay'),
                                 url: erp_contacts.dataselect_backend_contacts_path(format: 'json'),
                                 required: true,
                                 errors: payment_record.errors.full_messages_for(:contact_id),
@@ -88,7 +88,7 @@
                         <%= erp_form_control("textarea", {
                             name: 'payment_record[description]',
                             value: payment_record.description,
-                            label: params[:payment_type] == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.pay_description') : t('.receive_description')
+                            label: params[:ptype] == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.pay_description') : t('.receive_description')
                         }) %>
                     </div>
                 </div>

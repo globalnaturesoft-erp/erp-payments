@@ -1,0 +1,15 @@
+<%= form_for([erp_payments, :backend, payment_type]) do |f| %>
+    <%= erp_form_control("text", {
+        name: 'payment_type[name]',
+        value: payment_type.name,                   
+        label: t('.name')
+    }) %>
+    
+    <%= erp_component('button/save', {
+        text: t('submit')
+    }) %>
+    <%= erp_component('button/cancel', {
+        text: t('cancel'),
+        href: erp_payments.backend_payment_types_path
+    }) %>
+<% end %>

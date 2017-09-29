@@ -30,6 +30,8 @@ Erp::Payments::Engine.routes.draw do
 					put 'confirm_all'
 					delete 'delete_all'
 					post 'order_payment_record_list'
+					get 'liabilities_tracking'
+					post 'liabilities_tracking_table'
 				end
 			end
 			resources :debts do
@@ -53,6 +55,12 @@ Erp::Payments::Engine.routes.draw do
 					put 'unarchive'
 					put 'archive_all'
 					put 'unarchive_all'
+				end
+			end
+			resources :payment_types do
+				collection do
+					post 'list'
+					get 'dataselect'
 				end
 			end
 		end

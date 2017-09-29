@@ -1,11 +1,11 @@
 <% content_for :title do %>
-    <%= params[:payment_type] == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.create_pay') : t('.create_receive') %>
+    <%= params[:ptype] == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.create_pay') : t('.create_receive') %>
 <% end %>
 
 <% content_for :page_title do %>    
     <a href="<%= erp_payments.backend_payment_records_path %>">
     <i class="fa fa-usd"></i> <%= t('.payment_records') %>
-    </a> / <%= params[:payment_type] == Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY ? t('.create_pay') : t('.create_receive') %>
+    </a> / <%= params[:ptype] == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.create_pay') : t('.create_receive') %>
 <% end %>
 
 <% content_for :page_toolbar do %>
@@ -23,7 +23,7 @@
         
         <!-- BEGIN SAMPLE FORM PORTLET-->
         
-                <%= render 'form', payment_record: @payment_record %>
+        <%= render 'form_' + @payment_record.payment_type_code(params), payment_record: @payment_record %>
         
         <!-- END SAMPLE FORM PORTLET-->
     </div>
