@@ -11,14 +11,14 @@
         actions:
         [
             {
-                text: '<i class=""></i> '+t('.for_order'),
+                text: '<i class=""></i> '+t('.receive_for_order'),
                 url: erp_payments.new_backend_payment_record_path(
                     pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
                     payment_type: Erp::Payments::PaymentType::TYPE_FOR_ORDER
                 )
             },
             {
-                text: '<i class=""></i> '+t('.for_contact'),
+                text: '<i class=""></i> '+t('.receive_for_contact'),
                 url: erp_payments.new_backend_payment_record_path(
                     pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
                     payment_type: Erp::Payments::PaymentType::TYPE_FOR_CONTACT
@@ -42,21 +42,21 @@
         actions:
         [
             {
-                text: '<i class=""></i> '+t('.for_order'),
+                text: '<i class=""></i> '+t('.pay_for_order'),
                 url: erp_payments.new_backend_payment_record_path(
                     pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
                     payment_type: Erp::Payments::PaymentType::TYPE_FOR_ORDER
                 )
             },
             {
-                text: '<i class=""></i> '+t('.for_contact'),
+                text: '<i class=""></i> '+t('.pay_for_contact'),
                 url: erp_payments.new_backend_payment_record_path(
                     pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
                     payment_type: Erp::Payments::PaymentType::TYPE_FOR_CONTACT
                 )
             },
             {
-                text: '<i class=""></i> '+t('.commission'),
+                text: '<i class=""></i> '+t('.pay_commission'),
                 url: erp_payments.new_backend_payment_record_path(
                     pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
                     payment_type: Erp::Payments::PaymentType::TYPE_COMMISSION
