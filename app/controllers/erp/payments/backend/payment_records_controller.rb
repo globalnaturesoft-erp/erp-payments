@@ -177,6 +177,25 @@ module Erp
             }
           end
         end
+        
+        # liabilities tracking table
+        def liabilities_tracking_table
+          glb = params.to_unsafe_hash[:global_filter]
+          @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
+          @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          
+          if glb[:customer].present?
+            @contacts = Erp::Contacts::Contact.where(id: glb[:customer])
+          else
+            @contacts = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
+          end
+        end
+        
+        # liabilities tracking table details
+        def liabilities_tracking_table_details
+          @orders = Erp::Contacts::Contact.find(params[:contact_id]).sales_orders_is_payment_for_contact
+          @payment_records = Erp::Payments::PaymentRecord.where(contact_id: params[:contact_id])
+        end
     
         private
           # Use callbacks to share common setup or constraints between actions.

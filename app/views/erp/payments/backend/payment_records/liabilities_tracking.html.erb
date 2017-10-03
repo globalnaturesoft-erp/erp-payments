@@ -10,20 +10,37 @@
     
 <% end %>
 
+<% content_for :global_filter do %>
+    <div class="row top-datalist">
+        <div class="col-md-3">
+            <%= erp_form_control('date', {
+                label: t('.order_from_date'),
+                name: 'from_date',
+                placeholder: t('.select_from_date')
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control('date', {
+                label: t('.order_to_date'),
+                name: 'to_date',
+                placeholder: t('.select_to_date')
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control("dataselect", {
+                name: 'customer',
+                label: t('.filter_customer'),
+                placeholder: t('.choose_customer'),
+                url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_customer: true),
+            }) %>
+        </div>
+    </div>
+<% end %>
+
 <%= erp_datalist(
     url: erp_payments.liabilities_tracking_table_backend_payment_records_path,
     keywords: [
-        {
-            text: t('.note'), name: 'erp_payments_debts.note'
-        },
-        {
-            text: t('creator'),
-            name: 'erp_users.name',
-            select: {
-                name: 'erp_users.id',
-                data_url: erp.dataselect_backend_users_path
-            }
-        }
+        
     ],
     actions: [
         
@@ -41,16 +58,16 @@
             text: t('.begin_of_period_amount'), name: 'begin_of_period_amount', value: true, checked: true
         },
         {
-            text: t('.total_orders'), name: 'total_orders', value: true, checked: true
+            text: t('.total_orders'), name: 'total_orders', value: true, checked: false
         },
         {
-            text: t('.number_of_payments'), name: 'number_of_payments', value: true, checked: true
+            text: t('.number_of_payments'), name: 'number_of_payments', value: true, checked: false
+        },
+        {
+            text: t('.period_amount'), name: 'period_amount', value: true, checked: true
         },
         {
             text: t('.paid_amount'), name: 'paid_amount', value: true, checked: true
-        },
-        {
-            text: t('.remain_amount'), name: 'remain_amount', value: true, checked: true
         },
         {
             text: t('.end_of_period_amount'), name: 'end_of_period_amount', value: true, checked: true
@@ -59,5 +76,5 @@
             text: t('.salesperson'), name: 'salesperson', value: true, checked: false
         }
     ],
-    sort: { sort_by: 'erp_payments_debts.created_at', sort_direction: 'desc' }
+    sort: {  }
 ) %>

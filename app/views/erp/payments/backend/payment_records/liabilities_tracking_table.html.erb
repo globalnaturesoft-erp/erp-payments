@@ -24,14 +24,14 @@
                     <%= t('.number_of_payments') %>
                 </th>
             <% end %>
+            <% if get_columns(params).include?("period_amount") %>
+                <th>
+                    <%= t('.period_amount') %>
+                </th>
+            <% end %>
             <% if get_columns(params).include?("paid_amount") %>
                 <th>
                     <%= t('.paid_amount') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("remain_amount") %>
-                <th>
-                    <%= t('.remain_amount') %>
                 </th>
             <% end %>
             <% if get_columns(params).include?("end_of_period_amount") %>
@@ -48,38 +48,40 @@
         </tr>
     </thead>
     <tbody>
-        <% Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id).each do |contact| %>  <!-- todo update this function -->
-            <tr class="odd gradeX">
+        <% @contacts.each do |contact| %>  <!-- todo update this function -->
+            <tr class="odd gradeX has-child-table" data-url="<%= erp_payments.liabilities_tracking_table_details_backend_payment_records_path(contact_id: contact.id) %>">
                 <td>
                     <%= erp_datalist_check_row(id: contact.id) %>
                 </td>
                 <% if get_columns(params).include?("customer") %>
-                    <td><%= contact.name %></td>
+                    <td>
+                        <i class="fa fa-plus expand tr-expand-button"></i>
+                    <!--<strong></strong>-->
+                        <%= contact.name %>
+                    </td>
                 <% end %>
                 <% if get_columns(params).include?("begin_of_period_amount") %>
-                    <td><%= format_price(11390000) %></td>
+                    <td><%= format_price(contact.sales_debt_amount(to: (@from - 1.day))) %></td>
                 <% end %>
                 <% if get_columns(params).include?("total_orders") %>
-                    <td class="text-center"><%= rand(2..10) %></td>
+                    <td class="text-center"><%= contact.sales_orders.count %></td> <!-- todo count with params -->
                 <% end %>
                 <% if get_columns(params).include?("number_of_payments") %>
-                    <td class="text-center"><%= rand(0..5) %></td>
+                    <td class="text-center"><%= rand(0..5) %></td> <!-- todo count with params -->
+                <% end %>
+                <% if get_columns(params).include?("period_amount") %>
+                    <td><%= format_price(contact.sales_total_amount(from: @from, to: @to)) %></td>
                 <% end %>
                 <% if get_columns(params).include?("paid_amount") %>
-                    <td><%= format_price(1300000) %></td>
+                    <td><%= format_price(contact.sales_paid_amount(from: @from, to: @to)) %></td>
                 <% end %>
-                <% if get_columns(params).include?("remain_amount") %>
-                    <td><%= format_price(11390000-1300000) %></td>
-                <% end %>
-                <% if get_columns(params).include?("creator") %>
+                <% if get_columns(params).include?("salesperson") %>
                     <td>
-                        <%= erp_component('avatar', {
-                            user: current_user
-                        }) %>
+                        <!-- todo update salesperson for contact -->
                     </td>
                 <% end %>
                 <% if get_columns(params).include?("end_of_period_amount") %>
-                    <td><%= format_price(11390000-1300000) %></td>
+                    <td><%= format_price(contact.sales_debt_amount(to: @to)) %></td>
                 <% end %>
                 <td>
                     <%= erp_datalist_row_actions(
@@ -89,7 +91,7 @@
                                 url: erp_payments.new_backend_payment_record_path(
                                     pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
                                     payment_type: Erp::Payments::PaymentType::TYPE_FOR_CONTACT,
-                                    contact_id: Erp::Contacts::Contact.last.id
+                                    contact_id: contact.id
                                 )
                             }
                         ]

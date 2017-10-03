@@ -32,6 +32,7 @@ Erp::Payments::Engine.routes.draw do
 					post 'order_payment_record_list'
 					get 'liabilities_tracking'
 					post 'liabilities_tracking_table'
+					get 'liabilities_tracking_table_details'
 				end
 			end
 			resources :debts do
