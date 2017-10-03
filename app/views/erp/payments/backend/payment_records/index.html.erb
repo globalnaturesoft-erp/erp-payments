@@ -79,13 +79,24 @@
     
 <% end %>
 
-<div class="row top-datalist">
-    <div class="col-md-12">
-        <%= erp_form_control('dateranges', {
-            form_group: 'no'
-        }) %>
+<% content_for :global_filter do %>
+    <div class="row top-datalist">
+        <div class="col-md-3">
+            <%= erp_form_control('date', {
+                label: t('.order_from_date'),
+                name: 'order_from_date',
+                placeholder: t('.select_from_date')
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control('date', {
+                label: t('.order_to_date'),
+                name: 'order_to_date',
+                placeholder: t('.select_to_date')
+            }) %>
+        </div>
     </div>
-</div>
+<% end %>
 
 <%= erp_datalist(
     url: erp_payments.list_backend_payment_records_path,
