@@ -33,6 +33,9 @@ Erp::Payments::Engine.routes.draw do
 					get 'liabilities_tracking'
 					post 'liabilities_tracking_table'
 					get 'liabilities_tracking_table_details'
+					get 'commission'
+					post 'commission_table'
+					get 'commission_details'
 				end
 			end
 			resources :debts do

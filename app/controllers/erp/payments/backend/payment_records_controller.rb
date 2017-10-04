@@ -196,6 +196,16 @@ module Erp
           @orders = Erp::Contacts::Contact.find(params[:contact_id]).sales_orders_is_payment_for_contact
           @payment_records = Erp::Payments::PaymentRecord.where(contact_id: params[:contact_id])
         end
+        
+        # commission
+        def commission_table
+          @employees = Erp::User.where('id != ?', Erp::User.find_by_email('admin@globalnaturesoft.com').id)
+        end
+        
+        def commission_details
+          @orders = Erp::Orders::Order.where(payment_for: Erp::Payments::PaymentType::TYPE_FOR_ORDER)
+          @contacts = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
+        end
     
         private
           # Use callbacks to share common setup or constraints between actions.

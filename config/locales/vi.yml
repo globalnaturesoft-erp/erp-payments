@@ -300,6 +300,28 @@ vi:
             payment_records_list: "Hóa đơn thanh toán"
             receive: "Phiếu thu"
             pay: "Phiếu chi"
+          commission:
+            commission: "Bảng kê hoa hồng"
+            from_date: "Ngày đầu kỳ"
+            to_date: "Ngày cuối kỳ"
+            select_from_date: "Chọn ngày đầu kỳ cần lọc"
+            select_to_date: "Chọn ngày cuối kỳ cần lọc"
+            filter_employee: "Nhân viên"
+            choose_employee: "Chọn nhân viên cần lọc"
+            employee: "Nhân viên"
+            total_revenue: "Tổng doanh thu"
+            total_received: "Số tiền đã thu"
+            total_remain: "Số tiền còn lại"
+            total_commission: "Tiền hoa hồng"
+          commission_table:
+            employee: "Nhân viên"
+            total_revenue: "Tổng doanh thu"
+            total_received: "Số tiền đã thu"
+            total_remain: "Số tiền còn lại"
+            total_commission: "Trích hoa hồng"
+          commission_details:
+            orders_list: "Hoa hồng trên đơn hàng"
+            contacts_list: "Hoa hồng trên khách hàng" 
         debts:
           create:
             success: "Gia hạn công nợ được tạo thành công."
