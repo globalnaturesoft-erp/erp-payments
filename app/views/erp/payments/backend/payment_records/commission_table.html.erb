@@ -29,6 +29,16 @@
                     <%= t('.total_commission') %>
                 </th>
             <% end %>
+            <% if get_columns(params).include?("paid_commission") %>
+                <th class="text-right">
+                    <%= t('.paid_commission') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("remain_commission") %>
+                <th class="text-right">
+                    <%= t('.remain_commission') %>
+                </th>
+            <% end %>
             <th width="7%"><%= t('actions') %></th>
         </tr>
     </thead>
@@ -56,18 +66,33 @@
                 <% if get_columns(params).include?("total_commission") %>
                     <td class="text-right"><%= format_price(25000) %></td>
                 <% end %>
+                <% if get_columns(params).include?("paid_commission") %>
+                    <td class="text-right"><%= format_price(25000) %></td>
+                <% end %>
+                <% if get_columns(params).include?("remain_commission") %>
+                    <td class="text-right"><%= format_price(25000) %></td>
+                <% end %>
                 <td>
-                    <%= erp_datalist_row_actions(
-                        [
-                            {
-                                text: '<i class="fa fa-plus"></i> '+t('.create_pay_for_commission'),
-                                url: erp_payments.new_backend_payment_record_path(
-                                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                                    payment_type: Erp::Payments::PaymentType::TYPE_COMMISSION,
-                                    employee_id: employee.id
-                                )
-                            }
-                        ]
+                    <%=
+                    actions = []
+                    actions << {
+                        text: '<i class="fa fa-plus"></i> '+t('.create_pay_for_commission'),
+                        url: erp_payments.new_backend_payment_record_path(
+                            pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                            payment_type: Erp::Payments::PaymentType::TYPE_COMMISSION,
+                            employee_id: employee.id
+                        )
+                    }
+                    actions << {divider: true}
+                    (1..3).each do |pr|
+                        actions << {
+                            text: '<i class="fa fa-file-pdf-o"></i> '+t('.payment_record_for_commission') + ' - ' + format_date(Time.now),
+                            url: 'javascript:;'
+                        }
+                    end
+                    
+                    erp_datalist_row_actions(
+                        actions
                     ) %>
                 </td>
             </tr>
