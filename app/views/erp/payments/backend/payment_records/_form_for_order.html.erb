@@ -18,35 +18,12 @@
                                         errors: payment_record.errors.full_messages_for(:order_id)
                                     }) %>
                                 <% end %>
-                                <% if Erp::Core.available?("contacts") %>
-                                    <%= erp_form_control("dataselect", {
-                                        name: 'payment_record[contact_id]',
-                                        value: payment_record.contact_id,
-                                        text: payment_record.contact_name,
-                                        placeholder: t('.choose_contact'),
-                                        help: t('.help_contact_pay_receive'),
-                                        label: t('.contact_pay_receive'),
-                                        url: erp_contacts.dataselect_backend_contacts_path(format: 'json'),
-                                        required: true,
-                                        errors: payment_record.errors.full_messages_for(:contact_id),
-                                        create: {
-                                            url: erp_contacts.new_backend_contact_path,
-                                            title: t('.create'),
-                                            container_selector: '.new_contact',
-                                            input_selector: 'input[name="contact[name]"]'
-                                        }
-                                    }) %>
-                                <% end %>
                             </div>
                             <div class="col-md-6">
-                                <ul>
-                                    <li>Khách hàng: <strong>Nguyễn Hoàng Anh</strong></li>
-                                    <li>Ngày đặt hàng: <strong><%= format_date(Time.now) %></strong></li>
-                                    <li>Hạn thanh toán: <strong><%= format_date(Time.now) %></strong></li>
-                                    <li>Tổng tiền cần thanh toán: <strong><%= format_price(5500000) %></strong></li>
-                                    <li>Tổng tiền đã thanh toán: <strong><%= format_price(500000) %></strong></li>
-                                    <li>Tổng tiền còn lại: <strong><%= format_price(5000000) %></strong></li>
-                                </ul>
+                                <div class="ajax-box"
+                                    data-url="<%= erp_payments.ajax_info_form_for_order_backend_payment_records_path %>"
+                                    data-control="[name='payment_record[order_id]']">
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -20,11 +20,10 @@
                                 <% end %>
                             </div>
                             <div class="col-md-6">
-                                <ul>
-                                    <li>Tiền hoa hồng: <strong><%= format_price(12450000) %></strong></li>
-                                    <li>Hoa hồng đã chi: <strong><%= format_price(3000000) %></strong></li>
-                                    <li>Hoa hồng chưa chi: <strong><%= format_price(12450000-3000000) %></strong></li>
-                                </ul>
+                                <div class="ajax-box"
+                                    data-url="<%= erp_payments.ajax_info_form_for_commission_backend_payment_records_path %>"
+                                    data-control="[name='payment_record[employee_id]']">
+                                </div>
                             </div>
                         </div>
                     </div>

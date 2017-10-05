@@ -173,6 +173,20 @@ module Erp
           end
         end
         
+        def ajax_info_form_for_order
+          @order = Erp::Orders::Order.where(id: params[:datas][0]).first
+          @contact = @order.customer
+          render layout: false
+        end
+        
+        def ajax_info_form_for_contact
+          @contact = Erp::Contacts::Contact.where(id: params[:datas][0]).first
+          render layout: false
+        end
+        
+        def ajax_info_form_for_commission
+        end
+        
         # liabilities tracking table
         def liabilities_tracking_table
           glb = params.to_unsafe_hash[:global_filter]

@@ -1,0 +1,19 @@
+<ul>
+    <li>
+        <input type="hidden" name="payment_record[contact_id]" value="<%= @contact.id %>">
+        Khách hàng: <strong><%= @contact.name %></strong>
+    </li>
+    <li>
+        Ngày đặt hàng: <strong><%= format_date(@order.order_date) %></strong>
+    </li>
+    <!--<li>Hạn thanh toán: <strong></strong></li>-->
+    <li>
+        Tổng tiền cần thanh toán: <strong><%= format_price(@order.cache_total) %></strong>
+    </li>
+    <li>
+        Tổng tiền đã thanh toán: <strong><%= format_price(@order.paid_amount) %></strong>
+    </li>
+    <li>
+        Tổng tiền còn lại: <strong><%= format_price(@order.remain_amount) %></strong>
+    </li>
+</ul>

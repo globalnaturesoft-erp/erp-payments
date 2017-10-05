@@ -37,6 +37,9 @@ Erp::Payments::Engine.routes.draw do
 					get 'commission'
 					post 'commission_table'
 					get 'commission_details'
+					get 'ajax_info_form_for_order'
+					get 'ajax_info_form_for_contact'
+					get 'ajax_info_form_for_commission'
 				end
 			end
 			resources :debts do
