@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="row">
-                    <input type="hidden" name="payment_record[payment_type_id]" value="<%= @payment_type %>">
+                    <input type="hidden" name="payment_record[payment_type_id]" value="<%= @payment_record.payment_type.id %>">
                     <input type="hidden" name="payment_record[pay_receive]" value="<%= payment_record.pay_receive %>">
                     <div class="col-md-6">
                         <%= erp_form_control("text", {

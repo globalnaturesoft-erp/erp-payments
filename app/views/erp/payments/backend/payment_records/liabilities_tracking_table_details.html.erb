@@ -2,7 +2,7 @@
     <ul class="nav nav-tabs ">
         <li class="active">
             <a href="#tab_5_1" data-toggle="tab">
-                <i class="glyphicon glyphicon-check"></i>
+                <i class="fa fa-history"></i>
                 <%= t('.payment_records_list') %>
             </a>
         </li>
@@ -17,71 +17,62 @@
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="tab_5_1">
-            <div class="table-scrollable">
-                <table class="table table-bordered table-advance order-column">
-                    <thead class="flip-content">
+            <table class="table table-bordered table-advance order-column">
+                <thead class="flip-content">
+                    <tr>
+                        <th width="15%" class="text-left bg-yellow bg-font-yellow text-nowrap">Mã thanh toán</th>
+                        <th class="bg-yellow bg-font-yellow text-nowrap">Hình thức</th>
+                        <th class="bg-yellow bg-font-yellow text-nowrap">Thời gian</th>
+                        <th class="bg-yellow bg-font-yellow text-nowrap">Người thanh toán</th>
+                        <th class="bg-yellow bg-font-yellow text-nowrap text-right">Số tiền</th>
+                        <th class="bg-yellow bg-font-yellow text-nowrap">Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="bg-green" colspan="4"><strong>  </strong></td>
+                        <td class="bg-green text-right"><strong><%= format_price(@payment_records.sum(&:amount)) %></strong></td> <!-- @todo sum amount for payment records -->
+                        <td class="bg-green" colspan="2"><strong>  </strong></td>
+                    </tr>
+                    <% @payment_records.each do |payment_record| %>
                         <tr>
-                            <th width="15%" class="text-left bg-yellow bg-font-yellow text-nowrap">Mã thanh toán</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap">Hình thức</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap">Thời gian</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap">Người thanh toán</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap text-right">Số tiền</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap">Ghi chú</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap">Kế toán</th>
+                            <td class="text-left"><strong><%= payment_record.code %></strong></td>
+                            <td class="text-left"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.pay') : t('.receive') %></td>
+                            <td class="text-left"><%= format_date(payment_record.payment_date) %></td>
+                            <td class="text-left"><%= payment_record.contact_name %></td>
+                            <td class=" text-right"><%= format_price(payment_record.amount) %></td>
+                            <td class="text-left"><%= raw payment_record.description %></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="bg-green" colspan="4"><strong>  </strong></td>
-                            <td class="bg-green text-right"><strong><%= format_price(@payment_records.sum(&:amount)) %></strong></td> <!-- @todo sum amount for payment records -->
-                            <td class="bg-green" colspan="2"><strong>  </strong></td>
-                        </tr>
-                        <% @payment_records.each do |payment_record| %>
-                            <tr>
-                                <td class="text-left"><strong><%= payment_record.code %></strong></td>
-                                <td class="text-left"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.pay') : t('.receive') %></td>
-                                <td class="text-left"><%= format_date(payment_record.payment_date) %></td>
-                                <td class="text-left"><%= payment_record.contact_name %></td>
-                                <td class=" text-right"><%= format_price(payment_record.amount) %></td>
-                                <td class="text-left"><%= raw payment_record.description %></td>
-                                <td class="text-left">
-                                    <%= erp_component('avatar', {
-                                        user: payment_record.accountant
-                                    }) %>
-                                </td>
-                            </tr>
-                        <% end %>
-                    </tbody>
-                </table>
-            </div>
+                    <% end %>
+                </tbody>
+            </table>
         </div>
         <div class="tab-pane" id="tab_5_2">
-            <div class="table-scrollable">
-                <table class="table table-bordered table-advance order-column">
-                    <thead class="flip-content">
+            <table class="table table-bordered table-advance order-column">
+                <thead class="flip-content">
+                    <tr>
+                        <th width="20%" class="text-left bg-yellow bg-font-yellow text-nowrap">Mã hóa đơn</th>
+                        <th width="10%" class="text-center bg-yellow bg-font-yellow text-nowrap">Ngày chứng từ</th>
+                        <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Tổng cộng</th>
+                        <th width="10%" class="bg-yellow bg-font-yellow text-nowrap">Nhân viên bán hàng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="bg-green" colspan="2"><strong>  </strong></td>
+                        <td class="bg-green text-right"><strong><%= format_price(@orders.sum(&:total)) %></strong></td> <!-- @todo sum total for orders -->
+                        <td class="bg-green"></td>
+                    </tr>
+                    <% @orders.each do |order| %>
                         <tr>
-                            <th class="text-left bg-yellow bg-font-yellow text-nowrap">Mã hóa đơn</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap">Ngày chứng từ</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap">Hạn thanh toán</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap text-right">Tổng cộng</th>
+                            <td class="text-left"><strong><%= link_to order.code + " (#{order.order_date.strftime('%d/%m/%Y')})", 'javascript:;' %></strong></td> <!-- @todo modal link_to for order details -->
+                            <td class="text-center"><%= format_date(order.order_date) %></td>
+                            <td class=" text-right"><%= format_price(order.cache_total) %></td>
+                            <td class="text-left"><%= order.employee_name %></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="bg-green" colspan="3"><strong>  </strong></td>
-                            <td class="bg-green text-right"><strong><%= format_price(@orders.sum(&:total)) %></strong></td> <!-- @todo sum total for orders -->
-                        </tr>
-                        <% @orders.each do |order| %>
-                            <tr>
-                                <td class="text-left"><strong><%= link_to order.code, 'javascript:;' %></strong></td> <!-- @todo modal link_to for order details -->
-                                <td class="text-left"><%= format_date(order.order_date) %></td>
-                                <td class="text-left"><%= format_date(order.get_payment_deadline) %></td>
-                                <td class=" text-right"><%= format_price(order.cache_total) %></td>
-                            </tr>
-                        <% end %>
-                    </tbody>
-                </table>
-            </div>
+                    <% end %>
+                </tbody>
+            </table>
         </div>
     </div>
 </div

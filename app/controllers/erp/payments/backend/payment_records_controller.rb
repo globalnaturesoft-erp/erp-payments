@@ -2,8 +2,8 @@ module Erp
   module Payments
     module Backend
       class PaymentRecordsController < Erp::Backend::BackendController
-        before_action :set_payment_record, only: [:confirm, :show, :edit, :update, :destroy]
-        before_action :set_payment_records, only: [:confirm_all, :delete_all]
+        before_action :set_payment_record, only: [:show, :edit, :update, :set_done, :set_deleted]
+        before_action :set_payment_records, only: [:set_done_all, :set_deleted_all]
     
         # GET /payment_records
         def index
@@ -50,8 +50,8 @@ module Erp
             @payment_record.contact = Erp::Contacts::Contact.find(params[:contact_id])
           end
           
-          if params[:payment_type].present?
-            @payment_type = Erp::Payments::PaymentType.find_by_code(params[:payment_type]).id
+          if params[:payment_type_id].present?
+            @payment_record.payment_type = Erp::Payments::PaymentType.find(params[:payment_type_id])
           end
           
           if params[:pay_receive].present?
@@ -65,6 +65,7 @@ module Erp
               elsif Erp::Orders::Order.find(params[:order_id]).purchase?
                 @payment_record.contact_id = Erp::Orders::Order.find(params[:order_id]).supplier_id
               end
+              @payment_record.order = Erp::Orders::Order.find(params[:order_id])
               @payment_record.amount = Erp::Orders::Order.find(params[:order_id]).remain_amount
             end
           end
@@ -72,11 +73,6 @@ module Erp
     
         # GET /payment_records/1/edit
         def edit
-          if params[:payment_type].present?
-            @payment_type = Erp::Payments::PaymentType.find_by_code(params[:payment_type]).id
-          else
-            @payment_type = @payment_record.payment_type_id
-          end
         end
         
         # GET /payment_records/1/show
@@ -87,9 +83,9 @@ module Erp
         def create
           @payment_record = PaymentRecord.new(payment_record_params)
           @payment_record.creator = current_user
-          @payment_record.status = Erp::Payments::PaymentRecord::STATUS_PENDING
     
           if @payment_record.save
+            @payment_record.set_done
             if request.xhr?
               render json: {
                 status: 'success',
@@ -120,11 +116,10 @@ module Erp
             render :edit
           end
         end
-    
-        # DELETE /payment_records/1
-        def destroy
-          @payment_record.destroy
-          
+        
+        # DONE /payment_records/1
+        def set_done
+          @payment_record.set_done
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_payment_records_path, notice: t('.success') }
             format.json {
@@ -136,23 +131,9 @@ module Erp
           end
         end
         
-        # DELETE /payment_records/delete_all?ids=1,2,3
-        def delete_all         
-          @payment_records.destroy_all
-          
-          respond_to do |format|
-            format.json {
-              render json: {
-                'message': t('.success'),
-                'type': 'success'
-              }
-            }
-          end          
-        end
-        
-        # CONFIRM /payment_records/1
-        def confirm
-          @payment_record.confirm
+        # DELETED /payment_records/1
+        def set_deleted
+          @payment_record.set_deleted
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_payment_records_path, notice: t('.success') }
             format.json {
@@ -164,9 +145,23 @@ module Erp
           end
         end
         
-        # CONFIRM /payment_records/confirm_all?ids=1,2,3
-        def confirm_all
-          @payment_records.confirm_all
+        # DONE /payment_records/set_done_all?ids=1,2,3
+        def set_done_all
+          @payment_records.set_done_all
+          respond_to do |format|
+            format.html { redirect_to erp_payments.backend_payment_records_path, notice: t('.success') }
+            format.json {
+              render json: {
+                'message': t('.success'),
+                'type': 'success'
+              }
+            }
+          end
+        end
+        
+        # DELETED /payment_records/set_deleted_all?ids=1,2,3
+        def set_deleted_all
+          @payment_records.set_deleted_all
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_payment_records_path, notice: t('.success') }
             format.json {

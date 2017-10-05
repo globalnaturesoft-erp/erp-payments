@@ -18,8 +18,6 @@
                                         errors: payment_record.errors.full_messages_for(:order_id)
                                     }) %>
                                 <% end %>
-                            </div>
-                            <div class="col-md-6">
                                 <% if Erp::Core.available?("contacts") %>
                                     <%= erp_form_control("dataselect", {
                                         name: 'payment_record[contact_id]',
@@ -40,17 +38,11 @@
                                     }) %>
                                 <% end %>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-6">
                                 <ul>
                                     <li>Khách hàng: <strong>Nguyễn Hoàng Anh</strong></li>
                                     <li>Ngày đặt hàng: <strong><%= format_date(Time.now) %></strong></li>
                                     <li>Hạn thanh toán: <strong><%= format_date(Time.now) %></strong></li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <ul>
                                     <li>Tổng tiền cần thanh toán: <strong><%= format_price(5500000) %></strong></li>
                                     <li>Tổng tiền đã thanh toán: <strong><%= format_price(500000) %></strong></li>
                                     <li>Tổng tiền còn lại: <strong><%= format_price(5000000) %></strong></li>

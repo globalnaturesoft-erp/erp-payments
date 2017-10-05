@@ -6,7 +6,7 @@ module Erp::Payments
     belongs_to :account, class_name: "Erp::Payments::Account"
     belongs_to :payment_type, class_name: "Erp::Payments::PaymentType"
     if Erp::Core.available?("contacts")
-      belongs_to :contact, class_name: "Erp::Contacts::Contact"
+      belongs_to :contact, class_name: "Erp::Contacts::Contact", optional: true
       
       def contact_name
         contact.present? ? contact.contact_name : ''
@@ -26,10 +26,10 @@ module Erp::Payments
     end
     
     if Erp::Core.available?("orders")
-      belongs_to :order, class_name: "Erp::Orders::Order"
+      belongs_to :order, class_name: "Erp::Orders::Order", optional: true
     end
     
-    validates :payment_date, :contact_id, :accountant_id, :presence => true
+    validates :payment_date, :amount, :accountant_id, :presence => true
     
     after_save :order_update_cache_payment_status
     after_destroy :order_update_cache_payment_status
@@ -38,7 +38,7 @@ module Erp::Payments
     TYPE_RECEIVE = 'receive'
     TYPE_PAY = 'pay'
     
-    STATUS_PENDING = 'pending'
+    STATUS_DELETED = 'deleted'
     STATUS_DONE = 'done'
     
     # get type method options
@@ -62,13 +62,15 @@ module Erp::Payments
     end
     
     # order date
-    def payment_type_code(params={})
-      if payment_type.present?
-        payment_type.code
-      elsif params[:payment_type].present?
-        Erp::Payments::PaymentType.find_by_code(params[:payment_type]).code
-      end
-    end
+    #def payment_type_code(params={})
+    #  if payment_type.present?
+    #    payment_type.code
+    #  elsif params[:payment_type].present?
+    #    Erp::Payments::PaymentType.find_by_code(params[:payment_type]).code
+    #  elsif params[:payment_type_id].present?
+    #    Erp::Payments::PaymentType.find(params[:payment_type_id]).code
+    #  end
+    #end
     
     # DISPLAY ORDER INFORMATION
     # order date
@@ -143,20 +145,36 @@ module Erp::Payments
 			end
 		end
     
-    def confirm
-      update_attributes(status: Erp::Payments::PaymentRecord::STATUS_DONE)
+    def set_done
+      update_columns(status: Erp::Payments::PaymentRecord::STATUS_DONE)
+    end
+    
+    def set_deleted
+      update_columns(status: Erp::Payments::PaymentRecord::STATUS_DELETED)
     end
     
     def self.confirm_all
       update_all(status: Erp::Payments::PaymentRecord::STATUS_DONE)
     end
     
-    def done?
-      self.status == Erp::Payments::PaymentRecord::STATUS_DONE ? true : false
+    def self.set_deleted_all
+      update_all(status: Erp::Payments::PaymentRecord::STATUS_DELETED)
     end
     
-    def pending?
-      self.status == Erp::Payments::PaymentRecord::STATUS_PENDING ? true : false
+    def is_done?
+      return self.status == Erp::Payments::PaymentRecord::STATUS_DONE
+    end
+    
+    def is_deleted?
+      return self.status == Erp::Payments::PaymentRecord::STATUS_DELETED
+    end
+    
+    def is_receipt_voucher?
+      return self.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE
+    end
+    
+    def is_payment_voucher?
+      return self.pay_receive == Erp::Payments::PaymentRecord::TYPE_PAY
     end
     
     def self.get_order_payment_records(params)
@@ -221,5 +239,14 @@ module Erp::Payments
       
       return query
     end
+    
+    # Generate code
+    after_save :generate_code
+    def generate_code
+			if !code.present?
+				str = (is_receipt_voucher? ? 'PT' : 'PC')
+				update_columns(code: str + id.to_s.rjust(3, '0'))
+			end
+		end
   end
 end

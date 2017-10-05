@@ -7,76 +7,81 @@
 <% end %>
 
 <% content_for :page_toolbar do %>
-    <%= erp_component('button/actions', {
-        actions:
-        [
-            {
-                text: '<i class=""></i> '+t('.receive_for_order'),
+    <!-- create receive -->
+    <%=
+        actions = []
+        actions << {
+            text: '<i class=""></i> '+t(".receive_for_order"),
+            url: erp_payments.new_backend_payment_record_path(
+                pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::TYPE_FOR_ORDER)
+            )
+        }
+        actions << {
+            text: '<i class=""></i> '+t('.receive_for_contact'),
+            url: erp_payments.new_backend_payment_record_path(
+                pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::TYPE_FOR_CONTACT)
+            )
+        }
+        actions << {divider: true}
+        Erp::Payments::PaymentType.get_custom_payment_types.each do |pt|
+            actions << {
+                text: '<i class=""></i> '+ pt.name,
                 url: erp_payments.new_backend_payment_record_path(
                     pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
-                    payment_type: Erp::Payments::PaymentType::TYPE_FOR_ORDER
-                )
-            },
-            {
-                text: '<i class=""></i> '+t('.receive_for_contact'),
-                url: erp_payments.new_backend_payment_record_path(
-                    pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
-                    payment_type: Erp::Payments::PaymentType::TYPE_FOR_CONTACT
-                )
-            },
-            {divider: true},
-            {
-                text: '<i class=""></i> '+t('.receive_custom'),
-                url: erp_payments.new_backend_payment_record_path(
-                    pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
-                    payment_type: Erp::Payments::PaymentType::TYPE_CUSTOM
+                    payment_type_id: pt.id
                 )
             }
-        ],
+        end
+        erp_component('button/actions', {
+        actions: actions,
         text: t('.create_receive'),
         class: 'btn-noborder btn-sm',
         icon: 'fa fa-calendar-plus-o'
     }) %>
     
-    <%= erp_component('button/actions', {
-        actions:
-        [
-            {
-                text: '<i class=""></i> '+t('.pay_for_order'),
+    <!-- create pay -->
+    <%=
+        actions = []
+        actions << {
+            text: '<i class=""></i> '+t('.pay_for_order'),
+            url: erp_payments.new_backend_payment_record_path(
+                pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::TYPE_FOR_ORDER)
+            )
+        }
+        actions << {
+            text: '<i class=""></i> '+t('.pay_for_contact'),
+            url: erp_payments.new_backend_payment_record_path(
+                pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::TYPE_FOR_CONTACT)
+            )
+        }
+        actions << {
+            text: '<i class=""></i> '+t('.pay_commission'),
+            url: erp_payments.new_backend_payment_record_path(
+                pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::TYPE_COMMISSION)
+            )
+        }
+        actions << {divider: true}
+        Erp::Payments::PaymentType.get_custom_payment_types.each do |pt|
+            actions << {
+                text: '<i class=""></i> '+ pt.name,
                 url: erp_payments.new_backend_payment_record_path(
                     pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                    payment_type: Erp::Payments::PaymentType::TYPE_FOR_ORDER
-                )
-            },
-            {
-                text: '<i class=""></i> '+t('.pay_for_contact'),
-                url: erp_payments.new_backend_payment_record_path(
-                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                    payment_type: Erp::Payments::PaymentType::TYPE_FOR_CONTACT
-                )
-            },
-            {
-                text: '<i class=""></i> '+t('.pay_commission'),
-                url: erp_payments.new_backend_payment_record_path(
-                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                    payment_type: Erp::Payments::PaymentType::TYPE_COMMISSION
-                )
-            },
-            {divider: true},
-            {
-                text: '<i class=""></i> '+t('.pay_custom'),
-                url: erp_payments.new_backend_payment_record_path(
-                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                    payment_type: Erp::Payments::PaymentType::TYPE_CUSTOM
+                    payment_type_id: pt.id
                 )
             }
-        ],
-        text: t('.create_pay'),
-        class: 'btn-noborder btn-sm',
-        icon: 'fa fa-calendar-minus-o'
-    }) %>
-    
-    
+        end
+        erp_component('button/actions', {
+            actions: actions,
+            text: t('.create_pay'),
+            class: 'btn-noborder btn-sm',
+            icon: 'fa fa-calendar-minus-o'
+            })
+    %>
 <% end %>
 
 <% content_for :global_filter do %>
@@ -122,10 +127,9 @@
         }
     ],
     actions: [
-        
         {
             text: '<i class="fa fa-check"></i> '+t('confirm'),
-            url: erp_payments.confirm_all_backend_payment_records_path,
+            url: erp_payments.set_done_all_backend_payment_records_path,
             data_method: 'PUT',
             data_confirm: t('.confirm_confirm')
         },
@@ -134,8 +138,8 @@
         },
         {
             text: '<i class="fa fa-trash"></i> '+t('.delete'),
-            url: erp_payments.delete_all_backend_payment_records_path,
-            data_method: 'DELETE',
+            url: erp_payments.set_deleted_all_backend_payment_records_path,
+            data_method: 'PUT',
             data_confirm: t('delete_confirm')
         }
     ],

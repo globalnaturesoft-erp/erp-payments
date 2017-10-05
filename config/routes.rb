@@ -26,9 +26,10 @@ Erp::Payments::Engine.routes.draw do
 			resources :payment_records do
 				collection do
 					post 'list'
-					put 'confirm'
-					put 'confirm_all'
-					delete 'delete_all'
+					put 'set_done'
+					put 'set_deleted'
+					put 'set_done_all'
+					put 'set_deleted_all'
 					post 'order_payment_record_list'
 					get 'liabilities_tracking'
 					post 'liabilities_tracking_table'

@@ -82,5 +82,9 @@ module Erp::Payments
     def set_code_is_custom
       self.update_columns(code: Erp::Payments::PaymentType::TYPE_CUSTOM)
     end
+    
+    def self.get_custom_payment_types
+      self.where(code: Erp::Payments::PaymentType::TYPE_CUSTOM)
+    end
   end
 end

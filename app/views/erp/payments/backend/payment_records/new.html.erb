@@ -23,7 +23,7 @@
         
         <!-- BEGIN SAMPLE FORM PORTLET-->
         
-        <%= render 'form_' + @payment_record.payment_type_code(params), payment_record: @payment_record %>
+        <%= render 'form_' + @payment_record.payment_type.code, payment_record: @payment_record %>
         
         <!-- END SAMPLE FORM PORTLET-->
     </div>

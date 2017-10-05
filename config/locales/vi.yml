@@ -167,6 +167,7 @@ vi:
             confirm_confirm: "Bạn đồng ý xác nhận phiếu?"
             pending: "Chưa xác nhận"
             done: "Đã xác nhận"
+            deleted: "Đã bị hủy"
             opening_funds: "Quỹ đầu kỳ"
             closing_funds: "Tồn quỹ"
             total_received: "Tổng thu"
@@ -296,8 +297,8 @@ vi:
             salesperson: "N.viên kinh doanh"
             create_receive_for_contact: "Tạo phiếu thu"
           liabilities_tracking_table_details:
-            orders_list: "Hóa đơn bán hàng"
-            payment_records_list: "Hóa đơn thanh toán"
+            orders_list: "Hóa đơn bán hàng trong kỳ"
+            payment_records_list: "Lịch sử thanh toán trong kỳ"
             receive: "Phiếu thu"
             pay: "Phiếu chi"
           commission:

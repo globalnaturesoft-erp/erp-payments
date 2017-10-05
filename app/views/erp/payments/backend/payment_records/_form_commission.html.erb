@@ -21,10 +21,9 @@
                             </div>
                             <div class="col-md-6">
                                 <ul>
-                                    <li>Ngày công nợ: Từ <strong><%= format_date(Time.now - 1.week) %></strong> đến <strong><%= format_date(Time.now + 1.week) %></strong></li>
-                                    <li>Tiền công nợ: <strong><%= format_price(12450000) %></strong></li>
-                                    <li>Đã thanh toán: <strong><%= format_price(3000000) %></strong></li>
-                                    <li>Chưa thanh toán: <strong><%= format_price(12450000-3000000) %></strong></li>
+                                    <li>Tiền hoa hồng: <strong><%= format_price(12450000) %></strong></li>
+                                    <li>Hoa hồng đã chi: <strong><%= format_price(3000000) %></strong></li>
+                                    <li>Hoa hồng chưa chi: <strong><%= format_price(12450000-3000000) %></strong></li>
                                 </ul>
                             </div>
                         </div>
