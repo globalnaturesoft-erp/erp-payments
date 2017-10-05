@@ -120,7 +120,7 @@ vi:
             delete: "Xóa phiếu đã chọn"
             confirm: "Xác nhận phiếu"
             confirm_confirm: "Bạn đồng ý xác nhận phiếu?"
-            payment_records: "Sổ quỹ"
+            payment_records: "Quản lý thu - chi"
             code: "Mã phiếu"
             payment_date: "Ngày thanh toán"
             payment_type: "Loại thu - chi"
@@ -173,13 +173,13 @@ vi:
             total_received: "Tổng thu"
             total_paid: "Tổng chi"
           new:
-            payment_records: "Sổ quỹ"
+            payment_records: "Quản lý thu - chi"
             create_receive: "Thêm phiếu thu"
             create_pay: "Thêm phiếu chi"
           edit:
-            payment_records: "Sổ quỹ"
+            payment_records: "Quản lý thu - chi"
           show:
-            payment_records: "Sổ quỹ"
+            payment_records: "Quản lý thu - chi"
             show: "Xem chi tiết"
             edit: "Chỉnh sửa"
             delete: "Xóa phiếu"
