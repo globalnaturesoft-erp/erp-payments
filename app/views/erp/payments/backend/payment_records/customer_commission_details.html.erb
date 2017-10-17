@@ -1,0 +1,89 @@
+<div class="tabbable-custom ">
+    <ul class="nav nav-tabs ">
+        <li class="active">
+            <a href="#tab_5_1" data-toggle="tab">
+                <i class="glyphicon glyphicon-list-alt"></i>
+                <%= t('.orders_list') %>
+            </a>
+        </li>
+        
+        <li>
+            <a href="#tab_5_2" data-toggle="tab">
+                <i class="fa fa-history"></i>
+                <%= t('.payment_records_list') %>
+            </a>
+        </li>
+        
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_5_1">
+            <% if @orders.count > 0 %>
+                <table class="table table-bordered table-advance order-column">
+                    <thead class="flip-content">
+                        <tr>
+                            <th width="10%" class="text-left bg-yellow bg-font-yellow text-nowrap">Mã hóa đơn</th>
+                            <th width="10%" class="text-center bg-yellow bg-font-yellow text-nowrap">Ngày chứng từ</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Cộng tiền hàng</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Tiền chiết khấu</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap">Nhân viên bán hàng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="bg-green" colspan="2"><strong>  </strong></td>
+                            <td class="bg-green text-right"><strong><%= format_price(@orders.sum(&:total)) %></strong></td> <!-- @todo sum total for orders -->
+                            <td class="bg-green"></td>
+                            <td class="bg-green"></td>
+                        </tr>
+                        <% @orders.each do |order| %>
+                            <tr>
+                                <td class="text-left"><strong><%= link_to order.code + " (#{order.order_date.strftime('%d/%m/%Y')})", 'javascript:;' %></strong></td> <!-- @todo modal link_to for order details -->
+                                <td class="text-center"><%= format_date(order.order_date) %></td>
+                                <td class=" text-right"><%= format_price(order.cache_total) %></td>
+                                <td class=" text-right"><%= format_price(order.cache_total) %></td>
+                                <td class="text-left"><%= order.employee_name %></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            <% else %>
+                <div class="alert alert-warning alert-dismissable no-margin">Chưa có đơn hàng nào được chi chiết khấu cho khách hàng trong kỳ này!</div>
+            <% end %>
+        </div>
+        <div class="tab-pane" id="tab_5_2">
+            <% if @payment_records.count > 0 %>
+                <table class="table table-bordered table-advance order-column">
+                    <thead class="flip-content">
+                        <tr>
+                            <th width="15%" class="text-left bg-yellow bg-font-yellow text-nowrap">Mã thanh toán</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap">Hình thức</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap">Thời gian</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap">Người thanh toán</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap text-right">Số tiền</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap">Ghi chú</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="bg-green" colspan="4"><strong>  </strong></td>
+                            <td class="bg-green text-right"><strong><%= format_price(@payment_records.sum(&:amount)) %></strong></td> <!-- @todo sum amount for payment records -->
+                            <td class="bg-green" colspan="2"><strong>  </strong></td>
+                        </tr>
+                        <% @payment_records.each do |payment_record| %>
+                            <tr>
+                                <td class="text-left"><strong><%= payment_record.code %></strong></td>
+                                <td class="text-left"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.pay') : t('.receive') %></td>
+                                <td class="text-left"><%= format_date(payment_record.payment_date) %></td>
+                                <td class="text-left"><%= payment_record.customer_name %></td>
+                                <td class=" text-right"><%= format_price(payment_record.amount) %></td>
+                                <td class="text-left"><%= raw payment_record.description %></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            <% else %>
+                <div class="alert alert-warning alert-dismissable no-margin">Chưa có lần thanh toán chiết khấu nào cho khách hàng trong kỳ này!</div>
+            <% end %>
+        </div>
+    </div>
+</div

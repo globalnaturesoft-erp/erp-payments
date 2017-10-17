@@ -1,5 +1,24 @@
-<ul>
-    <li>Tiền hoa hồng: <strong><%= format_price(rand(12450..30000)*1000) %></strong></li>
-    <li>Hoa hồng đã chi: <strong><%= format_price(rand(12450..30000)*1000) %></strong></li>
-    <li>Hoa hồng chưa chi: <strong><%= format_price(rand(12450..30000)*1000) %></strong></li>
-</ul>
+<div class="alert alert-info no-margin">
+    <table class="table table-info-detail no-margin">
+        <tbody>
+            <tr>
+                <td> Tổng hoa hồng: </td>
+                <td>
+                    <strong><%= format_price(rand(12450..30000)*1000) %></strong>
+                </td>
+            </tr>
+            <tr>
+                <td> Tổng hoa hồng đã chi: </td>
+                <td>
+                    <strong><%= format_price(rand(12450..30000)*1000) %></strong>
+                </td>
+            </tr>
+            <tr>
+                <td> Tổng chưa chi (còn lại): </td>
+                <td>
+                    <strong><%= format_price(rand(12450..30000)*1000) %></strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

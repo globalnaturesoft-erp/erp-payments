@@ -2,6 +2,14 @@
     <div class="form-body">
         <div class="row">
             <div class="col-md-12">
+                <div class="custom-show text-center">
+                    <h4 class="font-yellow bold uppercase">
+                        <%= t("#{payment_record.pay_receive}") %>
+                        <%= t(".#{payment_record.payment_type_name}") %>
+                    </h4>
+                </div>
+            </div>
+            <div class="col-md-12">
                 <%= render 'form_genaral', payment_record: payment_record %>
             </div>
         </div>

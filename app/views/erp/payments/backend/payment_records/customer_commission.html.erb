@@ -1,0 +1,78 @@
+<% content_for :title do %>
+    <%= t('.customer_commission') %>
+<% end %>
+
+<% content_for :page_title do %>
+    <i class="fa fa-bar-chart-o"></i> <%= t('.customer_commission') %>
+<% end %>
+
+<% content_for :page_toolbar do %>
+    
+<% end %>
+
+<% content_for :global_filter do %>
+    <div class="row top-datalist">
+        <div class="col-md-3">
+            <%= erp_form_control('date', {
+                label: t('.from_date'),
+                name: 'from_date',
+                placeholder: t('.select_from_date')
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control('date', {
+                label: t('.to_date'),
+                name: 'to_date',
+                placeholder: t('.select_to_date')
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control("dataselect", {
+                name: 'customer',
+                label: t('.filter_customer'),
+                placeholder: t('.choose_customer'),
+                url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_customer: true),
+            }) %>
+        </div>
+    </div>
+<% end %>
+
+<%= erp_datalist(
+    url: erp_payments.customer_commission_table_backend_payment_records_path,
+    keywords: [
+        
+    ],
+    actions: [
+        
+    ],
+    filters: [
+        
+    ],
+    columns: [
+        {
+            text: t('.customer'), name: 'customer', value: true, checked: true
+        },
+        {
+            text: t('.begin_of_period_amount'), name: 'begin_of_period_amount', value: true, checked: true
+        },
+        {
+            text: t('.total_orders'), name: 'total_orders', value: true, checked: false
+        },
+        {
+            text: t('.number_of_payments'), name: 'number_of_payments', value: true, checked: false
+        },
+        {
+            text: t('.period_amount'), name: 'period_amount', value: true, checked: true
+        },
+        {
+            text: t('.paid_amount'), name: 'paid_amount', value: true, checked: true
+        },
+        {
+            text: t('.end_of_period_amount'), name: 'end_of_period_amount', value: true, checked: true
+        },
+        {
+            text: t('.salesperson'), name: 'salesperson', value: true, checked: false
+        }
+    ],
+    sort: {  }
+) %>

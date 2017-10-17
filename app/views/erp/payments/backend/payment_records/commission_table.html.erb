@@ -79,7 +79,7 @@
                         text: '<i class="fa fa-plus"></i> '+t('.create_pay_for_commission'),
                         url: erp_payments.new_backend_payment_record_path(
                             pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                            payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::TYPE_COMMISSION),
+                            payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_COMMISSION),
                             employee_id: employee.id
                         )
                     }

@@ -2,10 +2,13 @@ module Erp::Payments
   class PaymentType < ApplicationRecord
     
     # class const
-    TYPE_FOR_ORDER = 'for_order'
-    TYPE_FOR_CONTACT = 'for_contact'
-    TYPE_COMMISSION = 'commission'
-    TYPE_CUSTOM = 'custom'
+    CODE_SALES_ORDER = 'sales_order'
+    CODE_PURCHASE_ORDER = 'purchase_order'
+    CODE_CUSTOMER = 'customer'
+    CODE_SUPPLIER = 'supplier'
+    CODE_COMMISSION = 'commission'
+    CODE_CUSTOMER_COMMISSION = 'customer_commission'
+    CODE_CUSTOM = 'custom'
     
     # Filters
     def self.filter(query, params)
@@ -53,7 +56,7 @@ module Erp::Payments
     end
     
     def self.search(params)
-      query = self.where(code: Erp::Payments::PaymentType::TYPE_CUSTOM)
+      query = self.where(code: Erp::Payments::PaymentType::CODE_CUSTOM)
       query = self.filter(query, params)
       
       # order
@@ -80,11 +83,11 @@ module Erp::Payments
     end
     
     def set_code_is_custom
-      self.update_columns(code: Erp::Payments::PaymentType::TYPE_CUSTOM)
+      self.update_columns(code: Erp::Payments::PaymentType::CODE_CUSTOM)
     end
     
     def self.get_custom_payment_types
-      self.where(code: Erp::Payments::PaymentType::TYPE_CUSTOM)
+      self.where(code: Erp::Payments::PaymentType::CODE_CUSTOM)
     end
   end
 end

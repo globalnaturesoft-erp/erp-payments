@@ -2,13 +2,16 @@
 users = Erp::User.all
 
 Erp::Payments::PaymentType.destroy_all
-Erp::Payments::PaymentType.create(name: 'Đơn hàng', code: Erp::Payments::PaymentType::TYPE_FOR_ORDER)
-Erp::Payments::PaymentType.create(name: 'Khách hàng/NCC', code: Erp::Payments::PaymentType::TYPE_FOR_CONTACT)
-Erp::Payments::PaymentType.create(name: 'Chiết khấu/Hoa hồng', code: Erp::Payments::PaymentType::TYPE_COMMISSION)
+Erp::Payments::PaymentType.create(name: 'Đơn bán hàng', code: Erp::Payments::PaymentType::CODE_SALES_ORDER)
+Erp::Payments::PaymentType.create(name: 'Đơn đặt hàng', code: Erp::Payments::PaymentType::CODE_PURCHASE_ORDER)
+Erp::Payments::PaymentType.create(name: 'Công nợ khách hàng', code: Erp::Payments::PaymentType::CODE_CUSTOMER)
+Erp::Payments::PaymentType.create(name: 'Công nợ nhà cung cấp', code: Erp::Payments::PaymentType::CODE_SUPPLIER)
+Erp::Payments::PaymentType.create(name: 'Hoa hồng', code: Erp::Payments::PaymentType::CODE_COMMISSION)
+Erp::Payments::PaymentType.create(name: 'Chiết khấu', code: Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION)
 
-Erp::Payments::PaymentType.create(name: 'Văn phòng phẩm', code: Erp::Payments::PaymentType::TYPE_CUSTOM)
-Erp::Payments::PaymentType.create(name: 'Công tác phí', code: Erp::Payments::PaymentType::TYPE_CUSTOM)
-Erp::Payments::PaymentType.create(name: 'Phí tàu xe, vé máy bay', code: Erp::Payments::PaymentType::TYPE_CUSTOM)
+Erp::Payments::PaymentType.create(name: 'Văn phòng phẩm', code: Erp::Payments::PaymentType::CODE_CUSTOM)
+Erp::Payments::PaymentType.create(name: 'Công tác phí', code: Erp::Payments::PaymentType::CODE_CUSTOM)
+Erp::Payments::PaymentType.create(name: 'Phí tàu xe, vé máy bay', code: Erp::Payments::PaymentType::CODE_CUSTOM)
 puts '==== Payment type created ===='
 
 #pr_types = [Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE, Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY]

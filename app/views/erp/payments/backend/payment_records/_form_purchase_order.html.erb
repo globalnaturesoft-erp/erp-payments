@@ -2,6 +2,14 @@
     <div class="form-body">
         <div class="row">
             <div class="col-md-12">
+                <div class="custom-show text-center">
+                    <h4 class="font-yellow bold uppercase">
+                        <%= t("#{payment_record.pay_receive}") %>
+                        <%= t('.purchase_order') %>
+                    </h4>
+                </div>
+            </div>
+            <div class="col-md-12">
                 <div class="portlet light bordered">
                     <div class="portlet-body form">
                         <div class="row">
@@ -13,7 +21,11 @@
                                         text: payment_record.order_code,
                                         placeholder: t('.choose_order'),
                                         label: t('.order'),
-                                        url: erp_orders.dataselect_backend_orders_path(format: 'json', status: Erp::Orders::Order::STATUS_CONFIRMED),
+                                        url: erp_orders.dataselect_backend_orders_path(format: 'json',
+                                            status: Erp::Orders::Order::STATUS_CONFIRMED,
+                                            customer_id: Erp::Contacts::Contact.get_main_contact.id,
+                                            payment_for: Erp::Orders::Order::PAYMENT_FOR_ORDER
+                                        ),
                                         required: true,
                                         errors: payment_record.errors.full_messages_for(:order_id)
                                     }) %>

@@ -4,9 +4,9 @@
             <th width='1%'>
                 <%= erp_datalist_check_all %>
             </th>
-            <% if get_columns(params).include?("customer") %>
+            <% if get_columns(params).include?("supplier") %>
                 <th>
-                    <%= t('.customer') %>
+                    <%= t('.supplier') %>
                 </th>
             <% end %>
             <% if get_columns(params).include?("begin_of_period_amount") %>
@@ -48,49 +48,44 @@
         </tr>
     </thead>
     <tbody>
-        <% @customers.each do |customer| %>  <!-- todo update this function -->
-            <tr class="odd gradeX has-child-table" data-url="<%= erp_payments.liabilities_tracking_table_details_backend_payment_records_path(customer_id: customer.id) %>">
+        <% @suppliers.each do |supplier| %>  <!-- todo update this function -->
+            <tr class="odd gradeX has-child-table" data-url="<%= erp_payments.supplier_liabilities_tracking_table_details_backend_payment_records_path(supplier_id: supplier.id) %>">
                 <td>
-                    <%= erp_datalist_check_row(id: customer.id) %>
+                    <%= erp_datalist_check_row(id: supplier.id) %>
                 </td>
-                <% if get_columns(params).include?("customer") %>
+                <% if get_columns(params).include?("supplier") %>
                     <td>
                         <i class="fa fa-plus expand tr-expand-button"></i>
-                        <strong><%= customer.name %></strong>
+                        <strong><%= supplier.name %></strong>
                     </td>
                 <% end %>
                 <% if get_columns(params).include?("begin_of_period_amount") %>
-                    <td><%= format_price(customer.sales_debt_amount(to: (@from - 1.day))) %></td>
+                    <td><%= format_price(supplier.purchase_debt_amount(to: (@from - 1.day))) %></td>
                 <% end %>
                 <% if get_columns(params).include?("total_orders") %>
-                    <td class="text-center"><%= customer.sales_orders.count %></td> <!-- todo count with params -->
+                    <td class="text-center"><%= supplier.purchase_orders.count %></td> <!-- todo count with params -->
                 <% end %>
                 <% if get_columns(params).include?("number_of_payments") %>
                     <td class="text-center"><%= rand(0..5) %></td> <!-- todo count with params -->
                 <% end %>
                 <% if get_columns(params).include?("period_amount") %>
-                    <td><%= format_price(customer.sales_total_amount(from: @from, to: @to)) %></td>
+                    <td><%= format_price(supplier.purchase_total_amount(from: @from, to: @to)) %></td>
                 <% end %>
                 <% if get_columns(params).include?("paid_amount") %>
-                    <td><%= format_price(customer.sales_paid_amount(from: @from, to: @to)) %></td>
-                <% end %>
-                <% if get_columns(params).include?("salesperson") %>
-                    <td>
-                        <!-- todo update salesperson for contact -->
-                    </td>
+                    <td><%= format_price(supplier.purchase_paid_amount(from: @from, to: @to)) %></td>
                 <% end %>
                 <% if get_columns(params).include?("end_of_period_amount") %>
-                    <td><%= format_price(customer.sales_debt_amount(to: @to)) %></td>
+                    <td><%= format_price(supplier.purchase_debt_amount(to: @to)) %></td>
                 <% end %>
                 <td>
                     <%= erp_datalist_row_actions(
                         [
                             {
-                                text: '<i class="fa fa-plus"></i> '+t('.create_receive_for_contact'),
+                                text: '<i class="fa fa-plus"></i> '+t('.create_pay_for_contact'),
                                 url: erp_payments.new_backend_payment_record_path(
-                                    pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
-                                    payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER),
-                                    customer_id: customer.id
+                                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                                    payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER),
+                                    supplier_id: supplier.id
                                 )
                             }
                         ]

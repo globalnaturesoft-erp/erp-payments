@@ -1,0 +1,9 @@
+<%= erp_form_control("dataselect", {
+    name: 'payment_record[employee_id]',
+    value: @employee.id,
+    text: @employee.name,
+    placeholder: t('.choose_employee'),
+    label: t('.employee'),
+    url: erp.dataselect_backend_users_path(format: 'json'),
+    required: true,
+}) %>

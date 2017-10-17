@@ -6,23 +6,44 @@ module Erp::Payments
     belongs_to :account, class_name: "Erp::Payments::Account"
     belongs_to :payment_type, class_name: "Erp::Payments::PaymentType"
     if Erp::Core.available?("contacts")
-      belongs_to :contact, class_name: "Erp::Contacts::Contact", optional: true
+      belongs_to :customer, class_name: "Erp::Contacts::Contact", optional: true
+      belongs_to :supplier, class_name: "Erp::Contacts::Contact", optional: true
       
-      def contact_name
-        contact.present? ? contact.contact_name : ''
+      def customer_name
+        customer.present? ? customer.contact_name : ''
       end
       
-      def contact_address
-        contact.present? ? contact.address : ''
+      def supplier_name
+        supplier.present? ? supplier.contact_name : ''
       end
       
-      def contact_phone
-        contact.present? ? contact.phone : ''
+      def customer_address
+        customer.present? ? customer.address : ''
+      end
+      
+      def supplier_address
+        supplier.present? ? supplier.address : ''
+      end
+      
+      def customer_phone
+        customer.present? ? customer.phone : ''
+      end
+      
+      def supplier_phone
+        supplier.present? ? supplier.phone : ''
       end
     end
     
     def creator_name
       creator.name
+    end
+    
+    def payment_type_code
+      payment_type.present? ? payment_type.code : ''
+    end
+    
+    def payment_type_name
+      payment_type.present? ? payment_type.name : ''
     end
     
     if Erp::Core.available?("orders")
@@ -49,6 +70,17 @@ module Erp::Payments
       ]
     end
     
+    
+    
+    # @TODO: Updating...
+    # Search
+    def self.search(params)
+      query = self.all
+      #query = self.filter(query, params)
+      
+      return query
+    end
+    
     def accountant_name
       accountant.present? ? accountant.name : ''
     end
@@ -61,16 +93,14 @@ module Erp::Payments
       account.present? ? account.account_number + ' - ' + account.owner + ' - ' + account.name : ''
     end
     
-    # order date
-    #def payment_type_code(params={})
-    #  if payment_type.present?
-    #    payment_type.code
-    #  elsif params[:payment_type].present?
-    #    Erp::Payments::PaymentType.find_by_code(params[:payment_type]).code
-    #  elsif params[:payment_type_id].present?
-    #    Erp::Payments::PaymentType.find(params[:payment_type_id]).code
-    #  end
-    #end
+    # Generate code
+    after_save :generate_code
+    def generate_code
+			if !code.present?
+				str = (is_receipt_voucher? ? 'PT' : 'PC')
+				update_columns(code: str + id.to_s.rjust(3, '0'))
+			end
+		end
     
     # DISPLAY ORDER INFORMATION
     # order date
@@ -91,10 +121,6 @@ module Erp::Payments
       end
     end
     
-    # order code
-    #def order_code
-    #  order.present? ? order.code : ''
-    #end
     def order_code(params={})
       if order.present?
         order.code
@@ -177,6 +203,7 @@ module Erp::Payments
       return self.pay_receive == Erp::Payments::PaymentRecord::TYPE_PAY
     end
     
+    # ############################# START - REVIEWING ################################
     def self.get_order_payment_records(params)
       self.where(order_id: params[:order_id])
     end
@@ -187,66 +214,75 @@ module Erp::Payments
     end
     
     # Get receive payment record
-    def self.all_received(from_date=nil, to_date=nil)
+    def self.all_received(params={})
       query = self.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE)
-      
-      if from_date.present?
-        query = query.where("payment_date >= ?", from_date.beginning_of_day)
+
+      if params[:from_date].present?
+        query = query.where("payment_date >= ?", params[:from_date].beginning_of_day)
       end
       
-      if to_date.present?
-        query = query.where("payment_date <= ?", to_date.end_of_day)
+      if params[:to_date].present?
+        query = query.where("payment_date <= ?", params[:to_date].end_of_day)
+      end
+      
+      if params[:period].present?
+        query = query.where("payment_date >= ? AND payment_date <= ?", period.from_date.beginning_of_day, period.to_date.end_of_day)
       end
       
       return query
     end
     
     # Get pay payment record
-    def self.all_paid(from_date=nil, to_date=nil)
+    def self.all_paid(params={})
       query = self.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY)
       
-      if from_date.present?
-        query = query.where("payment_date >= ?", from_date.beginning_of_day)
+      if params[:from_date].present?
+        query = query.where("payment_date >= ?", params[:from_date].beginning_of_day)
       end
       
-      if to_date.present?
-        query = query.where("payment_date <= ?", to_date.end_of_day)
+      if params[:to_date].present?
+        query = query.where("payment_date <= ?", params[:to_date].end_of_day)
+      end
+      
+      if params[:period].present?
+        query = query.where("payment_date >= ? AND payment_date <= ?", period.from_date.beginning_of_day, period.to_date.end_of_day)
       end
       
       return query
     end
     
     # get total recieved amount
-    def self.received_amount(from_date=nil, to_date=nil)
-      self.all_done.all_received(from_date, to_date).sum(:amount)
+    def self.received_amount(params={})
+      self.all_done.all_received(params).sum(:amount)
     end
     
     # get total paid amount
-    def self.paid_amount(from_date=nil, to_date=nil)
-      self.all_done.all_paid(from_date, to_date).sum(:amount)
+    def self.paid_amount(params={})
+      self.all_done.all_paid(params).sum(:amount)
     end
     
     # get remain amount (beginning/end) of period
-    def self.remain_amount(from_date=nil, to_date=nil)
-      self.received_amount(from_date, to_date) - self.paid_amount(from_date, to_date)
-    end
+    #def self.remain_amount(from_date=nil, to_date=nil)
+    #  self.received_amount(from_date, to_date) - self.paid_amount(from_date, to_date)
+    #end
+    # ############################# END - REVIEWING ################################
     
-    # @TODO: Updating...
-    # Search
-    def self.search(params)
-      query = self.all
-      #query = self.filter(query, params)
+    # revenue by period
+    def self.revenue_by_period(params={})
+      total = 0.0
       
-      return query
+      # Tong tien thu duoc tu khach hang
+      total = total + self.all_done.all_received(params)
+                          .where(payment_type_id: [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_SALES_ORDER),
+                                                   Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER)])
+                          .sum(:amount)
+      
+      # Tong tien tra lai cho khach hang
+      total = total - self.all_done.all_paid(params)
+                          .where(payment_type_id: [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_SALES_ORDER),
+                                                   Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER)])
+                          .sum(:amount)
+      return total
     end
-    
-    # Generate code
-    after_save :generate_code
-    def generate_code
-			if !code.present?
-				str = (is_receipt_voucher? ? 'PT' : 'PC')
-				update_columns(code: str + id.to_s.rjust(3, '0'))
-			end
-		end
   end
 end

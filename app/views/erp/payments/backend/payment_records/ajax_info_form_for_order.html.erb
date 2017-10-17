@@ -1,19 +1,43 @@
-<ul>
-    <li>
-        <input type="hidden" name="payment_record[contact_id]" value="<%= @contact.id %>">
-        Khách hàng: <strong><%= @contact.name %></strong>
-    </li>
-    <li>
-        Ngày đặt hàng: <strong><%= format_date(@order.order_date) %></strong>
-    </li>
-    <!--<li>Hạn thanh toán: <strong></strong></li>-->
-    <li>
-        Tổng tiền cần thanh toán: <strong><%= format_price(@order.cache_total) %></strong>
-    </li>
-    <li>
-        Tổng tiền đã thanh toán: <strong><%= format_price(@order.paid_amount) %></strong>
-    </li>
-    <li>
-        Tổng tiền còn lại: <strong><%= format_price(@order.remain_amount) %></strong>
-    </li>
-</ul>
+<div class="alert alert-info no-margin">
+    <table class="table table-info-detail no-margin">
+        <% if @order.sales? %>
+            <input type="hidden" name="payment_record[customer_id]" value="<%= @contact.id %>">
+        <% end %>
+        <% if @order.purchase? %>
+            <input type="hidden" name="payment_record[supplier_id]" value="<%= @contact.id %>">
+        <% end %>
+        
+        <tbody>
+            <tr>
+                <td> <%= @order.sales? ? 'Tên khách hàng' : 'Tên nhà cung cấp' %>: </td>
+                <td>
+                    <strong><%= @contact.name %></strong>
+                </td>
+            </tr>
+            <tr>
+                <td> Ngày đặt hàng: </td>
+                <td>
+                    <strong><%= format_date(@order.order_date) %></strong>
+                </td>
+            </tr>
+            <tr>
+                <td> Tổng tiền mua hàng: </td>
+                <td>
+                    <strong><%= format_price(@order.cache_total) %></strong>
+                </td>
+            </tr>
+            <tr>
+                <td> Tổng đã thanh toán: </td>
+                <td>
+                    <strong><%= format_price(@order.paid_amount) %></strong>
+                </td>
+            </tr>
+            <tr>
+                <td> Tổng phải thu (còn lại): </td>
+                <td>
+                    <strong><%= format_price(@order.remain_amount) %></strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

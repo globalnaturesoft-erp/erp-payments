@@ -13,21 +13,21 @@ module Erp
         def list
           records = PaymentRecord.search(params)
           
-           #todo get dates from params
-          from_date = Time.now.beginning_of_month.beginning_of_day
-          to_date = Time.now.end_of_month.end_of_day
-          
-          # Recieved total
-          @total_received = records.received_amount(from_date, to_date)
-          
-          # Paid total
-          @total_paid = records.paid_amount(from_date, to_date)
-          
-          # Begin of period amount
-          @begin_period_amount = records.remain_amount(nil, (from_date - 1.day).end_of_day)
-          
-          # End of period amount
-          @end_period_amount = records.remain_amount(nil, to_date)
+          ##todo get dates from params
+          #from_date = Time.now.beginning_of_month.beginning_of_day
+          #to_date = Time.now.end_of_month.end_of_day
+          #
+          ## Recieved total
+          #@total_received = records.received_amount(from_date, to_date)
+          #
+          ## Paid total
+          #@total_paid = records.paid_amount(from_date, to_date)
+          #
+          ## Begin of period amount
+          #@begin_period_amount = records.remain_amount(nil, (from_date - 1.day).end_of_day)
+          #
+          ## End of period amount
+          #@end_period_amount = records.remain_amount(nil, to_date)
           
           @payment_records = records.paginate(:page => params[:page], :per_page => 3)
           
@@ -46,8 +46,12 @@ module Erp
           @payment_record.payment_date = Time.now
           @payment_record.accountant = current_user
           
-          if params[:contact_id].present?
-            @payment_record.contact = Erp::Contacts::Contact.find(params[:contact_id])
+          if params[:customer_id].present?
+            @payment_record.customer = Erp::Contacts::Contact.find(params[:customer_id])
+          end
+          
+          if params[:supplier_id].present?
+            @payment_record.supplier = Erp::Contacts::Contact.find(params[:supplier_id])
           end
           
           if params[:payment_type_id].present?
@@ -61,12 +65,11 @@ module Erp
           if Erp::Core.available?("orders")
             if params[:order_id].present?
               if Erp::Orders::Order.find(params[:order_id]).sales?
-                @payment_record.contact_id = Erp::Orders::Order.find(params[:order_id]).customer_id
+                @payment_record.customer_id = Erp::Orders::Order.find(params[:order_id]).customer_id
               elsif Erp::Orders::Order.find(params[:order_id]).purchase?
-                @payment_record.contact_id = Erp::Orders::Order.find(params[:order_id]).supplier_id
+                @payment_record.supplier_id = Erp::Orders::Order.find(params[:order_id]).supplier_id
               end
               @payment_record.order = Erp::Orders::Order.find(params[:order_id])
-              @payment_record.amount = Erp::Orders::Order.find(params[:order_id]).remain_amount
             end
           end
         end
@@ -175,45 +178,151 @@ module Erp
         
         def ajax_info_form_for_order
           @order = Erp::Orders::Order.where(id: params[:datas][0]).first
-          @contact = @order.customer
+          @contact = @order.customer if @order.sales?
+          @contact = @order.supplier if @order.purchase?
           render layout: false
         end
         
-        def ajax_info_form_for_contact
-          @contact = Erp::Contacts::Contact.where(id: params[:datas][0]).first
+        def ajax_info_form_for_customer
+          @customer = Erp::Contacts::Contact.where(id: params[:datas][0]).first
+          render layout: false
+        end
+        
+        def ajax_info_form_for_supplier
+          @supplier = Erp::Contacts::Contact.where(id: params[:datas][0]).first
           render layout: false
         end
         
         def ajax_info_form_for_commission
         end
         
-        # liabilities tracking table
+        def ajax_amount_field
+          @order = Erp::Orders::Order.where(id: params[:datas][0]).first
+          @customer = Erp::Contacts::Contact.where(id: params[:datas][1]).first
+          @supplier = Erp::Contacts::Contact.where(id: params[:datas][2]).first
+          if params[:amount].present?
+            @amount = params[:amount]
+          else
+            if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_SALES_ORDER
+              @amount = @order.remain_amount if @order.present?
+            end
+            if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_PURCHASE_ORDER
+              @amount = @order.remain_amount if @order.present?
+            end
+            if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_CUSTOMER
+              @amount = @customer.sales_debt_amount(to: Time.now) if @customer.present? # @todo update params from/to date filter
+            end
+            if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_SUPPLIER
+              @amount = @supplier.purchase_debt_amount(to: Time.now) if @supplier.present? # @todo update params from/to date filter
+            end
+            if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_CUSTOM
+              @amount = nil
+            end
+          end
+        end
+        
+        def ajax_employee_field
+            # Payment record da ton tai employee
+            if params[:employee_id].present?
+              @employee = Erp::User.find(params[:employee_id])
+            
+            # Payment record chua ton tai employee
+            # Lay employee theo order (payment for order)
+            elsif params[:type] == 'order' and params[:datas].present? and params[:datas][0].present?
+              @order = Erp::Orders::Order.where(id: params[:datas][0]).first
+              if @order.present? and @order.employee_id.present?
+                @employee = Erp::User.find(@order.employee_id)
+              else
+                @employee = Erp::User.new
+              end
+            
+            # Lay employee theo contact (payment for contact)
+            elsif params[:type] == 'contact' and params[:datas].present? and params[:datas][0].present?
+              @contact = Erp::Contacts::Contact.where(id: params[:datas][0]).first
+              
+              if @contact.present? and @contact.salesperson_id.present?
+                @employee = Erp::User.find(@contact.salesperson_id)
+              else
+                @employee = Erp::User.new
+              end
+              
+            else # Tra ve gia tri rong neu employee khong ton tai
+              @employee = Erp::User.new
+            end
+          render layout: false
+        end
+        
+        # CUSTOMER / liabilities tracking table
         def liabilities_tracking_table
           glb = params.to_unsafe_hash[:global_filter]
           @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
           @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
           
           if glb[:customer].present?
-            @contacts = Erp::Contacts::Contact.where(id: glb[:customer])
+            @customers = Erp::Contacts::Contact.where(id: glb[:customer])
           else
-            @contacts = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
+            @customers = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
+                                              .where(is_customer: true)
           end
         end
         
-        # liabilities tracking table details
+        # CUSTOMER / liabilities tracking table details
         def liabilities_tracking_table_details
-          @orders = Erp::Contacts::Contact.find(params[:contact_id]).sales_orders_is_payment_for_contact
-          @payment_records = Erp::Payments::PaymentRecord.where(contact_id: params[:contact_id])
+          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders_is_payment_for_contact
+          @payment_records = Erp::Payments::PaymentRecord.where(customer_id: params[:customer_id])
+                                                        .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER).id)
         end
         
-        # commission
+        # SUPPLIER / liabilities tracking table
+        def supplier_liabilities_tracking_table
+          glb = params.to_unsafe_hash[:global_filter]
+          @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
+          @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          
+          if glb[:supplier].present?
+            @suppliers = Erp::Contacts::Contact.where(id: glb[:supplier])
+          else
+            @suppliers = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
+                                              .where(is_supplier: true)
+          end
+        end
+        
+        # SUPPLIER / liabilities tracking table details
+        def supplier_liabilities_tracking_table_details
+          @orders = Erp::Contacts::Contact.find(params[:supplier_id]).purchase_orders_is_payment_for_contact
+          @payment_records = Erp::Payments::PaymentRecord.where(supplier_id: params[:supplier_id])
+                                                        .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER).id)
+        end
+        
+        # commission / SALESPERSON
         def commission_table
+          # @todo change user 'admin@globalnaturesoft.com'
           @employees = Erp::User.where('id != ?', Erp::User.find_by_email('admin@globalnaturesoft.com').id)
         end
         
         def commission_details
-          @orders = Erp::Orders::Order.where(payment_for: Erp::Payments::PaymentType::TYPE_FOR_ORDER)
+          @orders = Erp::Orders::Order.where(payment_for: Erp::Orders::Order::PAYMENT_FOR_ORDER)
           @contacts = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
+        end
+        
+        # commission / CUSTOMER
+        def customer_commission_table
+          glb = params.to_unsafe_hash[:global_filter]
+          @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
+          @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          
+          if glb[:customer].present?
+            @customers = Erp::Contacts::Contact.where(id: glb[:customer])
+          else
+            @customers = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
+                                              .where(is_customer: true)
+          end
+        end
+        
+        def customer_commission_details
+          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders_is_payment_for_contact
+          @payment_records = Erp::Payments::PaymentRecord.where(customer_id: params[:customer_id])
+                                                        .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION).id)
         end
     
         private
@@ -229,7 +338,7 @@ module Erp
           # Only allow a trusted parameter "white list" through.
           def payment_record_params
             params.fetch(:payment_record, {}).permit(:code, :amount, :payment_date, :pay_receive, :description, :status,
-                                                     :order_id, :accountant_id, :contact_id, :employee_id, :account_id, :payment_type_id)
+                                                     :order_id, :accountant_id, :customer_id, :supplier_id, :employee_id, :account_id, :payment_type_id)
           end
       end
     end

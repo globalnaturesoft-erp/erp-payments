@@ -2,22 +2,28 @@
     <div class="form-body">
         <div class="row">
             <div class="col-md-12">
+                <div class="custom-show text-center">
+                    <h4 class="font-yellow bold uppercase">
+                        <%= t("#{payment_record.pay_receive}") %>
+                        <%= t('.employee_commission') %>
+                    </h4>
+                </div>
+            </div>
+            <div class="col-md-12">
                 <div class="portlet light bordered">
                     <div class="portlet-body form">
                         <div class="row">
                             <div class="col-md-6">
-                                <% if Erp::Core.available?("contacts") %>
-                                    <%= erp_form_control("dataselect", {
-                                        name: 'payment_record[employee_id]',
-                                        value: payment_record.employee_id,
-                                        text: payment_record.employee_name,
-                                        placeholder: t('.choose_employee'),
-                                        label: t('.employee'),
-                                        url: erp.dataselect_backend_users_path(format: 'json'),
-                                        required: true,
-                                        errors: payment_record.errors.full_messages_for(:employee_id)
-                                    }) %>
-                                <% end %>
+                                <%= erp_form_control("dataselect", {
+                                    name: 'payment_record[employee_id]',
+                                    value: payment_record.employee_id,
+                                    text: payment_record.employee_name,
+                                    placeholder: t('.choose_employee'),
+                                    label: t('.employee'),
+                                    url: erp.dataselect_backend_users_path(format: 'json'),
+                                    required: true,
+                                    errors: payment_record.errors.full_messages_for(:employee_id)
+                                }) %>
                             </div>
                             <div class="col-md-6">
                                 <div class="ajax-box"

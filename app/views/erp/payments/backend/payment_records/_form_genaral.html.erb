@@ -23,11 +23,18 @@
                         }) %>
                     </div>
                 </div>
-                <%= erp_form_control("number", {
-                    name: 'payment_record[amount]',
-                    value: payment_record.amount,
-                    label: t('.amount')
-                }) %>
+                
+                <div class="ajax-box"
+                    data-url="<%= erp_payments.ajax_amount_field_backend_payment_records_path(amount: payment_record.amount,
+                                                payment_type_code: payment_record.payment_type_code) %>"
+                    data-control="
+                        [name='payment_record[order_id]'],
+                        [name='payment_record[customer_id]'],
+                        [name='payment_record[supplier_id]'],
+                        [name='payment_record[employee_id]'],
+                        [name='payment_record[pay_receive]']
+                    ">
+                </div>
                 <%= erp_form_control("dataselect", {
                     name: 'payment_record[accountant_id]',
                     value: payment_record.accountant_id,
@@ -48,6 +55,12 @@
                     placeholder: t('.choose_bank_account'),
                     label: t('.bank_account'),
                     url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+                    create: {
+                        url: erp_payments.new_backend_account_path,
+                        title: t('.create'),
+                        container_selector: '.new_account',
+                        input_selector: 'input[name="account[name]"]'
+                    },
                     required: true,
                     errors: payment_record.errors.full_messages_for(:account_id)
                 }) %>

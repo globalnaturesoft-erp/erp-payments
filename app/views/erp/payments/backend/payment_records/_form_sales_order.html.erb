@@ -1,0 +1,60 @@
+<%= form_for([erp_payments, :backend, payment_record]) do |f| %>
+    <div class="form-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="custom-show text-center">
+                    <h4 class="font-yellow bold uppercase">
+                        <%= t("#{payment_record.pay_receive}") %>
+                        <%= t('.sales_order') %>
+                    </h4>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-body form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <% if Erp::Core.available?("orders") %>
+                                    <%= erp_form_control("dataselect", {
+                                        name: 'payment_record[order_id]',
+                                        value: payment_record.order_id,
+                                        text: payment_record.order_code,
+                                        placeholder: t('.choose_order'),
+                                        label: t('.order'),
+                                        url: erp_orders.dataselect_backend_orders_path(format: 'json',
+                                            status: Erp::Orders::Order::STATUS_CONFIRMED,
+                                            supplier_id: Erp::Contacts::Contact.get_main_contact.id,
+                                            payment_for: Erp::Orders::Order::PAYMENT_FOR_ORDER
+                                        ),
+                                        required: true,
+                                        errors: payment_record.errors.full_messages_for(:order_id)
+                                    }) %>
+                                <% end %>
+                                <div class="ajax-box"
+                                    data-url="<%= erp_payments.ajax_employee_field_backend_payment_records_path(employee_id: payment_record.employee_id, type: 'order') %>"
+                                    data-control="[name='payment_record[order_id]']">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="ajax-box"
+                                    data-url="<%= erp_payments.ajax_info_form_for_order_backend_payment_records_path %>"
+                                    data-control="[name='payment_record[order_id]']">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <%= render 'form_genaral', payment_record: payment_record %>
+            </div>
+        </div>
+    </div>
+    <%= erp_component('button/save', {
+        text: t('submit')
+    }) %>
+    <%= erp_component('button/cancel', {
+        text: t('cancel'),
+        href: erp_payments.backend_payment_records_path
+    }) %>
+<% end %>

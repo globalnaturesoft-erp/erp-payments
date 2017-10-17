@@ -1,0 +1,77 @@
+<% content_for :title do %>
+    <%= t('.supplier_liabilities_tracking') %>
+<% end %>
+
+<% content_for :page_title do %>
+    <i class="fa fa-bar-chart-o"></i> <%= t('.supplier_liabilities_tracking') %>
+<% end %>
+
+<% content_for :page_toolbar do %>
+    
+<% end %>
+
+<% content_for :global_filter do %>
+    <div class="row top-datalist">
+        <div class="col-md-3">
+            <%= erp_form_control('date', {
+                label: t('.order_from_date'),
+                name: 'from_date',
+                placeholder: t('.select_from_date')
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control('date', {
+                label: t('.order_to_date'),
+                name: 'to_date',
+                placeholder: t('.select_to_date')
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control("dataselect", {
+                name: 'supplier',
+                label: t('.filter_supplier'),
+                placeholder: t('.choose_supplier'),
+                url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_supplier: true),
+            }) %>
+        </div>
+    </div>
+<% end %>
+
+<%= erp_datalist(
+    url: erp_payments.supplier_liabilities_tracking_table_backend_payment_records_path,
+    keywords: [
+        
+    ],
+    actions: [
+        
+    ],
+    filters: [
+        {
+            text: t('.debt_archived'), name: 'show_archived', value: true, checked: false
+        }
+    ],
+    columns: [
+        {
+            text: t('.supplier'), name: 'supplier', value: true, checked: true
+        },
+        {
+            text: t('.begin_of_period_amount'), name: 'begin_of_period_amount', value: true, checked: true
+        },
+        {
+            text: t('.total_orders'), name: 'total_orders', value: true, checked: false
+        },
+        {
+            text: t('.number_of_payments'), name: 'number_of_payments', value: true, checked: false
+        },
+        {
+            text: t('.period_amount'), name: 'period_amount', value: true, checked: true
+        },
+        {
+            text: t('.paid_amount'), name: 'paid_amount', value: true, checked: true
+        },
+        {
+            text: t('.end_of_period_amount'), name: 'end_of_period_amount', value: true, checked: true
+        }
+    ],
+    sort: {  }
+) %>

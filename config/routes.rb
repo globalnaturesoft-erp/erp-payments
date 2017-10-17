@@ -34,12 +34,21 @@ Erp::Payments::Engine.routes.draw do
 					get 'liabilities_tracking'
 					post 'liabilities_tracking_table'
 					get 'liabilities_tracking_table_details'
+					get 'supplier_liabilities_tracking'
+					post 'supplier_liabilities_tracking_table'
+					get 'supplier_liabilities_tracking_table_details'
 					get 'commission'
 					post 'commission_table'
 					get 'commission_details'
+					get 'customer_commission'
+					post 'customer_commission_table'
+					get 'customer_commission_details'
 					get 'ajax_info_form_for_order'
-					get 'ajax_info_form_for_contact'
+					get 'ajax_info_form_for_customer'
+					get 'ajax_info_form_for_supplier'
 					get 'ajax_info_form_for_commission'
+					get 'ajax_employee_field'
+					get 'ajax_amount_field'
 				end
 			end
 			resources :debts do

@@ -1,9 +1,9 @@
 <div class="portlet m-grid m-grid-demo">
     <div class="m-grid-row">
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.opening_funds') %>: <strong><%= @begin_period_amount %></strong></div>
+        <!--<div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.opening_funds') %>: <strong><%= @begin_period_amount %></strong></div>
         <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_received') %>: <strong><%= @total_received %></strong></div>
         <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_paid') %>: <strong><%= @total_paid %></strong></div>
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.closing_funds') %>: <strong><%= @end_period_amount %></strong></div>
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.closing_funds') %>: <strong><%= @end_period_amount %></strong></div>-->
     </div>
 </div>
 
@@ -29,9 +29,14 @@
                         <%= t('.payment_type') %>
                     </th>
                 <% end %>
-                <% if get_columns(params).include?("partner_name") %>
+                <% if get_columns(params).include?("customer_name") %>
                     <th>
-                        <%= t('.partner_name') %>
+                        <%= t('.customer_name') %>
+                    </th>
+                <% end %>
+                <% if get_columns(params).include?("supplier_name") %>
+                    <th>
+                        <%= t('.supplier_name') %>
                     </th>
                 <% end %>
                 <% if get_columns(params).include?("amount") %>
@@ -76,23 +81,14 @@
                     <% end %>
                     <% if get_columns(params).include?("payment_type") %>
                         <td>
-                            <% if !payment_record.order_id.nil? %>
-                                <% if payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_PAY %>
-                                    <%= t('.order_pay') %>
-                                <% else %>
-                                    <%= t('.order_receive') %>
-                                <% end %>
-                            <% else %>
-                                <% if payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_PAY %>
-                                    <%= t('.other_pay') %>
-                                <% else %>
-                                    <%= t('.other_receive') %>
-                                <% end %>
-                            <% end %>
+                            <%= t(".#{display_payment_record_type(payment_record)}") %>
                         </td>
                     <% end %>
-                    <% if get_columns(params).include?("partner_name") %>
-                        <td><%= payment_record.contact_name %></td>
+                    <% if get_columns(params).include?("customer_name") %>
+                        <td><%= payment_record.customer_name %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("supplier_name") %>
+                        <td><%= payment_record.supplier_name %></td>
                     <% end %>
                     <% if get_columns(params).include?("amount") %>
                         <td><%= payment_record.amount %></td>

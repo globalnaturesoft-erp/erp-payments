@@ -14,14 +14,14 @@
             text: '<i class=""></i> '+t(".receive_for_order"),
             url: erp_payments.new_backend_payment_record_path(
                 pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
-                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::TYPE_FOR_ORDER)
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SALES_ORDER)
             )
         }
         actions << {
             text: '<i class=""></i> '+t('.receive_for_contact'),
             url: erp_payments.new_backend_payment_record_path(
                 pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
-                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::TYPE_FOR_CONTACT)
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER)
             )
         }
         actions << {divider: true}
@@ -48,21 +48,21 @@
             text: '<i class=""></i> '+t('.pay_for_order'),
             url: erp_payments.new_backend_payment_record_path(
                 pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::TYPE_FOR_ORDER)
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_PURCHASE_ORDER)
             )
         }
         actions << {
             text: '<i class=""></i> '+t('.pay_for_contact'),
             url: erp_payments.new_backend_payment_record_path(
                 pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::TYPE_FOR_CONTACT)
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER)
             )
         }
         actions << {
             text: '<i class=""></i> '+t('.pay_commission'),
             url: erp_payments.new_backend_payment_record_path(
                 pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::TYPE_COMMISSION)
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_COMMISSION)
             )
         }
         actions << {divider: true}
@@ -183,7 +183,10 @@
             text: t('.payment_type'), name: 'payment_type', value: true, checked: true
         },
         {
-            text: t('.partner_name'), name: 'partner_name', value: true, checked: true
+            text: t('.customer_name'), name: 'customer_name', value: true, checked: true
+        },
+        {
+            text: t('.supplier_name'), name: 'supplier_name', value: true, checked: true
         },
         {
             text: t('.amount'), name: 'amount', value: true, checked: true

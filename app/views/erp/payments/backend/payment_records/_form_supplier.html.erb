@@ -2,28 +2,36 @@
     <div class="form-body">
         <div class="row">
             <div class="col-md-12">
+                <div class="custom-show text-center">
+                    <h4 class="font-yellow bold uppercase">
+                        <%= t("#{payment_record.pay_receive}") %>
+                        <%= t('.supplier_liability') %>
+                    </h4>
+                </div>
+            </div>
+            <div class="col-md-12">
                 <div class="portlet light bordered">
                     <div class="portlet-body form">
                         <div class="row">
                             <div class="col-md-6">
                                 <% if Erp::Core.available?("contacts") %>
                                     <%= erp_form_control("dataselect", {
-                                        name: 'payment_record[contact_id]',
-                                        value: payment_record.contact_id,
-                                        text: payment_record.contact_name,
-                                        placeholder: t('.choose_contact'),
-                                        help: t('.help_contact'),
-                                        label: t('.contact'),
-                                        url: erp_contacts.dataselect_backend_contacts_path(format: 'json'),
+                                        name: 'payment_record[supplier_id]',
+                                        value: payment_record.supplier_id,
+                                        text: payment_record.supplier_name,
+                                        placeholder: t('.choose_supplier'),
+                                        help: t('.help_supplier'),
+                                        label: t('.supplier'),
+                                        url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_supplier: true),
                                         required: true,
-                                        errors: payment_record.errors.full_messages_for(:contact_id)
+                                        errors: payment_record.errors.full_messages_for(:supplier_id)
                                     }) %>
                                 <% end %>
                             </div>
                             <div class="col-md-6">
                                 <div class="ajax-box"
-                                    data-url="<%= erp_payments.ajax_info_form_for_contact_backend_payment_records_path %>"
-                                    data-control="[name='payment_record[contact_id]']">
+                                    data-url="<%= erp_payments.ajax_info_form_for_supplier_backend_payment_records_path %>"
+                                    data-control="[name='payment_record[supplier_id]']">
                                 </div>
                             </div>
                         </div>

@@ -9,7 +9,8 @@ class CreateErpPaymentsPaymentRecords < ActiveRecord::Migration[5.0]
       t.string :status
       t.references :order, index: true, references: :erp_orders_orders
       t.references :accountant, index: true, references: :erp_users
-      t.references :contact, index: true, references: :erp_contacts_contacts
+      t.references :customer, index: true, references: :erp_contacts_contacts
+      t.references :supplier, index: true, references: :erp_contacts_contacts
       t.references :account, index: true, references: :erp_payments_accounts
       t.references :payment_type, index: true, references: :erp_payments_payment_types
       t.references :employee, index: true, references: :erp_users

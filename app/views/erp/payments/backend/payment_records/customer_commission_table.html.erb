@@ -49,7 +49,7 @@
     </thead>
     <tbody>
         <% @customers.each do |customer| %>  <!-- todo update this function -->
-            <tr class="odd gradeX has-child-table" data-url="<%= erp_payments.liabilities_tracking_table_details_backend_payment_records_path(customer_id: customer.id) %>">
+            <tr class="odd gradeX has-child-table" data-url="<%= erp_payments.customer_commission_details_backend_payment_records_path(customer_id: customer.id) %>">
                 <td>
                     <%= erp_datalist_check_row(id: customer.id) %>
                 </td>
@@ -86,10 +86,10 @@
                     <%= erp_datalist_row_actions(
                         [
                             {
-                                text: '<i class="fa fa-plus"></i> '+t('.create_receive_for_contact'),
+                                text: '<i class="fa fa-plus"></i> '+t('.create_pay_customer_commission'),
                                 url: erp_payments.new_backend_payment_record_path(
-                                    pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
-                                    payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER),
+                                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                                    payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION),
                                     customer_id: customer.id
                                 )
                             }
@@ -100,3 +100,9 @@
         <% end %>
     </tbody>
 </table>
+
+ <!--if @contacts.empty? %>
+    <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
+ end %>
+
+= erp_datalist_pagination(@contacts) %>-->
