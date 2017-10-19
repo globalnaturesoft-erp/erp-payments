@@ -13,21 +13,25 @@ module Erp
         def list
           records = PaymentRecord.search(params)
           
+          glb = params.to_unsafe_hash[:global_filter]
+          @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
+          @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          
           #todo get dates from params
-          from_date = Time.now.beginning_of_month.beginning_of_day
-          to_date = Time.now.end_of_month.end_of_day
+          #from_date = Time.now.beginning_of_month.beginning_of_day
+          #to_date = Time.now.end_of_month.end_of_day
           
           # Recieved total
-          @total_received = 10000000000#records.received_amount(from_date, to_date)
+          @total_received = records.received_amount(from_date: @from, to_date: @to)
           
           # Paid total
-          @total_paid = 10000000000#records.paid_amount(from_date, to_date)
+          @total_paid = records.paid_amount(from_date: @from, to_date: @to)
           
           # Begin of period amount
-          @begin_period_amount = 10000000000#records.remain_amount(nil, (from_date - 1.day).end_of_day)
+          @begin_period_amount = records.remain_amount(from_date: nil, to_date: (@from - 1.day))
           
           # End of period amount
-          @end_period_amount = 10000000000#records.remain_amount(nil, to_date)
+          @end_period_amount = records.remain_amount(from_date: nil, to_date: @to)
           
           @payment_records = records.paginate(:page => params[:page], :per_page => 20)
           
@@ -311,6 +315,7 @@ module Erp
         def commission_details
           @orders = Erp::Orders::Order.where(payment_for: Erp::Orders::Order::PAYMENT_FOR_ORDER)
           @contacts = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
+          @employee = Erp::User.find(params[:employee_id])
         end
         
         # commission / CUSTOMER

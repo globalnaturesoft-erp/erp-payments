@@ -35,7 +35,6 @@
                         <th class="bg-yellow bg-font-yellow text-nowrap">Tổng cộng</th>
                         <th class="bg-yellow bg-font-yellow text-nowrap">Số tiền đã thu</th>
                         <th class="bg-yellow bg-font-yellow text-nowrap">Số tiền còn lại</th>
-                        <th class="bg-yellow bg-font-yellow text-nowrap text-right">Hoa hồng (%)</th>
                         <th class="bg-yellow bg-font-yellow text-nowrap text-right">Tiền chi hoa hồng</th>
                         <th class="bg-yellow bg-font-yellow text-nowrap text-right">Ghi chú</th>
                     </tr>
@@ -46,7 +45,6 @@
                         <td class="bg-green text-right"><strong><%= format_price(@orders.sum(&:total)) %></strong></td> <!-- @todo sum total for orders -->
                         <td class="bg-green text-right"><strong><%= format_price(10000000) %></strong></td>
                         <td class="bg-green text-right"><strong><%= format_price(10000000) %></strong></td>
-                        <td class="bg-green text-right"><strong></strong></td>
                         <td class="bg-green text-right"><strong><%= format_price(10000) %></strong></td>
                         <td class="bg-green text-right"><strong></strong></td>
                     </tr>
@@ -57,7 +55,6 @@
                             <td class="text-right"><%= format_price(order.cache_total) %></td>
                             <td class="text-right"><%= format_price(10000000) %></td>
                             <td class="text-right"><%= format_price(10000000) %></td>
-                            <td class="text-right">0.5%</td>
                             <td class="text-right"><%= format_price(10000) %></td>
                             <td class="text-right"></td>
                         </tr>
@@ -71,6 +68,7 @@
                     <tr>
                         <th width="20%" class="bg-yellow bg-font-yellow text-nowrap text-left">Tên khách hàng</th>
                         <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Số tiền thu</th>
+                        <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">New Acc</th>
                         <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Hoa hồng (%)</th>
                         <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Tiền chi hoa hồng</th>
                         <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Ghi chú</th>
@@ -81,6 +79,7 @@
                         <td class="bg-green"><strong></strong></td>
                         <td class="bg-green text-right"><strong><%= format_price(1000000000) %></strong></td> <!-- @todo sum amount for payment records -->
                         <td class="bg-green text-right"><strong></strong></td>
+                        <td class="bg-green text-right"><strong></strong></td>
                         <td class="bg-green text-right"><strong><%= format_price(1000000) %></strong></td>
                         <td class="bg-green text-right"><strong></strong></td>
                     </tr>
@@ -88,6 +87,7 @@
                         <tr>
                             <td class="text-left"><strong><%= link_to contact.name, 'javascript:;' %></strong></td>
                             <td class="text-right"><%= format_price(rand(1000000..1000000000)) %></td>
+                            <td class="text-right"></td>
                             <td class="text-right"><%= rand(0.1..0.5).round(1) %>%</td>
                             <td class="text-right"><%= format_price(rand(1000000..1000000000)) %></td>
                             <td class="text-right"></td>
@@ -99,11 +99,11 @@
         <div class="tab-pane" id="tab_5_3">
             <div class="m-grid m-grid-demo">
                 <div class="m-grid-row">
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.target_amount') %> <br><strong><%= format_price(421057000) %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_sales_amount') %> <br><strong><%= format_price(616998000) %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.amount_received') %> <br><strong><%= format_price(484328000) %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.percentage_achieved') %> <br><strong><%= 115.to_s + '%' %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.commission_amount') %> <br><strong><%= format_price(1500000) %></strong></div>
+                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.target_amount') %> <br><strong><%= format_price(@employee.target_by_period(Erp::Periods::Period.first).amount) %></strong></div>
+                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_sales_amount') %> <br><strong><%= format_price(@employee.sales_total_amount(Erp::Periods::Period.first)) %></strong></div>
+                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.amount_received') %> <br><strong><%= format_price(@employee.revenue_by_period(Erp::Periods::Period.first)) %></strong></div>
+                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.percentage_achieved') %> (mốc) <br><strong><%= @employee.target_commission_by_period(Erp::Periods::Period.first).percent.to_s + '%' %></strong></div>
+                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.commission_amount') %> <br><strong><%= format_price(@employee.target_commission_by_period(Erp::Periods::Period.first).commission_amount) %></strong></div>
                     <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.notes') %> <br><strong><%= '3 ca' %></strong></div>
                 </div>
             </div>

@@ -29,14 +29,9 @@
                         <%= t('.payment_type') %>
                     </th>
                 <% end %>
-                <% if get_columns(params).include?("customer_name") %>
+                <% if get_columns(params).include?("contact_name") %>
                     <th>
-                        <%= t('.customer_name') %>
-                    </th>
-                <% end %>
-                <% if get_columns(params).include?("supplier_name") %>
-                    <th>
-                        <%= t('.supplier_name') %>
+                        <%= t('.contact_name') %>
                     </th>
                 <% end %>
                 <% if get_columns(params).include?("amount") %>
@@ -84,8 +79,12 @@
                             <%= t(".#{display_payment_record_type(payment_record)}") %>
                         </td>
                     <% end %>
-                    <% if get_columns(params).include?("customer_name") %>
-                        <td><%= payment_record.customer_name %></td>
+                    <% if get_columns(params).include?("contact_name") %>
+                        <td>
+                            <%= raw 'KH: ' + payment_record.customer_name + '<br>' if payment_record.customer.present? %>
+                            <%= raw 'NCC: ' + payment_record.supplier_name + '<br>' if payment_record.supplier.present? %>
+                            <%= raw 'Sales: ' + payment_record.employee_name + '<br>' if payment_record.employee.present? %>
+                        </td>
                     <% end %>
                     <% if get_columns(params).include?("supplier_name") %>
                         <td><%= payment_record.supplier_name %></td>

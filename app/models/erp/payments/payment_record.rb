@@ -262,9 +262,9 @@ module Erp::Payments
     end
     
     # get remain amount (beginning/end) of period
-    #def self.remain_amount(from_date=nil, to_date=nil)
-    #  self.received_amount(from_date, to_date) - self.paid_amount(from_date, to_date)
-    #end
+    def self.remain_amount(params={})
+      self.received_amount(params) - self.paid_amount(params)
+    end
     # ############################# END - REVIEWING ################################
     
     # revenue by period

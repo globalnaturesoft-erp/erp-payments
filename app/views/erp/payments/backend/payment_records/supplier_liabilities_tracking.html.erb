@@ -28,6 +28,14 @@
         </div>
         <div class="col-md-3">
             <%= erp_form_control("dataselect", {
+                name: 'period',
+                label: t('.filter_period'),
+                placeholder: t('.choose_period'),
+                url: erp_periods.dataselect_backend_periods_path(format: 'json'),
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control("dataselect", {
                 name: 'supplier',
                 label: t('.filter_supplier'),
                 placeholder: t('.choose_supplier'),

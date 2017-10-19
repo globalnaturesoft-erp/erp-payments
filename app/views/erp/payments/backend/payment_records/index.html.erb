@@ -100,6 +100,14 @@
                 placeholder: t('.select_to_date')
             }) %>
         </div>
+        <div class="col-md-3">
+            <%= erp_form_control("dataselect", {
+                name: 'period',
+                label: t('.filter_period'),
+                placeholder: t('.choose_period'),
+                url: erp_periods.dataselect_backend_periods_path(format: 'json'),
+            }) %>
+        </div>
     </div>
 <% end %>
 
@@ -183,10 +191,7 @@
             text: t('.payment_type'), name: 'payment_type', value: true, checked: true
         },
         {
-            text: t('.customer_name'), name: 'customer_name', value: true, checked: true
-        },
-        {
-            text: t('.supplier_name'), name: 'supplier_name', value: true, checked: true
+            text: t('.contact_name'), name: 'contact_name', value: true, checked: true
         },
         {
             text: t('.amount'), name: 'amount', value: true, checked: true
