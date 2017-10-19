@@ -13,23 +13,23 @@ module Erp
         def list
           records = PaymentRecord.search(params)
           
-          ##todo get dates from params
-          #from_date = Time.now.beginning_of_month.beginning_of_day
-          #to_date = Time.now.end_of_month.end_of_day
-          #
-          ## Recieved total
-          #@total_received = records.received_amount(from_date, to_date)
-          #
-          ## Paid total
-          #@total_paid = records.paid_amount(from_date, to_date)
-          #
-          ## Begin of period amount
-          #@begin_period_amount = records.remain_amount(nil, (from_date - 1.day).end_of_day)
-          #
-          ## End of period amount
-          #@end_period_amount = records.remain_amount(nil, to_date)
+          #todo get dates from params
+          from_date = Time.now.beginning_of_month.beginning_of_day
+          to_date = Time.now.end_of_month.end_of_day
           
-          @payment_records = records.paginate(:page => params[:page], :per_page => 3)
+          # Recieved total
+          @total_received = 10000000000#records.received_amount(from_date, to_date)
+          
+          # Paid total
+          @total_paid = 10000000000#records.paid_amount(from_date, to_date)
+          
+          # Begin of period amount
+          @begin_period_amount = 10000000000#records.remain_amount(nil, (from_date - 1.day).end_of_day)
+          
+          # End of period amount
+          @end_period_amount = 10000000000#records.remain_amount(nil, to_date)
+          
+          @payment_records = records.paginate(:page => params[:page], :per_page => 20)
           
           render layout: nil
         end
@@ -196,6 +196,11 @@ module Erp
         def ajax_info_form_for_commission
         end
         
+        def ajax_info_form_for_customer_commission
+          @customer = Erp::Contacts::Contact.where(id: params[:datas][0]).first
+          render layout: false
+        end
+        
         def ajax_amount_field
           @order = Erp::Orders::Order.where(id: params[:datas][0]).first
           @customer = Erp::Contacts::Contact.where(id: params[:datas][1]).first
@@ -210,10 +215,13 @@ module Erp
               @amount = @order.remain_amount if @order.present?
             end
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_CUSTOMER
-              @amount = @customer.sales_debt_amount(to: Time.now) if @customer.present? # @todo update params from/to date filter
+              @amount = @customer.sales_debt_amount(to_date: Time.now) if @customer.present?
             end
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_SUPPLIER
-              @amount = @supplier.purchase_debt_amount(to: Time.now) if @supplier.present? # @todo update params from/to date filter
+              @amount = @supplier.purchase_debt_amount(to_date: Time.now) if @supplier.present?
+            end
+            if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION
+              @amount = @customer.customer_commission_debt_amount(to_date: Time.now) if @customer.present?
             end
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_CUSTOM
               @amount = nil
@@ -268,7 +276,7 @@ module Erp
         
         # CUSTOMER / liabilities tracking table details
         def liabilities_tracking_table_details
-          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders_is_payment_for_contact
+          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders.payment_for_contact_orders
           @payment_records = Erp::Payments::PaymentRecord.where(customer_id: params[:customer_id])
                                                         .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER).id)
         end
@@ -289,7 +297,7 @@ module Erp
         
         # SUPPLIER / liabilities tracking table details
         def supplier_liabilities_tracking_table_details
-          @orders = Erp::Contacts::Contact.find(params[:supplier_id]).purchase_orders_is_payment_for_contact
+          @orders = Erp::Contacts::Contact.find(params[:supplier_id]).purchase_orders.payment_for_contact_orders
           @payment_records = Erp::Payments::PaymentRecord.where(supplier_id: params[:supplier_id])
                                                         .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER).id)
         end
@@ -320,7 +328,7 @@ module Erp
         end
         
         def customer_commission_details
-          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders_is_payment_for_contact
+          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders.payment_for_contact_orders
           @payment_records = Erp::Payments::PaymentRecord.where(customer_id: params[:customer_id])
                                                         .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION).id)
         end

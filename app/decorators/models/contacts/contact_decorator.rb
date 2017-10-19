@@ -1,26 +1,20 @@
 Erp::Contacts::Contact.class_eval do
-  # todo: check order/payment engine available?
+  
   # Get sales orders for contact (is ordered)
   def sales_orders
     Erp::Orders::Order.sales_orders.where(customer_id: self.id)
                       .where(status: Erp::Orders::Order::STATUS_CONFIRMED)
   end
   
-  def sales_orders_is_payment_for_contact
-    sales_orders.where(payment_for: Erp::Orders::Order::PAYMENT_FOR_CONTACT)
+  # Get purchase orders for contact (is ordered)
+  def purchase_orders
+    Erp::Orders::Order.purchase_orders.where(supplier_id: self.id)
+                      .where(status: Erp::Orders::Order::STATUS_CONFIRMED)
   end
   
   # Sales total amount for contact
   def sales_total_amount(params={})
-    query = self.sales_orders_is_payment_for_contact
-    
-    if params[:from].present?
-      query = query.where('order_date >= ?', params[:from].beginning_of_day)
-    end
-    
-    if params[:to].present?
-      query = query.where('order_date <= ?', params[:to].end_of_day)
-    end
+    query = self.sales_orders.payment_for_contact_orders(params)
     
     return query.sum(:cache_total)
   end
@@ -31,15 +25,10 @@ Erp::Contacts::Contact.class_eval do
                                         .includes(:payment_type)
                                         .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
                                         .where(customer_id: self.id)
-    if params[:from].present?
-      query = query.where('payment_date >= ?', params[:from].beginning_of_day)
-    end
+  
+    result = - query.all_paid(params).sum(:amount) + query.all_received(params).sum(:amount)
     
-    if params[:to].present?
-      query = query.where('payment_date <= ?', params[:to].end_of_day)
-    end
-    
-    return query.sum(:amount)
+    return result
   end
   
   # Sales debt amount for contact
@@ -47,27 +36,9 @@ Erp::Contacts::Contact.class_eval do
     self.sales_total_amount(params) - self.sales_paid_amount(params)
   end
   
-  # Get purchase orders for contact (is ordered)
-  def purchase_orders
-    Erp::Orders::Order.purchase_orders.where(supplier_id: self.id)
-                      .where(status: Erp::Orders::Order::STATUS_CONFIRMED)
-  end
-  
-  def purchase_orders_is_payment_for_contact
-    purchase_orders.where(payment_for: Erp::Orders::Order::PAYMENT_FOR_CONTACT)
-  end
-  
   # Purchase total amount for contact
   def purchase_total_amount(params={})
-    query = self.purchase_orders_is_payment_for_contact
-    
-    if params[:from].present?
-      query = query.where('order_date >= ?', params[:from].beginning_of_day)
-    end
-    
-    if params[:to].present?
-      query = query.where('order_date <= ?', params[:to].end_of_day)
-    end
+    query = self.purchase_orders.payment_for_contact_orders(params)
     
     return query.sum(:cache_total)
   end
@@ -78,19 +49,38 @@ Erp::Contacts::Contact.class_eval do
                                         .includes(:payment_type)
                                         .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
                                         .where(supplier_id: self.id)
-    if params[:from].present?
-      query = query.where('payment_date >= ?', params[:from].beginning_of_day)
-    end
     
-    if params[:to].present?
-      query = query.where('payment_date <= ?', params[:to].end_of_day)
-    end
+    result = query.all_paid(params).sum(:amount) - query.all_received(params).sum(:amount)
     
-    return query.sum(:amount)
+    return result
   end
   
-  # Sales debt amount for contact
+  # Purchase debt amount for contact
   def purchase_debt_amount(params={})
     self.purchase_total_amount(params) - self.purchase_paid_amount(params)
+  end
+  
+  # Customer commission total amount
+  def customer_commission_total_amount(params={})
+    query = self.sales_orders.payment_for_contact_orders(params)
+    
+    return query.sum(:cache_customer_commission_amount)
+  end
+  
+  # Customer commission paid amount
+  def customer_commission_paid_amount(params={})
+    query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
+                                        .includes(:payment_type)
+                                        .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION})
+                                        .where(customer_id: self.id)
+    
+    result = query.all_paid(params).sum(:amount) - query.all_received(params).sum(:amount)
+    
+    return result
+  end
+  
+  # Customer commission debt amount
+  def customer_commission_debt_amount(params={})
+    self.customer_commission_total_amount(params) - self.customer_commission_paid_amount(params)
   end
 end

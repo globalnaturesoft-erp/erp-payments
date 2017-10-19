@@ -32,7 +32,7 @@
                         <tr>
                             <td class="bg-green" colspan="2"><strong>  </strong></td>
                             <td class="bg-green text-right"><strong><%= format_price(@orders.sum(&:total)) %></strong></td> <!-- @todo sum total for orders -->
-                            <td class="bg-green"></td>
+                            <td class="bg-green text-right"><strong><%= format_price(@orders.sum(&:customer_commission_amount)) %></strong></td>
                             <td class="bg-green"></td>
                         </tr>
                         <% @orders.each do |order| %>
@@ -40,7 +40,7 @@
                                 <td class="text-left"><strong><%= link_to order.code + " (#{order.order_date.strftime('%d/%m/%Y')})", 'javascript:;' %></strong></td> <!-- @todo modal link_to for order details -->
                                 <td class="text-center"><%= format_date(order.order_date) %></td>
                                 <td class=" text-right"><%= format_price(order.cache_total) %></td>
-                                <td class=" text-right"><%= format_price(order.cache_total) %></td>
+                                <td class=" text-right"><%= format_price(order.cache_customer_commission_amount) %></td>
                                 <td class="text-left"><%= order.employee_name %></td>
                             </tr>
                         <% end %>

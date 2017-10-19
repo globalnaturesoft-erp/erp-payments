@@ -172,6 +172,8 @@ vi:
             pay_purchase_order: "Chi tiền đơn đặt hàng"
             pay_customer: "Chi công nợ khách hàng"
             pay_supplier: "Chi công nợ nhà cung cấp"
+            pay_commission: "Chi hoa hồng nhân viên"
+            pay_customer_commission: "Chi chiết khấu khách hàng"
             pay_custom: "Chi khác"
             delete: "Xóa phiếu"
             show: "Xem chi tiết"
@@ -218,6 +220,11 @@ vi:
             employee_commission: "Hoa hồng nhân viên"
             employee: "Nhân viên"
             choose_employee: "Chọn nhân viên thụ hưởng"
+          form_customer_commission:
+            customer_commission: "Chiết khấu khách hàng"
+            customer: "Khách hàng"
+            choose_customer: "Chọn khách hàng trong danh sách"
+            help_customer: "Khách hàng được hưởng chiết khấu"
           form_customer:
             customer_liability: "Công nợ khách hàng"
             customer: "Khách hàng"

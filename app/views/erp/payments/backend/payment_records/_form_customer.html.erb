@@ -22,7 +22,7 @@
                                         placeholder: t('.choose_customer'),
                                         help: t('.help_customer'),
                                         label: t('.customer'),
-                                        url: erp_contacts.dataselect_backend_contacts_path(format: 'json'),
+                                        url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_customer: true),
                                         required: true,
                                         errors: payment_record.errors.full_messages_for(:customer_id)
                                     }) %>

@@ -14,16 +14,6 @@
                     <%= t('.begin_of_period_amount') %>
                 </th>
             <% end %>
-            <% if get_columns(params).include?("total_orders") %>
-                <th>
-                    <%= t('.total_orders') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("number_of_payments") %>
-                <th>
-                    <%= t('.number_of_payments') %>
-                </th>
-            <% end %>
             <% if get_columns(params).include?("period_amount") %>
                 <th>
                     <%= t('.period_amount') %>
@@ -60,19 +50,13 @@
                     </td>
                 <% end %>
                 <% if get_columns(params).include?("begin_of_period_amount") %>
-                    <td><%= format_price(customer.sales_debt_amount(to: (@from - 1.day))) %></td>
-                <% end %>
-                <% if get_columns(params).include?("total_orders") %>
-                    <td class="text-center"><%= customer.sales_orders.count %></td> <!-- todo count with params -->
-                <% end %>
-                <% if get_columns(params).include?("number_of_payments") %>
-                    <td class="text-center"><%= rand(0..5) %></td> <!-- todo count with params -->
+                    <td><%= format_price(customer.customer_commission_debt_amount(to_date: (@from - 1.day))) %></td>
                 <% end %>
                 <% if get_columns(params).include?("period_amount") %>
-                    <td><%= format_price(customer.sales_total_amount(from: @from, to: @to)) %></td>
+                    <td><%= format_price(customer.customer_commission_total_amount(from_date: @from, to_date: @to)) %></td>
                 <% end %>
                 <% if get_columns(params).include?("paid_amount") %>
-                    <td><%= format_price(customer.sales_paid_amount(from: @from, to: @to)) %></td>
+                    <td><%= format_price(customer.customer_commission_paid_amount(from_date: @from, to_date: @to)) %></td>
                 <% end %>
                 <% if get_columns(params).include?("salesperson") %>
                     <td>
@@ -80,7 +64,7 @@
                     </td>
                 <% end %>
                 <% if get_columns(params).include?("end_of_period_amount") %>
-                    <td><%= format_price(customer.sales_debt_amount(to: @to)) %></td>
+                    <td><%= format_price(customer.customer_commission_debt_amount(to_date: @to)) %></td>
                 <% end %>
                 <td>
                     <%= erp_datalist_row_actions(

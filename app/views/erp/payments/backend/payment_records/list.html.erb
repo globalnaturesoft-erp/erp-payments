@@ -1,9 +1,9 @@
 <div class="portlet m-grid m-grid-demo">
     <div class="m-grid-row">
-        <!--<div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.opening_funds') %>: <strong><%= @begin_period_amount %></strong></div>
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_received') %>: <strong><%= @total_received %></strong></div>
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_paid') %>: <strong><%= @total_paid %></strong></div>
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.closing_funds') %>: <strong><%= @end_period_amount %></strong></div>-->
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.opening_funds') %>: <strong><%= format_price(@begin_period_amount) %></strong></div>
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_received') %>: <strong><%= format_price(@total_received) %></strong></div>
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_paid') %>: <strong><%= format_price(@total_paid) %></strong></div>
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.closing_funds') %>: <strong><%= format_price(@end_period_amount) %></strong></div>
     </div>
 </div>
 
@@ -40,7 +40,7 @@
                     </th>
                 <% end %>
                 <% if get_columns(params).include?("amount") %>
-                    <th>
+                    <th class="text-right">
                         <%= t('.amount') %>
                     </th>
                 <% end %>
@@ -91,7 +91,7 @@
                         <td><%= payment_record.supplier_name %></td>
                     <% end %>
                     <% if get_columns(params).include?("amount") %>
-                        <td><%= payment_record.amount %></td>
+                        <td class="text-right"><%= format_price(payment_record.amount) %></td>
                     <% end %>
                     <% if get_columns(params).include?("description") %>
                         <td><%= payment_record.description %></td>
@@ -120,7 +120,8 @@
                             [
                                 {
                                     text: '<i class="fa fa-file-pdf-o"></i> '+t('.show'),
-                                    url: erp_payments.backend_payment_record_path(payment_record)
+                                    url: erp_payments.backend_payment_record_path(payment_record),
+                                    class: "modal-link"
                                 },
                                 {
                                     text: '<i class="fa fa-check"></i> '+t('confirm'),

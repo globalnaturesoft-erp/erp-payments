@@ -47,6 +47,7 @@ Erp::Payments::Engine.routes.draw do
 					get 'ajax_info_form_for_customer'
 					get 'ajax_info_form_for_supplier'
 					get 'ajax_info_form_for_commission'
+					get 'ajax_info_form_for_customer_commission'
 					get 'ajax_employee_field'
 					get 'ajax_amount_field'
 				end
