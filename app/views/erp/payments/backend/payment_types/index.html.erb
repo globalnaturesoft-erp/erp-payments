@@ -28,7 +28,12 @@
         
     ],
     filters: [
-        
+        {
+            text: t('.active'), name: 'status', value: Erp::Payments::PaymentType::STATUS_ACTIVE, checked: true
+        },
+        {
+            text: t('.deleted'), name: 'status', value: Erp::Payments::PaymentType::STATUS_DELETED, checked: false
+        }
     ],
     columns: [
         {
@@ -38,7 +43,10 @@
             text: t('.code'), name: 'code', value: true, checked: false
         },
         {
-            text: t('status'), name: 'status', value: true, checked: false
+            text: t('.payable_receivable'), name: 'payable_receivable', value: true, checked: true
+        },
+        {
+            text: t('status'), name: 'status', value: true, checked: true
         }
     ]
 ) %>

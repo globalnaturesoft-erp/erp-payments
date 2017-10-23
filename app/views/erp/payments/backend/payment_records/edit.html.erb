@@ -8,14 +8,6 @@
     </a> / <%= @payment_record.code %>
 <% end %>
 
-<% content_for :page_toolbar do %>
-    <%= erp_component('button/create', {
-        text: t('.create'),
-        href: erp_payments.new_backend_payment_record_path,
-        class: 'btn-sm'
-    }) %>
-<% end %>
-
 <div class="row">
     <div class="col-md-12">
         <% if @payment_record.errors.any? %>

@@ -72,19 +72,92 @@ module Erp::Payments
         {text: I18n.t('.receive'), value: Erp::Payments::PaymentRecord::TYPE_RECEIVE},
         {text: I18n.t('.pay'), value: Erp::Payments::PaymentRecord::TYPE_PAY}
       ]
-    end
+    end    
+    
+    # Filters
+    def self.filter(query, params)
+      params = params.to_unsafe_hash
+      and_conds = []
+      
+      #filters
+      if params["filters"].present?
+        params["filters"].each do |ft|
+          or_conds = []
+          ft[1].each do |cond|
+            or_conds << "#{cond[1]["name"]} = '#{cond[1]["value"]}'"
+          end
+          and_conds << '('+or_conds.join(' OR ')+')' if !or_conds.empty?
+        end
+      end
+      
+      #keywords
+      if params["keywords"].present?
+        params["keywords"].each do |kw|
+          or_conds = []
+          kw[1].each do |cond|
+            or_conds << "LOWER(#{cond[1]["name"]}) LIKE '%#{cond[1]["value"].downcase.strip}%'"
+          end
+          and_conds << '('+or_conds.join(' OR ')+')'
+        end
+      end
+      
+      # add conditions to query
+      query = query.where(and_conds.join(' AND ')) if !and_conds.empty?
+      
+      # global filter
+      global_filter = params[:global_filter]
 
+      if global_filter.present?
 
+				# filter by order from date
+				if global_filter[:from_date].present?
+					query = query.where('payment_date >= ?', global_filter[:from_date].to_date.beginning_of_day)
+				end
 
-    # @TODO: Updating...
-    # Search
-    def self.search(params)
-      query = self.all
-      #query = self.filter(query, params)
+				# filter by order to date
+				if global_filter[:to_date].present?
+					query = query.where('payment_date <= ?', global_filter[:to_date].to_date.end_of_day)
+				end
 
+				# filter by order warehouse
+				if global_filter[:period].present?
+					query = query.where('payment_date >= ? AND payment_date <= ?',
+                              Erp::Periods::Period.find(global_filter[:period]).from_date.beginning_of_day,
+                              Erp::Periods::Period.find(global_filter[:period]).to_date.end_of_day)
+				end
+
+				# filter by order customer
+				if global_filter[:customer].present?
+					query = query.where(customer_id: global_filter[:customer])
+				end
+
+				# filter by order supplier
+				if global_filter[:supplier].present?
+					query = query.where(supplier_id: global_filter[:supplier])
+				end
+
+			end
+      # end// global filter
+      
       return query
     end
-
+    
+    def self.search(params)
+      query = self.all
+      query = self.filter(query, params)
+      
+      # order
+      if params[:sort_by].present?
+        order = params[:sort_by]
+        order += " #{params[:sort_direction]}" if params[:sort_direction].present?
+        
+        query = query.order(order)
+      end
+      
+      return query
+    end
+    
+    # Display name
     def accountant_name
       accountant.present? ? accountant.name : ''
     end
@@ -94,7 +167,7 @@ module Erp::Payments
     end
 
     def account_name
-      account.present? ? account.account_number + ' - ' + account.owner + ' - ' + account.name : ''
+      account.present? ? account.name : ''
     end
 
     # Generate code
@@ -230,7 +303,9 @@ module Erp::Payments
       end
 
       if params[:period].present?
-        query = query.where("payment_date >= ? AND payment_date <= ?", period.from_date.beginning_of_day, period.to_date.end_of_day)
+        query = query.where("payment_date >= ? AND payment_date <= ?",
+                            Erp::Periods::Period.find(params[:period]).from_date.beginning_of_day,
+                            Erp::Periods::Period.find(params[:period]).to_date.end_of_day)
       end
 
       return query
@@ -249,7 +324,9 @@ module Erp::Payments
       end
 
       if params[:period].present?
-        query = query.where("payment_date >= ? AND payment_date <= ?", period.from_date.beginning_of_day, period.to_date.end_of_day)
+        query = query.where("payment_date >= ? AND payment_date <= ?", 
+                            Erp::Periods::Period.find(params[:period]).from_date.beginning_of_day,
+                            Erp::Periods::Period.find(params[:period]).to_date.end_of_day)
       end
 
       return query

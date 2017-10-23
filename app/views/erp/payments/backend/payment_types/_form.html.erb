@@ -4,7 +4,28 @@
         value: payment_type.name,                   
         label: t('.name')
     }) %>
-    
+    <div class="row">
+        <div class="col-md-6 col-sm-6 col-xs-6">
+            <%= erp_form_control('checkbox', {
+                name: 'payment_type[is_payable]',
+                id: 'payment_type_is_payable',
+                value: payment_type.is_payable,
+                not_selected_value: 'false',
+                options: [{value: 'true', text: t('.is_payable')}],
+                errors: payment_type.errors.full_messages_for(:is_payable),
+                alert: true
+            }) %>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6">
+            <%= erp_form_control('checkbox', {
+                name: 'payment_type[is_receivable]',
+                id: 'payment_type_is_receivable',
+                value: payment_type.is_receivable,
+                not_selected_value: 'false',
+                options: [{value: 'true', text: t('.is_receivable')}]
+            }) %>
+        </div>
+    </div>
     <%= erp_component('button/save', {
         text: t('submit')
     }) %>

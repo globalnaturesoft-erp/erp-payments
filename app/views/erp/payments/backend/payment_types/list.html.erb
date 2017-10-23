@@ -14,6 +14,11 @@
                     <%= t('.code') %>
                 </th>
             <% end %>
+            <% if get_columns(params).include?("payable_receivable") %>
+                <th>
+                    <%= t('.payable_receivable') %>
+                </th>
+            <% end %>
             <% if get_columns(params).include?("status") %>
                 <th>
                     <%= t('status') %>
@@ -24,7 +29,7 @@
     </thead>
     <tbody>
         <% if @payment_types.each do |payment_type| %>
-            <tr class="odd gradeX">
+            <tr class="<%= 'blurred' if payment_type.is_deleted? %> odd gradeX">
                 <td>
                     <%= erp_datalist_check_row(id: payment_type.id) %>
                 </td>
@@ -34,8 +39,18 @@
                 <% if get_columns(params).include?("code") %>
                     <td><%= payment_type.code %></td>
                 <% end %>
+                <% if get_columns(params).include?("payable_receivable") %>
+                    <td>
+                        <%= "- #{payment_type.is_payable? ? t('.is_payable') : t('.not_payable')} <br>".html_safe %>
+                        <%= "- #{payment_type.is_receivable? ? t('.is_receivable') : t('.not_receivable')}" %>
+                    </div>
+                </td>
+                <% end %>
                 <% if get_columns(params).include?("status") %>
-                <td></td>
+                    <td>
+                        <%= status_label(payment_type.status) %>
+                    </div>
+                </td>
                 <% end %>
                 <td>
                     <%= erp_datalist_row_actions(
@@ -43,6 +58,22 @@
                             {
                                 text: '<i class="fa fa-edit"></i> '+t('edit'),
                                 href: erp_payments.edit_backend_payment_type_path(payment_type)
+                            },
+                            {
+                                text: '<i class="fa fa-check"></i> '+t('.set_active'),
+                                url: erp_payments.set_active_backend_payment_types_path(id: payment_type),
+                                data_method: 'PUT',
+                                class: 'ajax-link',
+                                hide: payment_type.is_active?,
+                                data_confirm: t('.set_active_confirm')
+                            },
+                            {
+                                text: '<i class="fa fa-close"></i> '+t('.set_deleted'),
+                                url: erp_payments.set_deleted_backend_payment_types_path(id: payment_type),
+                                data_method: 'PUT',
+                                class: 'ajax-link',
+                                hide: payment_type.is_deleted?,
+                                data_confirm: t('.set_deleted_confirm')
                             }
                         ]
                     ) %>

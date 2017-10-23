@@ -14,14 +14,14 @@
     <div class="row top-datalist">
         <div class="col-md-3">
             <%= erp_form_control('date', {
-                label: t('.order_from_date'),
+                label: t('.from_date'),
                 name: 'from_date',
                 placeholder: t('.select_from_date')
             }) %>
         </div>
         <div class="col-md-3">
             <%= erp_form_control('date', {
-                label: t('.order_to_date'),
+                label: t('.to_date'),
                 name: 'to_date',
                 placeholder: t('.select_to_date')
             }) %>
@@ -54,9 +54,7 @@
         
     ],
     filters: [
-        {
-            text: t('.debt_archived'), name: 'show_archived', value: true, checked: false
-        }
+        
     ],
     columns: [
         {
@@ -64,12 +62,6 @@
         },
         {
             text: t('.begin_of_period_amount'), name: 'begin_of_period_amount', value: true, checked: true
-        },
-        {
-            text: t('.total_orders'), name: 'total_orders', value: true, checked: false
-        },
-        {
-            text: t('.number_of_payments'), name: 'number_of_payments', value: true, checked: false
         },
         {
             text: t('.period_amount'), name: 'period_amount', value: true, checked: true

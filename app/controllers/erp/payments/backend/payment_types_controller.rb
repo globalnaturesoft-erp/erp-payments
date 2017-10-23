@@ -2,7 +2,7 @@ module Erp
   module Payments
     module Backend
       class PaymentTypesController < Erp::Backend::BackendController
-        before_action :set_payment_type, only: [:edit, :update]
+        before_action :set_payment_type, only: [:edit, :update, :set_active, :set_deleted]
         
         # POST /payment_types/list
         def list
@@ -26,7 +26,7 @@ module Erp
           
           if @payment_type.save
             @payment_type.set_code_is_custom
-            
+            @payment_type.set_active
             if request.xhr?
               render json: {
                 status: 'success',
@@ -34,7 +34,7 @@ module Erp
                 value: @payment_type.id
               }
             else
-              redirect_to erp_payments.edit_backend_payment_type_path(@payment_type), notice: t('.success')
+              redirect_to erp_payments.backend_payment_types_path, notice: t('.success')
             end
           else
             render :new
@@ -53,10 +53,38 @@ module Erp
                 value: @payment_type.id
               }              
             else
-              redirect_to erp_payments.edit_backend_payment_type_path(@payment_type), notice: t('.success')
+              redirect_to erp_payments.backend_payment_types_path, notice: t('.success')
             end
           else
             render :edit
+          end
+        end
+        
+        # ACTIVE /payment_records/1
+        def set_active
+          @payment_type.set_active
+          respond_to do |format|
+            format.html { redirect_to erp_payments.backend_payment_types_path, notice: t('.success') }
+            format.json {
+              render json: {
+                'message': t('.success'),
+                'type': 'success'
+              }
+            }
+          end
+        end
+        
+        # DELETED /payment_records/1
+        def set_deleted
+          @payment_type.set_deleted
+          respond_to do |format|
+            format.html { redirect_to erp_payments.backend_payment_types_path, notice: t('.success') }
+            format.json {
+              render json: {
+                'message': t('.success'),
+                'type': 'success'
+              }
+            }
           end
         end
     
@@ -68,7 +96,7 @@ module Erp
     
           # Only allow a trusted parameter "white list" through.
           def payment_type_params
-            params.fetch(:payment_type, {}).permit(:name)
+            params.fetch(:payment_type, {}).permit(:name, :is_payable, :is_receivable, :status)
           end
       end
     end

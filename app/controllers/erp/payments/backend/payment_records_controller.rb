@@ -14,8 +14,13 @@ module Erp
           records = PaymentRecord.search(params)
           
           glb = params.to_unsafe_hash[:global_filter]
-          @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
-          @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          if glb[:period].present?
+            @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
+            @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
+          else 
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          end
           
           #todo get dates from params
           #from_date = Time.now.beginning_of_month.beginning_of_day
@@ -267,8 +272,13 @@ module Erp
         # CUSTOMER / liabilities tracking table
         def liabilities_tracking_table
           glb = params.to_unsafe_hash[:global_filter]
-          @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
-          @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          if glb[:period].present?
+            @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
+            @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
+          else 
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          end
           
           if glb[:customer].present?
             @customers = Erp::Contacts::Contact.where(id: glb[:customer])
@@ -288,8 +298,13 @@ module Erp
         # SUPPLIER / liabilities tracking table
         def supplier_liabilities_tracking_table
           glb = params.to_unsafe_hash[:global_filter]
-          @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
-          @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          if glb[:period].present?
+            @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
+            @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
+          else 
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          end
           
           if glb[:supplier].present?
             @suppliers = Erp::Contacts::Contact.where(id: glb[:supplier])
@@ -321,8 +336,13 @@ module Erp
         # commission / CUSTOMER
         def customer_commission_table
           glb = params.to_unsafe_hash[:global_filter]
-          @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
-          @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          if glb[:period].present?
+            @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
+            @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
+          else 
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          end
           
           if glb[:customer].present?
             @customers = Erp::Contacts::Contact.where(id: glb[:customer])

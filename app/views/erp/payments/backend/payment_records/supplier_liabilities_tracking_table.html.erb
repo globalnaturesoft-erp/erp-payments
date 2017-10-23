@@ -14,16 +14,6 @@
                     <%= t('.begin_of_period_amount') %>
                 </th>
             <% end %>
-            <% if get_columns(params).include?("total_orders") %>
-                <th>
-                    <%= t('.total_orders') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("number_of_payments") %>
-                <th>
-                    <%= t('.number_of_payments') %>
-                </th>
-            <% end %>
             <% if get_columns(params).include?("period_amount") %>
                 <th>
                     <%= t('.period_amount') %>
@@ -61,12 +51,6 @@
                 <% end %>
                 <% if get_columns(params).include?("begin_of_period_amount") %>
                     <td><%= format_price(supplier.purchase_debt_amount(to_date: (@from - 1.day))) %></td>
-                <% end %>
-                <% if get_columns(params).include?("total_orders") %>
-                    <td class="text-center"><%= supplier.purchase_orders.count %></td> <!-- todo count with params -->
-                <% end %>
-                <% if get_columns(params).include?("number_of_payments") %>
-                    <td class="text-center"><%= rand(0..5) %></td> <!-- todo count with params -->
                 <% end %>
                 <% if get_columns(params).include?("period_amount") %>
                     <td><%= format_price(supplier.purchase_total_amount(from_date: @from, to_date: @to)) %></td>

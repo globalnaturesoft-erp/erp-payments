@@ -10,6 +10,9 @@ module Erp::Payments
     CODE_CUSTOMER_COMMISSION = 'customer_commission'
     CODE_CUSTOM = 'custom'
     
+    STATUS_ACTIVE = 'active'
+    STATUS_DELETED = 'deleted'
+    
     # Filters
     def self.filter(query, params)
       params = params.to_unsafe_hash
@@ -87,7 +90,34 @@ module Erp::Payments
     end
     
     def self.get_custom_payment_types
-      self.where(code: Erp::Payments::PaymentType::CODE_CUSTOM)
+      self.where(status: Erp::Payments::PaymentType::STATUS_ACTIVE)
+          .where(code: Erp::Payments::PaymentType::CODE_CUSTOM)
+    end
+    
+    def self.payables
+      self.where(is_payable: true)
+    end
+    
+    def self.receivables
+      self.where(is_receivable: true)
+    end
+    
+    # SET status
+    def set_active
+      update_columns(status: Erp::Payments::PaymentType::STATUS_ACTIVE)
+    end
+    
+    def set_deleted
+      update_columns(status: Erp::Payments::PaymentType::STATUS_DELETED)
+    end
+    
+    # Check if deleted/active?
+    def is_active?
+      return self.status == Erp::Payments::PaymentType::STATUS_ACTIVE
+    end
+    
+    def is_deleted?
+      return self.status == Erp::Payments::PaymentType::STATUS_DELETED
     end
   end
 end
