@@ -49,7 +49,25 @@ module Erp::Payments
     if Erp::Core.available?("orders")
       belongs_to :order, class_name: "Erp::Orders::Order", optional: true
     end
-
+    
+    if Erp::Core.available?("qdeliveries")
+      belongs_to :delivery, class_name: "Erp::Qdeliveries::Delivery", optional: true
+      
+      after_save :delivery_update_cache_payment_status
+      after_destroy :delivery_update_cache_payment_status
+      
+      def delivery_code
+        delivery.present? ? delivery.code : ''
+      end
+      
+      def delivery_update_cache_payment_status
+        if delivery.present?
+          delivery.update_cache_payment_status
+        end
+      end
+    end
+    
+    validates :code, uniqueness: true
     validates :payment_date, :amount, :accountant_id, :presence => true
 
     after_save :order_update_cache_payment_status
@@ -171,11 +189,19 @@ module Erp::Payments
     end
 
     # Generate code
-    after_save :generate_code
+    before_validation :generate_code
     def generate_code
 			if !code.present?
+				if is_receipt_voucher?
+					query = Erp::Payments::PaymentRecord.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE)
+				elsif is_payment_voucher?
+					query = Erp::Payments::PaymentRecord.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY)
+				end
+				
 				str = (is_receipt_voucher? ? 'PT' : 'PC')
-				update_columns(code: str + id.to_s.rjust(3, '0'))
+				num = query.where('payment_date >= ? AND payment_date <= ?', self.payment_date.beginning_of_month, self.payment_date.end_of_month).count + 1
+				
+				self.code = str + payment_date.strftime("%m") + payment_date.strftime("%Y").last(2) + "-" + num.to_s.rjust(3, '0')
 			end
 		end
 
