@@ -8,10 +8,16 @@ Erp::Payments::PaymentType.create(name: 'Công nợ khách hàng', code: Erp::Pa
 Erp::Payments::PaymentType.create(name: 'Công nợ nhà cung cấp', code: Erp::Payments::PaymentType::CODE_SUPPLIER, status: Erp::Payments::PaymentType::STATUS_ACTIVE)
 Erp::Payments::PaymentType.create(name: 'Hoa hồng', code: Erp::Payments::PaymentType::CODE_COMMISSION, status: Erp::Payments::PaymentType::STATUS_ACTIVE)
 Erp::Payments::PaymentType.create(name: 'Chiết khấu', code: Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION, status: Erp::Payments::PaymentType::STATUS_ACTIVE)
+Erp::Payments::PaymentType.create(name: 'Trả hàng', code: Erp::Payments::PaymentType::CODE_PRODUCT_RETURN, status: Erp::Payments::PaymentType::STATUS_ACTIVE)
 
-Erp::Payments::PaymentType.create(name: 'Văn phòng phẩm', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE)
-Erp::Payments::PaymentType.create(name: 'Công tác phí', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE)
-Erp::Payments::PaymentType.create(name: 'Phí tàu xe, vé máy bay', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE)
+Erp::Payments::PaymentType.create(name: 'Cố định: nhà + lương', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true)
+Erp::Payments::PaymentType.create(name: 'Phát sinh: gởi hàng, văn phòng...', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true)
+Erp::Payments::PaymentType.create(name: 'Phát sinh Marketing', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true)
+Erp::Payments::PaymentType.create(name: 'Công tác phí', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true)
+Erp::Payments::PaymentType.create(name: 'Tiếp khách', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true)
+Erp::Payments::PaymentType.create(name: 'Thưởng mở account – PKD (new acc)', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true)
+Erp::Payments::PaymentType.create(name: 'Phí vận chuyển hàng', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true)
+Erp::Payments::PaymentType.create(name: 'Lãi ngân hàng', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_receivable: true)
 puts '==== Payment type created ===='
 
 #pr_types = [Erp::Payments::PaymentRecord::PAYMENT_TYPE_RECEIVE, Erp::Payments::PaymentRecord::PAYMENT_TYPE_PAY]
