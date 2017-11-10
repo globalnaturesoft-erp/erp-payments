@@ -250,6 +250,10 @@ vi:
             purchase_order: "Hóa đơn nhập hàng"
             order: "Hóa đơn nhập hàng"
             choose_order: "Chọn đơn hàng muốn thanh toán"
+          form_product_return:
+            product_return: "Hàng hóa bị trả lại"
+            delivery: "Phiếu trả hàng"
+            choose_delivery: "Chọn mã phiếu trả hàng"
           form_genaral:
             payment_code: "Mã phiếu thanh toán"
             placeholder_payment_code: "Nhập mã phiếu thanh toán"

@@ -9,6 +9,7 @@ module Erp::Payments
     CODE_COMMISSION = 'commission'
     CODE_CUSTOMER_COMMISSION = 'customer_commission'
     CODE_CUSTOM = 'custom'
+    CODE_PRODUCT_RETURN = 'product_return'
     
     STATUS_ACTIVE = 'active'
     STATUS_DELETED = 'deleted'

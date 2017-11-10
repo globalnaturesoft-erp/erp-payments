@@ -63,6 +63,10 @@ module Erp
             @payment_record.supplier = Erp::Contacts::Contact.find(params[:supplier_id])
           end
 
+          if params[:delivery_id].present?
+            @payment_record.delivery = Erp::Qdeliveries::Delivery.find(params[:delivery_id])
+          end
+
           if params[:payment_type_id].present?
             @payment_record.payment_type = Erp::Payments::PaymentType.find(params[:payment_type_id])
           end
@@ -95,9 +99,10 @@ module Erp
         def create
           @payment_record = PaymentRecord.new(payment_record_params)
           @payment_record.creator = current_user
+          @payment_record.status = PaymentRecord::STATUS_DONE
 
           if @payment_record.save
-            @payment_record.set_done
+            
             if request.xhr?
               render json: {
                 status: 'success',
@@ -210,10 +215,17 @@ module Erp
           render layout: false
         end
 
+        def ajax_info_form_for_delivery
+          @delivery = Erp::Qdeliveries::Delivery.where(id: params[:datas][0]).first
+          @contact = @delivery.customer
+          render layout: false
+        end
+
         def ajax_amount_field
           @order = Erp::Orders::Order.where(id: params[:datas][0]).first
           @customer = Erp::Contacts::Contact.where(id: params[:datas][1]).first
           @supplier = Erp::Contacts::Contact.where(id: params[:datas][2]).first
+          @delivery = Erp::Qdeliveries::Delivery.where(id: params[:datas][3]).first
           if params[:amount].present?
             @amount = params[:amount]
           else
@@ -231,6 +243,9 @@ module Erp
             end
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION
               @amount = @customer.customer_commission_debt_amount(to_date: Time.now) if @customer.present?
+            end
+            if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_PRODUCT_RETURN
+              @amount = @delivery.remain_amount if @delivery.present?
             end
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_CUSTOM
               @amount = nil
@@ -370,8 +385,8 @@ module Erp
 
           # Only allow a trusted parameter "white list" through.
           def payment_record_params
-            params.fetch(:payment_record, {}).permit(:code, :amount, :payment_date, :pay_receive, :description, :status,
-                                                     :order_id, :accountant_id, :customer_id, :supplier_id, :employee_id, :account_id, :payment_type_id)
+            params.fetch(:payment_record, {}).permit(:code, :amount, :payment_date, :pay_receive, :description, :status, :order_id, :delivery_id,
+                                                     :accountant_id, :customer_id, :supplier_id, :employee_id, :account_id, :payment_type_id)
           end
       end
     end
