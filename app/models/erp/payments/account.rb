@@ -65,6 +65,19 @@ module Erp::Payments
       # add conditions to query
       query = query.where(and_conds.join(' AND ')) if !and_conds.empty?
       
+      # global filter
+      global_filter = params[:global_filter]
+
+      if global_filter.present?
+
+				# filter by self
+				if global_filter[:account].present?
+					query = query.where(id: global_filter[:account])
+				end
+
+			end
+      # end// global filter
+      
       return query
     end
     
