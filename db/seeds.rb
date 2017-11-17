@@ -1,6 +1,3 @@
-# USER
-users = Erp::User.all
-
 Erp::Payments::PaymentType.destroy_all
 Erp::Payments::PaymentType.create(name: 'Đơn bán hàng', code: Erp::Payments::PaymentType::CODE_SALES_ORDER, status: Erp::Payments::PaymentType::STATUS_ACTIVE)
 Erp::Payments::PaymentType.create(name: 'Đơn đặt hàng', code: Erp::Payments::PaymentType::CODE_PURCHASE_ORDER, status: Erp::Payments::PaymentType::STATUS_ACTIVE)
