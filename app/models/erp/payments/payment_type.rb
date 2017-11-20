@@ -6,10 +6,13 @@ module Erp::Payments
     CODE_PURCHASE_ORDER = 'purchase_order'
     CODE_CUSTOMER = 'customer'
     CODE_SUPPLIER = 'supplier'
+    CODE_PRODUCT_RETURN = 'product_return'
     CODE_COMMISSION = 'commission'
     CODE_CUSTOMER_COMMISSION = 'customer_commission'
+    # hoat dong tai chinh, quan ly doanh nghiep
+    CODE_FINANCIAL_EXPENSES = 'financial_expenses'
+    CODE_ADMINISTRATIVE_EXPENSES = 'administrative_expenses'
     CODE_CUSTOM = 'custom'
-    CODE_PRODUCT_RETURN = 'product_return'
     
     STATUS_ACTIVE = 'active'
     STATUS_DELETED = 'deleted'
@@ -119,6 +122,27 @@ module Erp::Payments
     
     def is_deleted?
       return self.status == Erp::Payments::PaymentType::STATUS_DELETED
+    end
+    
+    # Payment record amount by payment type
+    def receive_amount_by_payment_type(params={})
+      Erp::Payments::PaymentRecord.all_done.all_received(params).where(payment_type_id: self.id).sum(:amount)
+    end
+    
+    def paid_amount_by_payment_type(params={})
+      Erp::Payments::PaymentRecord.all_done.all_paid(params).where(payment_type_id: self.id).sum(:amount)
+    end
+    
+    def self.receive_amount_by_payment_type(params={})
+      Erp::Payments::PaymentRecord.all_done.all_received(params).where(payment_type_id: self.ids).sum(:amount)
+    end
+    
+    def self.paid_amount_by_payment_type(params={})
+      Erp::Payments::PaymentRecord.all_done.all_paid(params).where(payment_type_id: self.ids).sum(:amount)
+    end
+    
+    def self.remain_amount_by_payment_type(params={})
+      self.receive_amount_by_payment_type(params) - self.paid_amount_by_payment_type(params)
     end
   end
 end

@@ -123,5 +123,22 @@ module Erp::Payments
     def self.unarchive_all
 			update_all(archived: false)
 		end
+		
+    # --------- Report Functions - Start ---------
+		# So du tai khoan cuoi ky
+		def self.account_balance(params={})
+      total = 0.0
+      total = total + Erp::Payments::PaymentRecord.all_done.all_received(params).sum(:amount)
+      total = total - Erp::Payments::PaymentRecord.all_done.all_paid(params).sum(:amount)
+      return total
+    end
+    
+    def account_balance(params={})
+      total = 0.0
+      total = total + Erp::Payments::PaymentRecord.all_done.all_received(params).where(account_id: self.id).sum(:amount)
+      total = total - Erp::Payments::PaymentRecord.all_done.all_paid(params).where(account_id: self.id).sum(:amount)
+      return total
+    end
+    # --------- Report Functions - End ---------
   end
 end
