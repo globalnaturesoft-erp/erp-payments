@@ -23,7 +23,7 @@
                                         label: t('.delivery'),
                                         url: erp_qdeliveries.dataselect_backend_deliveries_path(format: 'json',
                                             status: Erp::Qdeliveries::Delivery::STATUS_DELIVERED,
-                                            delivery_type: Erp::Qdeliveries::Delivery::TYPE_CUSTOMER_IMPORT
+                                            delivery_type: Erp::Qdeliveries::Delivery::TYPE_SALES_IMPORT
                                         ),
                                         required: true,
                                         errors: payment_record.errors.full_messages_for(:delivery_id)
