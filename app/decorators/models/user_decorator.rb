@@ -33,12 +33,17 @@ Erp::User.class_eval do
 
   def target_commission_by_period(period={})
     revenue = self.revenue_by_period(period)
-    target_by_period(period).target_details.order('percent DESC').each do |td|
-      if revenue >= (td.percent/100)*target_by_period(period).amount
-        return td
+
+    target = target_by_period(period)
+    if target.present?
+      target.target_details.order('percent DESC').each do |td|
+        if revenue >= (td.percent/100)*target_by_period(period).amount
+          return td
+        end
       end
     end
-    return target_by_period(period).target_details.new
+
+    return Erp::Targets::TargetDetail.new
   end
 
   # Get all sales order details, for_order orders
@@ -91,7 +96,7 @@ Erp::User.class_eval do
   def payment_for_contact_sales_commission_amount(params={})
     total = 0.0
     self.payment_for_contact_sales_payment_records(params).each do |pr|
-      total += pr.commission_amount
+      total += pr.commission_amount.to_f
     end
     return total
   end
@@ -101,6 +106,18 @@ Erp::User.class_eval do
     self.payment_for_contact_sales_payment_records(params).each do |pr|
       total += pr.new_account_commission_amount
     end
+    return total
+  end
+
+  # empployee target amount
+  def employee_target_commission_amount(params={})
+    total = 0.0
+    # commission for employee target
+    if params[:target_period].present?
+      target = self.target_commission_by_period(params[:target_period])
+      total += target.commission_amount if target.present?
+    end
+
     return total
   end
 
@@ -115,6 +132,15 @@ Erp::User.class_eval do
 
     # commission for new account
     total += self.new_account_commission_amount(params)
+
+    # commission for employee target
+    total += self.employee_target_commission_amount(params)
+
+    # commission for company target
+    if params[:target_period].present?
+      company_target = Erp::Targets::CompanyTarget.get_by_period(params[:target_period])
+      total += company_target.commission_amount if company_target.present?
+    end
 
     return total
   end

@@ -140,11 +140,11 @@
                         </strong></div>
                         <div class="m-grid-col m-grid-col-middle m-grid-col-center">
                             <%= t('.commission_amount') %> <br><strong>
-                            <%= @target.present? ? format_price(@employee.target_commission_by_period(@period).commission_amount) : '--' %>
+                            <%= @target.present? ? format_price(@employee.employee_target_commission_amount(@options)) : '--' %>
                         </strong></div>
                         <div class="m-grid-col m-grid-col-middle m-grid-col-center">
                             Số lần thu <br><strong>
-                            <%= @payment_for_contact_sales_payment_records.count + @payment_for_order_sales_payment_records.count %>
+                            <%= @payment_for_contact_sales_payment_records.count %>
                         </strong></div>
                     </div>
                 </div>
@@ -155,15 +155,39 @@
             <% end %>
         </div>
         <div class="tab-pane" id="tab_<%= uid %>_4">
-            <div class="m-grid m-grid-demo">
-                <div class="m-grid-row">
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center">Tổng doanh thu: <br><strong><%= format_price(Erp::Payments::PaymentRecord.revenue_by_period) %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center">Target: <br><strong><%= format_price(100000) %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center">Target đã đạt: <br><strong><%= format_price(1000000) %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center">Tổng doanh thu 1%: <br><strong><%= format_price(16394213) %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center">Số tiền được thưởng: <br><strong><%= format_price(1171015) %></strong></div>
+            <% if !@company_target.present? %>
+                <div class="alert alert-warning alert-dismissable no-margin">
+                    Chưa có target công ty trong kỳ này!
                 </div>
-            </div>
+            <% else %>
+                <div class="m-grid m-grid-demo">
+                    <div class="m-grid-row">
+                        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
+                            Tổng doanh thu: <br><strong>
+                            <%= format_price(@company_target.revenue) %>
+                        </strong></div>
+                        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
+                            Target: <br><strong>
+                            <%= format_price(@company_target.amount) %>
+                        </strong></div>
+                        <% if @company_target.reached_target? %>
+                            <div class="m-grid-col m-grid-col-middle m-grid-col-center">
+                                Tổng doanh thu 1%: <br><strong>
+                                <%= format_price(@company_target.revenue_1_percent) %>
+                            </strong></div>
+                            <div class="m-grid-col m-grid-col-middle m-grid-col-center">
+                                Số tiền được thưởng<br>(Tổng doanh thu/<strong><%= Erp::User.employee_count %></strong> nhân viên): <br><strong>
+                                <%= format_price(@company_target.commission_amount) %>
+                            </strong></div>
+                        <% else %>
+                            <div class="m-grid-col m-grid-col-middle m-grid-col-center"><strong class="text-warning">
+                                Chưa đạt target
+                            </strong></div>
+                        <% end %>
+                    </div>
+                </div>
+            <% end %>
+
         </div>
     </div>
     <br />
@@ -182,13 +206,13 @@
     <h4 class="text-left">
         <label style="width: 200px">Thưởng theo target:</label>
         <strong style="width: 100px; display: inline-block" class="text- text-right">
-            <%= format_price(0) %>
+            <%= @target.present? ? format_price(@employee.employee_target_commission_amount(@options)) : '--' %>
         </strong>
     </h4>
     <h4 class="text-left">
         <label style="width: 200px">Thưởng doanh thu (1%):</label>
         <strong style="width: 100px; display: inline-block" class="text- text-right">
-            <%= format_price(0) %>
+            <%= @company_target.present? ? format_price(@company_target.commission_amount) : '--' %>
         </strong>
     </h4>
     <hr style="border-color: #fff;width: 400px">

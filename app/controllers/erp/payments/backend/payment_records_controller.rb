@@ -114,7 +114,7 @@ module Erp
                 value: @payment_record.id
               }
             else
-              redirect_to erp_payments.backend_payment_record_path(@payment_record), notice: t('.success')
+              redirect_to erp_payments.backend_payment_records_path, notice: t('.success')
             end
           else
             render :new
@@ -131,7 +131,7 @@ module Erp
                 value: @payment_record.id
               }
             else
-              redirect_to erp_payments.backend_payment_record_path(@payment_record), notice: t('.success')
+              redirect_to erp_payments.backend_payment_records_path, notice: t('.success')
             end
           else
             render :edit
@@ -356,6 +356,7 @@ module Erp
             @options = {
               from_date: @period.from_date.beginning_of_day,
               to_date: @period.to_date.end_of_day,
+              target_period: @period,
             }
           end
 
@@ -378,6 +379,7 @@ module Erp
             @options = {
               from_date: @period.from_date.beginning_of_day,
               to_date: @period.to_date.end_of_day,
+              target_period: @period,
             }
 
             # payment for order orders
@@ -394,6 +396,7 @@ module Erp
 
             # target
             @target = @employee.target_by_period(@period)
+            @company_target = Erp::Targets::CompanyTarget.get_by_period(@period)
           end
         end
 

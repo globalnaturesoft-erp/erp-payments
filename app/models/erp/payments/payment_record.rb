@@ -398,7 +398,7 @@ module Erp::Payments
     end
 
     def commission_amount
-      return self.amount*(self.customer_commission_percent/100)
+      return self.amount*(self.customer_commission_percent.to_f/100)
     end
 
     # check if new account
@@ -414,7 +414,7 @@ module Erp::Payments
 
     # new account commission
     def new_account_commission_amount
-      self.new_customer? ? self.customer.new_account_commission_amount : 0
+      return (self.new_customer? ? self.customer.new_account_commission_amount.to_f : 0)
     end
   end
 end

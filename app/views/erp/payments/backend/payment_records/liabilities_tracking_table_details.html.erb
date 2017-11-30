@@ -6,14 +6,14 @@
                 <%= t('.payment_records_list') %>
             </a>
         </li>
-        
+
         <li>
             <a href="#tab_5_2" data-toggle="tab">
                 <i class="glyphicon glyphicon-list-alt"></i>
                 <%= t('.orders_list') %>
             </a>
         </li>
-        
+
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="tab_5_1">
@@ -76,7 +76,7 @@
         </div>
         <div class="tab-pane" id="tab_5_2">
             <% if @orders.count > 0 %>
-                
+
                 <table class="table table-bordered table-advance order-column">
                     <thead class="flip-content">
                         <tr>
@@ -94,7 +94,11 @@
                         </tr>
                         <% @orders.each do |order| %>
                             <tr>
-                                <td class="text-left"><strong><%= link_to order.code, 'javascript:;' %></strong></td> <!-- @todo modal link_to for order details -->
+                                <td class="text-left"><strong>
+                                    <%= link_to order.code,
+                                        erp_orders.backend_order_path(order),
+                                        title: order.code, class: "font-blue sbold", target: "_blank" %>
+                                </strong></td> <!-- @todo modal link_to for order details -->
                                 <td class="text-center"><%= format_date(order.order_date) %></td>
                                 <td class=" text-right"><%= format_price(order.cache_total) %></td>
                                 <td class="text-left"><%= order.employee_name %></td>
