@@ -118,8 +118,9 @@
                         <%= erp_datalist_row_actions(
                             [
                                 {
-                                    text: '<i class="fa fa-file-pdf-o"></i> '+t('.view_print'),
-                                    url: erp_payments.backend_payment_record_path(payment_record)
+                                    text: '<i class="fa fa-print"></i> '+t('.view_print'),
+                                    url: erp_payments.backend_payment_record_path(payment_record),
+                                    target: '_blank'
                                 },
                                 {
                                     text: '<i class="fa fa-edit"></i> '+t('.edit'),
@@ -141,7 +142,7 @@
                                     url: erp_payments.set_deleted_backend_payment_records_path(id: payment_record),
                                     data_method: 'PUT',
                                     class: 'ajax-link',
-                                    data_confirm: t('delete_confirm')
+                                    data_confirm: t('.delete_confirm')
                                 }
                             ]
                         ) %>
