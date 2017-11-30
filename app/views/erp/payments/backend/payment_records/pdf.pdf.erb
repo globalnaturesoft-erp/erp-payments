@@ -1,0 +1,79 @@
+<% content_for :form_num do %>
+    01-TT
+<% end %>
+<% content_for :form_info do %>
+    Quyển số: ...<br>
+    Nợ: ...<br>
+    Có: ...
+<% end %>
+<% content_for :title_line_1 do %>
+    <%= @payment_record.is_receipt_voucher? ? 'PHIẾU THU' : 'PHIẾU CHI' %>
+<% end %>
+
+<% content_for :title_line_2 do %>
+    <i>Ngày <%= @payment_record.payment_date.strftime('%d') %>
+    tháng <%= @payment_record.payment_date.strftime('%m') %>
+    năm <%= @payment_record.payment_date.strftime('%Y') %></i>
+    <div>Số: <%= @payment_record.code %></div>
+<% end %>
+
+<% content_for :main_info_col_1 do %>
+  <p class="mt-5">
+    <label><%= @payment_record.is_receipt_voucher? ? 'Người nộp tiền' : 'Người nhận tiền' %>:</label>
+    <span><strong><%= @payment_record.get_contact.name %> </strong></span>
+  </p>
+  <p class="mt-5">
+    <label>Địa chỉ:</label>
+    <span><%= display_contact_address(@payment_record.get_contact) if @payment_record.get_contact %></span>
+  </p>
+  <p class="mt-5">
+    <label>Lý do <%= @payment_record.is_receipt_voucher? ? 'thu' : 'chi' %>:</label>
+    <span><%= @payment_record.description %></span>
+  </p>
+  <p class="mt-5">
+    <label>Số tiền:</label>
+    <span><strong><%= format_number(@payment_record.amount) %> VNĐ</strong></span>
+  </p>
+  <p class="mt-5">
+    <label>Viết bằng chữ:</label>
+    <span><strong><i><%= docso(@payment_record.amount) %>.</i></strong></span>
+  </p>
+  <p class="mt-5">
+    <label>Kèm theo:</label>
+    <span>...... chứng từ gốc</span>
+  </p>
+<% end %>
+
+<% content_for :footer do %>
+    <div class="col text-center" style="width: 20%">
+        <p>
+            <strong>Giám đốc</strong><br/>
+            <i>(Ký, họ tên, đóng dấu)</i>
+        </p>
+    </div>
+    <div class="col text-center" style="width: 20%">
+        <p>
+            <strong>Kế toán trưởng</strong><br/>
+            <i>(Ký, họ tên)</i>
+        </p>
+    </div>
+    <div class="col text-center" style="width: 20%">
+        <p>
+            <strong>Thủ quỹ</strong><br/>
+            <i>(Ký, họ tên)</i>
+        </p>
+    </div>
+    <div class="col text-center" style="width: 20%">
+        <p>
+            <strong>Người lập phiếu</strong><br/>
+            <i>(Ký, họ tên)</i>
+        </p>
+        <p class="sign_name"><%= @payment_record.creator_name %></p>
+    </div>
+    <div class="col text-center" style="width: 20%">
+        <p>
+            <strong><%= @payment_record.is_receipt_voucher? ? 'Người nộp tiền' : 'Người nhận tiền' %></strong><br/>
+            <i>(Ký, họ tên)</i>
+        </p>
+    </div>
+<% end %>

@@ -86,7 +86,7 @@ module Erp::Payments
         query = query.where('LOWER(name) LIKE ?', "%#{keyword}%")
       end
       
-      query = query.limit(8).map{|ptype| {value: ptype.id, text: ptype.name} }
+      query = query.limit(20).map{|ptype| {value: ptype.id, text: ptype.name} }
     end
     
     def set_code_is_custom

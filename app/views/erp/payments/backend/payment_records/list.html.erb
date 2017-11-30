@@ -83,7 +83,7 @@
                         <td>
                             <%= raw 'KH: ' + payment_record.customer_name + '<br>' if payment_record.customer.present? %>
                             <%= raw 'NCC: ' + payment_record.supplier_name + '<br>' if payment_record.supplier.present? %>
-                            <%= raw 'Sales: ' + payment_record.employee_name + '<br>' if payment_record.employee.present? %>
+                            <%= raw 'Sell: ' + payment_record.employee_name + '<br>' if payment_record.employee.present? %>
                         </td>
                     <% end %>
                     <% if get_columns(params).include?("supplier_name") %>
@@ -118,9 +118,8 @@
                         <%= erp_datalist_row_actions(
                             [
                                 {
-                                    text: '<i class="fa fa-file-pdf-o"></i> '+t('.show'),
-                                    url: erp_payments.backend_payment_record_path(payment_record),
-                                    class: "modal-link"
+                                    text: '<i class="fa fa-file-pdf-o"></i> '+t('.view_print'),
+                                    url: erp_payments.backend_payment_record_path(payment_record)
                                 },
                                 {
                                     text: '<i class="fa fa-edit"></i> '+t('.edit'),

@@ -51,6 +51,8 @@ Erp::Payments::Engine.routes.draw do
 					get 'ajax_info_form_for_delivery'
 					get 'ajax_employee_field'
 					get 'ajax_amount_field'
+					post 'show_list'
+					get 'pdf'
 				end
 			end
 			resources :debts do

@@ -115,8 +115,67 @@
                 url: erp_periods.dataselect_backend_periods_path(format: 'json'),
             }) %>
         </div>
+        <div class="col-md-3">
+            <%= erp_form_control("dataselect", {
+                name: 'employee',
+                label: t('.filter_employee'),
+                placeholder: t('.choose_employee'),
+                url: erp.dataselect_backend_users_path(format: 'json'),
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control("dataselect", {
+                name: 'customer',
+                label: t('.filter_customer'),
+                placeholder: t('.choose_customer'),
+                url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_customer: true,
+                    contact_id: Erp::Contacts::Contact.get_main_contact.id),
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control("dataselect", {
+                name: 'supplier',
+                label: t('.filter_supplier'),
+                placeholder: t('.choose_supplier'),
+                url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_supplier: true,
+                    contact_id: Erp::Contacts::Contact.get_main_contact.id),
+            }) %>
+        </div>
+        <div class="col-md-6">
+            <%= erp_form_control("dataselect", {
+                name: 'payment_type',
+                label: t('.filter_payment_type'),
+                placeholder: t('.choose_payment_type'),
+                url: erp_payments.dataselect_backend_payment_types_path(format: 'json'),
+                multiple: true
+            }) %>
+        </div>
     </div>
 <% end %>
+
+<%
+    filters = []
+    filters << {
+        text: t('.receipt_voucher'), name: 'pay_receive', value: Erp::Payments::PaymentRecord::TYPE_RECEIVE, checked: false
+    }
+    filters << {
+        text: t('.payment_voucher'), name: 'pay_receive', value: Erp::Payments::PaymentRecord::TYPE_PAY, checked: false
+    }
+    filters << {
+        divider: true
+    } if Erp::Payments::Account.where(archived: false).count > 0
+    Erp::Payments::Account.where(archived: false).each do |account|
+        filters << {
+            text: account.name, name: 'account_id', value: account.id, checked: false
+        }
+    end
+    filters << {
+        divider: true
+    }
+    filters << {
+        text: t('.deleted'), name: 'status', value: Erp::Payments::PaymentRecord::STATUS_DELETED, checked: false
+    }
+%>
 
 <%= erp_datalist(
     url: erp_payments.list_backend_payment_records_path,
@@ -142,51 +201,9 @@
         }
     ],
     actions: [
-        {
-            text: '<i class="fa fa-check"></i> '+t('confirm'),
-            url: erp_payments.set_done_all_backend_payment_records_path,
-            data_method: 'PUT',
-            data_confirm: t('.confirm_confirm')
-        },
-        {
-            divider: true
-        },
-        {
-            text: '<i class="fa fa-trash"></i> '+t('.delete'),
-            url: erp_payments.set_deleted_all_backend_payment_records_path,
-            data_method: 'PUT',
-            data_confirm: t('delete_confirm')
-        }
+        
     ],
-    filters: [
-        {
-            text: t('.cash'), name: 'cash', value: true, checked: false
-        },
-        {
-            text: t('.bank_account'), name: 'bank_account', value: true, checked: false
-        },
-        {
-            divider: true
-        },
-        {
-            text: t('.order_receive'), name: 'order_receive', value: true, checked: false
-        },
-        {
-            text: t('.order_pay'), name: 'order_pay', value: true, checked: false
-        },
-        {
-            text: t('.other_receive'), name: 'other_receive', value: true, checked: false
-        },
-        {
-            text: t('.other_pay'), name: 'other_pay', value: true, checked: false
-        },
-        {
-            divider: true
-        },
-        {
-            text: t('.payment_record_archived'), name: 'show_archived', value: true, checked: false
-        }
-    ],
+    filters: filters,
     columns: [
         {
             text: t('.code'), name: 'code', value: true, checked: true

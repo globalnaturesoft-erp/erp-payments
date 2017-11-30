@@ -144,16 +144,26 @@ module Erp::Payments
                               Erp::Periods::Period.find(global_filter[:period]).to_date.end_of_day)
 				end
 
-				# filter by order customer
+				# filter by customer
 				if global_filter[:customer].present?
 					query = query.where(customer_id: global_filter[:customer])
 				end
 
-				# filter by order supplier
+				# filter by supplier
 				if global_filter[:supplier].present?
 					query = query.where(supplier_id: global_filter[:supplier])
 				end
 
+				# filter by employee
+				if global_filter[:employee].present?
+					query = query.where(employee_id: global_filter[:employee])
+				end
+
+				# filter by employee
+				if global_filter[:payment_type].present?
+					query = query.where(payment_type_id: global_filter[:payment_type])
+				end
+        
 			end
       # end// global filter
 
@@ -186,6 +196,39 @@ module Erp::Payments
 
     def account_name
       account.present? ? account.name : ''
+    end
+    
+    def get_contact
+      if [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_SALES_ORDER).id,
+        Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER).id].include?(payment_type_id)
+        if customer.present?
+          query = customer
+        end
+      end
+      if [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_PURCHASE_ORDER).id,
+        Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER).id].include?(payment_type_id)
+        if supplier.present?
+          query = supplier
+        end
+      end
+      if [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_PRODUCT_RETURN).id].include?(payment_type_id)
+        if supplier.present?
+          query = supplier
+        else
+          query = customer
+        end
+      end
+      if [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_COMMISSION).id].include?(payment_type_id)
+        if employee.present?
+          query = employee
+        end
+      end
+      if [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION).id].include?(payment_type_id)
+        if customer.present?
+          query = customer
+        end
+      end
+      return query
     end
 
     # Generate code

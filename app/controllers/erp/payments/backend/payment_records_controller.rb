@@ -2,7 +2,7 @@ module Erp
   module Payments
     module Backend
       class PaymentRecordsController < Erp::Backend::BackendController
-        before_action :set_payment_record, only: [:show, :edit, :update, :set_done, :set_deleted]
+        before_action :set_payment_record, only: [:pdf, :show, :show_list, :edit, :update, :set_done, :set_deleted]
         before_action :set_payment_records, only: [:set_done_all, :set_deleted_all]
 
         # GET /payment_records
@@ -97,6 +97,37 @@ module Erp
 
         # GET /payment_records/1/show
         def show
+          respond_to do |format|
+            format.html
+            format.pdf do
+              render pdf: "show_list",
+                layout: 'erp/backend/pdf'
+            end
+          end
+        end
+        
+        def show_list
+        end
+        
+        # GET /orders/1
+        def pdf
+
+          respond_to do |format|
+            format.html
+            format.pdf do
+              render pdf: "#{@payment_record.code}",
+                title: "#{@payment_record.code}",
+                layout: 'erp/backend/pdf',
+                page_size: 'A5',
+                orientation: 'Landscape',
+                margin: {
+                  top: 7,                     # default 10 (mm)
+                  bottom: 7,
+                  left: 7,
+                  right: 7
+                }
+            end
+          end
         end
 
         # POST /payment_records

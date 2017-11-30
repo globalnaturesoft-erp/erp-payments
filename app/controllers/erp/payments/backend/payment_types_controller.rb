@@ -87,6 +87,14 @@ module Erp
             }
           end
         end
+        
+        def dataselect
+          respond_to do |format|
+            format.json {
+              render json: PaymentType.dataselect(params[:keyword])
+            }
+          end
+        end
     
         private
           # Use callbacks to share common setup or constraints between actions.
