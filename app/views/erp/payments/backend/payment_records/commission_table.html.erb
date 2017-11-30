@@ -1,107 +1,117 @@
-<table class="table table-advance table-hover table-striped table-checkable order-column">
-    <thead>
-        <tr>
-            <th width='1%'>
-                <%= erp_datalist_check_all %>
-            </th>
-            <% if get_columns(params).include?("employee") %>
-                <th>
-                    <%= t('.employee') %>
+<% if !@period.present? %>
+  <div class="alert alert-warning">
+      <p>Vui lòng chọn các tham số bắt buộc:
+          <br>- <strong>Chu kỳ thời gian</strong>
+      </p>
+  </div>
+<% else %>
+  <h4 class="mb-10">
+    Chi hoa hồng nhân viên
+    <% if @period.present? %>
+      <strong><%= @period.name %></strong>
+    <% end %>
+  </h4>
+    <table class="table table-advance table-hover table-striped table-checkable order-column">
+        <thead>
+            <tr>
+                <th width='1%'>
+                    <%= erp_datalist_check_all %>
                 </th>
-            <% end %>
-            <% if get_columns(params).include?("total_revenue") %>
-                <th class="text-right">
-                    <%= t('.total_revenue') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("total_received") %>
-                <th class="text-right">
-                    <%= t('.total_received') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("total_remain") %>
-                <th class="text-right">
-                    <%= t('.total_remain') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("total_commission") %>
-                <th class="text-right">
-                    <%= t('.total_commission') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("paid_commission") %>
-                <th class="text-right">
-                    <%= t('.paid_commission') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("remain_commission") %>
-                <th class="text-right">
-                    <%= t('.remain_commission') %>
-                </th>
-            <% end %>
-            <th width="7%"><%= t('actions') %></th>
-        </tr>
-    </thead>
-    <tbody>
-        <% @employees.each do |employee| %>  <!-- todo update this function -->
-            <tr class="odd gradeX has-child-table" data-url="<%= erp_payments.commission_details_backend_payment_records_path(employee_id: employee.id) %>">
-                <td>
-                    <%= erp_datalist_check_row(id: employee.id) %>
-                </td>
                 <% if get_columns(params).include?("employee") %>
-                    <td>
-                        <i class="fa fa-plus expand tr-expand-button"></i>
-                        <strong><%= employee.name %></strong
-                    </td>
+                    <th>
+                        <%= t('.employee') %>
+                    </th>
                 <% end %>
                 <% if get_columns(params).include?("total_revenue") %>
-                    <td class="text-right"><%= format_price(25000000) %></td>
+                    <th class="text-right">
+                        <%= t('.total_revenue') %>
+                    </th>
                 <% end %>
                 <% if get_columns(params).include?("total_received") %>
-                    <td class="text-right"><%= format_price(25000000) %></td> <!-- todo count with params -->
+                    <th class="text-right">
+                        <%= t('.total_received') %>
+                    </th>
                 <% end %>
                 <% if get_columns(params).include?("total_remain") %>
-                    <td class="text-right"><%= format_price(0) %></td> <!-- todo count with params -->
+                    <th class="text-right">
+                        <%= t('.total_remain') %>
+                    </th>
                 <% end %>
                 <% if get_columns(params).include?("total_commission") %>
-                    <td class="text-right"><%= format_price(25000) %></td>
+                    <th class="text-right">
+                        <%= t('.total_commission') %>
+                    </th>
                 <% end %>
                 <% if get_columns(params).include?("paid_commission") %>
-                    <td class="text-right"><%= format_price(25000) %></td>
+                    <th class="text-right">
+                        <%= t('.paid_commission') %>
+                    </th>
                 <% end %>
                 <% if get_columns(params).include?("remain_commission") %>
-                    <td class="text-right"><%= format_price(25000) %></td>
+                    <th class="text-right">
+                        <%= t('.remain_commission') %>
+                    </th>
                 <% end %>
-                <td>
-                    <%=
-                    actions = []
-                    actions << {
-                        text: '<i class="fa fa-plus"></i> '+t('.create_pay_for_commission'),
-                        url: erp_payments.new_backend_payment_record_path(
-                            pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                            payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_COMMISSION),
-                            employee_id: employee.id
-                        )
-                    }
-                    actions << {divider: true}
-                    (1..3).each do |pr|
-                        actions << {
-                            text: '<i class="fa fa-file-pdf-o"></i> '+t('.payment_record_for_commission') + ' - ' + format_date(Time.now),
-                            url: 'javascript:;'
-                        }
-                    end
-                    
-                    erp_datalist_row_actions(
-                        actions
-                    ) %>
-                </td>
+                <th width="7%"><%= t('actions') %></th>
             </tr>
-        <% end %>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <% @employees.each do |employee| %>  <!-- todo update this function -->
+                <tr class="odd gradeX has-child-table"
+                    data-url="<%= erp_payments.commission_details_backend_payment_records_path(params.to_unsafe_hash.merge({employee_id: employee.id})) %>"
+                >
+                    <td>
+                        <%= erp_datalist_check_row(id: employee.id) %>
+                    </td>
+                    <% if get_columns(params).include?("employee") %>
+                        <td>
+                            <i class="fa fa-plus expand tr-expand-button"></i>
+                            <strong><%= employee.name %></strong
+                        </td>
+                    <% end %>
+                    <% if get_columns(params).include?("total_revenue") %>
+                        <td class="text-right"><%= format_price(25000000) %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("total_received") %>
+                        <td class="text-right"><%= format_price(25000000) %></td> <!-- todo count with params -->
+                    <% end %>
+                    <% if get_columns(params).include?("total_remain") %>
+                        <td class="text-right"><%= format_price(0) %></td> <!-- todo count with params -->
+                    <% end %>
+                    <% if get_columns(params).include?("total_commission") %>
+                        <td class="text-right"><%= format_price(employee.commission_amount(@options)) %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("paid_commission") %>
+                        <td class="text-right"><%= format_price(employee.commission_paid_amount(@options)) %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("remain_commission") %>
+                        <td class="text-right"><%= format_price(employee.commission_remain_amount(@options)) %></td>
+                    <% end %>
+                    <td>
+                        <%=
+                        actions = []
+                        actions << {
+                            text: '<i class="fa fa-plus"></i> '+t('.create_pay_for_commission'),
+                            url: erp_payments.new_backend_payment_record_path(
+                                pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_COMMISSION),
+                                employee_id: employee.id
+                            )
+                        }
+                        actions << {divider: true}
+                        (1..3).each do |pr|
+                            actions << {
+                                text: '<i class="fa fa-file-pdf-o"></i> '+t('.payment_record_for_commission') + ' - ' + format_date(Time.now),
+                                url: 'javascript:;'
+                            }
+                        end
 
- <!--if @orders.empty? %>
-    <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
- end %>
-
-= erp_datalist_pagination(@orders) %>-->
+                        erp_datalist_row_actions(
+                            actions
+                        ) %>
+                    </td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+<% end %>

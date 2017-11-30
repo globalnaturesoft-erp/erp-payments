@@ -1,114 +1,160 @@
+<% uid = unique_id %>
 <div class="tabbable-custom ">
     <ul class="nav nav-tabs ">
         <li class="active">
-            <a href="#tab_5_1" data-toggle="tab">
+            <a href="#tab_<%= uid %>_1" data-toggle="tab">
                 <i class="glyphicon glyphicon-list-alt"></i>
                 <%= t('.orders_list') %>
             </a>
         </li>
         <li>
-            <a href="#tab_5_2" data-toggle="tab">
+            <a href="#tab_<%= uid %>_2" data-toggle="tab">
                 <i class="icon-users"></i>
-                <%= t('.contacts_list') %>
+                Hoa hồng thu công nợ
             </a>
         </li>
         <li>
-            <a href="#tab_5_3" data-toggle="tab">
+            <a href="#tab_<%= uid %>_3" data-toggle="tab">
                 <i class="icon-target"></i>
                 <%= t('.commission_with_target') %>
             </a>
         </li>
         <li>
-            <a href="#tab_5_4" data-toggle="tab">
+            <a href="#tab_<%= uid %>_4" data-toggle="tab">
                 <i class="icon-bar-chart"></i>
                 <%= t('.commission_with_revenue') %>
             </a>
         </li>
     </ul>
     <div class="tab-content">
-        <div class="tab-pane active" id="tab_5_1">
-            <table class="table table-bordered table-advance order-column">
-                <thead class="flip-content">
-                    <tr>
-                        <th width="12%" class="text-left bg-yellow bg-font-yellow text-nowrap">Mã hóa đơn</th>
-                        <th class="bg-yellow bg-font-yellow text-nowrap">Ngày chứng từ</th>
-                        <th class="bg-yellow bg-font-yellow text-nowrap">Tổng cộng</th>
-                        <th class="bg-yellow bg-font-yellow text-nowrap">Số tiền đã thu</th>
-                        <th class="bg-yellow bg-font-yellow text-nowrap">Số tiền còn lại</th>
-                        <th class="bg-yellow bg-font-yellow text-nowrap text-right">Tiền chi hoa hồng</th>
-                        <th class="bg-yellow bg-font-yellow text-nowrap text-right">Ghi chú</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="bg-green" colspan="2"><strong> Tổng cộng </strong></td>
-                        <td class="bg-green text-right"><strong><%= format_price(@orders.sum(&:total)) %></strong></td> <!-- @todo sum total for orders -->
-                        <td class="bg-green text-right"><strong><%= format_price(10000000) %></strong></td>
-                        <td class="bg-green text-right"><strong><%= format_price(10000000) %></strong></td>
-                        <td class="bg-green text-right"><strong><%= format_price(10000) %></strong></td>
-                        <td class="bg-green text-right"><strong></strong></td>
-                    </tr>
-                    <% @orders.each do |order| %>
+        <div class="tab-pane active" id="tab_<%= uid %>_1">
+            <% if @payment_for_order_sales_payment_records.count > 0 %>
+                <table class="table table-bordered table-advance order-column">
+                    <thead class="flip-content">
                         <tr>
-                            <td class="text-left"><strong><%= link_to order.code, 'javascript:;' %></strong></td> <!-- @todo modal link_to for order details -->
-                            <td class="text-right"><%= format_date(order.order_date) %></td>
-                            <td class="text-right"><%= format_price(order.cache_total) %></td>
-                            <td class="text-right"><%= format_price(10000000) %></td>
-                            <td class="text-right"><%= format_price(10000000) %></td>
-                            <td class="text-right"><%= format_price(10000) %></td>
-                            <td class="text-right"></td>
+                            <th width="12%" class="text-left bg-yellow bg-font-yellow text-nowrap">Mã hóa đơn</th>
+                            <th width="12%" class="text-left bg-yellow bg-font-yellow text-nowrap">Mã phiếu</th>
+                            <th class="text-left bg-yellow bg-font-yellow text-nowrap">Khách hàng</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap">Ngày chứng từ</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap">Tổng cộng</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap">Số tiền đã thu</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap text-right">Tiền chi hoa hồng</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap text-right">Ghi chú</th>
                         </tr>
-                    <% end %>
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-pane" id="tab_5_2">
-            <table class="table table-bordered table-advance order-column">
-                <thead class="flip-content">
-                    <tr>
-                        <th width="20%" class="bg-yellow bg-font-yellow text-nowrap text-left">Tên khách hàng</th>
-                        <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Số tiền thu</th>
-                        <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">New Acc</th>
-                        <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Hoa hồng (%)</th>
-                        <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Tiền chi hoa hồng</th>
-                        <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Ghi chú</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="bg-green"><strong></strong></td>
-                        <td class="bg-green text-right"><strong><%= format_price(1000000000) %></strong></td> <!-- @todo sum amount for payment records -->
-                        <td class="bg-green text-right"><strong></strong></td>
-                        <td class="bg-green text-right"><strong></strong></td>
-                        <td class="bg-green text-right"><strong><%= format_price(1000000) %></strong></td>
-                        <td class="bg-green text-right"><strong></strong></td>
-                    </tr>
-                    <% @contacts.each do |contact| %>
+                    </thead>
+                    <tbody>
                         <tr>
-                            <td class="text-left"><strong><%= link_to contact.name, 'javascript:;' %></strong></td>
-                            <td class="text-right"><%= format_price(rand(1000000..1000000000)) %></td>
-                            <td class="text-right"></td>
-                            <td class="text-right"><%= rand(0.1..0.5).round(1) %>%</td>
-                            <td class="text-right"><%= format_price(rand(1000000..1000000000)) %></td>
-                            <td class="text-right"></td>
+                            <td class="bg-green" colspan="4"><strong> Tổng cộng </strong></td>
+                            <td class="bg-green text-right"><strong><%= format_price(@payment_for_order_sales_total) %></strong></td> <!-- @todo sum total for orders -->
+                            <td class="bg-green text-right"><strong><%= format_price(@payment_for_order_sales_paid_amount) %></strong></td>
+                            <td class="bg-green text-right"><strong class="text-danger"><%= format_price(@payment_for_order_sales_commission_amount) %></strong></td>
+                            <td class="bg-green text-right"></td>
                         </tr>
-                    <% end %>
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-pane" id="tab_5_3">
-            <div class="m-grid m-grid-demo">
-                <div class="m-grid-row">
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.target_amount') %> <br><strong><%= format_price(@employee.target_by_period(Erp::Periods::Period.first).amount) %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_sales_amount') %> <br><strong><%= format_price(@employee.sales_total_amount(Erp::Periods::Period.first)) %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.amount_received') %> <br><strong><%= format_price(@employee.revenue_by_period(Erp::Periods::Period.first)) %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.percentage_achieved') %> (mốc) <br><strong><%= @employee.target_commission_by_period(Erp::Periods::Period.first).percent.to_s + '%' %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.commission_amount') %> <br><strong><%= format_price(@employee.target_commission_by_period(Erp::Periods::Period.first).commission_amount) %></strong></div>
-                    <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.notes') %> <br><strong><%= '3 ca' %></strong></div>
+                        <% @payment_for_order_sales_payment_records.each do |pr| %>
+                            <tr>
+                                <td class="text-left"><strong><%= link_to pr.order.code, 'javascript:;' %></strong></td>
+                                <td class="text-left"><strong><%= link_to pr.code, 'javascript:;' %></strong></td> <!-- @todo modal link_to for order details -->
+                                <td class="text-left"><%= pr.order.customer_name %></td>
+                                <td class="text-left"><%= format_date(pr.order.order_date) %></td>
+                                <td class="text-right"><%= format_price(pr.order.total) %></td>
+                                <td class="text-right"><%= format_price(pr.amount) %></td>
+                                <td class="text-right"><%= format_price(pr.order.commission_amount) %></td>
+                                <td class="text-right"><%= pr.description %></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <br/>
+                <h4>Tổng cộng: <strong class="text-danger"><%= format_price(@payment_for_order_sales_commission_amount) %></strong></h4>
+            <% else %>
+                <div class="alert alert-warning alert-dismissable no-margin">
+                    Chưa có khoản thu nào được ghi nhận trong kỳ này!
                 </div>
-            </div>
+            <% end %>
         </div>
-        <div class="tab-pane" id="tab_5_4">
+        <div class="tab-pane" id="tab_<%= uid %>_2">
+            <% if @payment_for_contact_sales_payment_records.count > 0 %>
+                <table class="table table-bordered table-advance order-column">
+                    <thead class="flip-content">
+                        <tr>
+                            <th width="20%" class="bg-yellow bg-font-yellow text-nowrap text-left">Tên khách hàng</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Số tiền thu</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">New Acc</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Hoa hồng (%)</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Tiền chi hoa hồng</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Ghi chú</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="bg-green"><strong></strong></td>
+                            <td class="bg-green text-right"><strong>
+                                <%= format_price(@payment_for_contact_sales_paid_amount) %>
+                            </strong></td>
+                            <td class="bg-green text-right"><strong class="text-danger"><%= format_price(@new_account_commission_amount) %></strong></td>
+                            <td class="bg-green text-right"><strong></strong></td>
+                            <td class="bg-green text-right"><strong class="text-danger">
+                                <%= format_price(@payment_for_contact_sales_commission_amount) %>
+                            </strong></td>
+                            <td class="bg-green text-right"><strong></strong></td>
+                        </tr>
+                        <% @payment_for_contact_sales_payment_records.each do |pr| %>
+                            <tr>
+                                <td class="text-left"><strong><%= link_to pr.customer.name, 'javascript:;' %></strong></td>
+                                <td class="text-right"><%= format_price(pr.amount) %></td>
+                                <td class="text-right"><%= format_price(pr.new_account_commission_amount) %></td>
+                                <td class="text-right"><%= pr.customer_commission_percent.to_f %>%</td>
+                                <td class="text-right"><%= format_price(pr.commission_amount) %></td>
+                                <td class="text-right"><%= pr.description %></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <br/>
+                <h4>Tổng cộng: <strong class="text-danger"><%= format_price(@new_account_commission_amount + @payment_for_contact_sales_commission_amount) %></strong></h4>
+            <% else %>
+                <div class="alert alert-warning alert-dismissable no-margin">
+                    Chưa có khoản thu nào được ghi nhận trong kỳ này!
+                </div>
+            <% end %>
+        </div>
+        <div class="tab-pane" id="tab_<%= uid %>_3">
+            <% if true %>
+                <div class="m-grid m-grid-demo">
+                    <div class="m-grid-row">
+                        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.target_amount') %>
+                            <br>
+                            <strong>
+                                <%= @target.present? ? format_price(@target.amount) : '--' %>
+                            </strong>
+                        </div>
+                        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_sales_amount') %> <br><strong>
+                            <%= format_price(@employee.sales_total_amount(@period)) %>
+                        </strong></div>
+                        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.amount_received') %> <br><strong>
+                            <%= format_price(@employee.revenue_by_period(@period)) %>
+                        </strong></div>
+                        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
+                            <%= t('.percentage_achieved') %> (mốc) <br><strong>
+                            <%= @target.present? ? @employee.target_commission_by_period(@period).percent.to_s + '%' : '--' %>
+                        </strong></div>
+                        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
+                            <%= t('.commission_amount') %> <br><strong>
+                            <%= @target.present? ? format_price(@employee.target_commission_by_period(@period).commission_amount) : '--' %>
+                        </strong></div>
+                        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
+                            Số lần thu <br><strong>
+                            <%= @payment_for_contact_sales_payment_records.count + @payment_for_order_sales_payment_records.count %>
+                        </strong></div>
+                    </div>
+                </div>
+            <% else %>
+                <div class="alert alert-warning alert-dismissable no-margin">
+                    Chưa có target tương ứng cho nhân viên trong kỳ này!
+                </div>
+            <% end %>
+        </div>
+        <div class="tab-pane" id="tab_<%= uid %>_4">
             <div class="m-grid m-grid-demo">
                 <div class="m-grid-row">
                     <div class="m-grid-col m-grid-col-middle m-grid-col-center">Tổng doanh thu: <br><strong><%= format_price(Erp::Payments::PaymentRecord.revenue_by_period) %></strong></div>
@@ -120,4 +166,36 @@
             </div>
         </div>
     </div>
+    <br />
+    <h4 class="text-left">
+        <label style="width: 200px">Hoa hồng trên đơn hàng:</label>
+        <strong style="width: 100px; display: inline-block" class="text- text-right">
+            <%= format_price(@payment_for_order_sales_commission_amount) %>
+        </strong>
+    </h4>
+    <h4 class="text-left">
+        <label style="width: 200px">Hoa hồng thu công nợ:</label>
+        <strong style="width: 100px; display: inline-block" class="text- text-right">
+            <%= format_price(@new_account_commission_amount + @payment_for_contact_sales_commission_amount) %>
+        </strong>
+    </h4>
+    <h4 class="text-left">
+        <label style="width: 200px">Thưởng theo target:</label>
+        <strong style="width: 100px; display: inline-block" class="text- text-right">
+            <%= format_price(0) %>
+        </strong>
+    </h4>
+    <h4 class="text-left">
+        <label style="width: 200px">Thưởng doanh thu (1%):</label>
+        <strong style="width: 100px; display: inline-block" class="text- text-right">
+            <%= format_price(0) %>
+        </strong>
+    </h4>
+    <hr style="border-color: #fff;width: 400px">
+    <h4 class="text-left">
+        <label style="width: 200px">Tổng hoa hồng:</label>
+        <strong style="width: 100px; display: inline-block" class="text-danger text-right">
+            <%= format_price(@employee.commission_amount(@options)) %>
+        </strong>
+    </h4>
 </div

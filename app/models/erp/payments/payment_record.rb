@@ -49,24 +49,24 @@ module Erp::Payments
     if Erp::Core.available?("orders")
       belongs_to :order, class_name: "Erp::Orders::Order", optional: true
     end
-    
+
     if Erp::Core.available?("qdeliveries")
       belongs_to :delivery, class_name: "Erp::Qdeliveries::Delivery", optional: true
-      
+
       after_save :delivery_update_cache_payment_status
       after_destroy :delivery_update_cache_payment_status
-      
+
       def delivery_code
         delivery.present? ? delivery.code : ''
       end
-      
+
       def delivery_update_cache_payment_status
         if delivery.present?
           delivery.update_cache_payment_status
         end
       end
     end
-    
+
     validates :code, uniqueness: true
     validates :payment_date, :amount, :accountant_id, :presence => true
 
@@ -90,13 +90,13 @@ module Erp::Payments
         {text: I18n.t('.receive'), value: Erp::Payments::PaymentRecord::TYPE_RECEIVE},
         {text: I18n.t('.pay'), value: Erp::Payments::PaymentRecord::TYPE_PAY}
       ]
-    end    
-    
+    end
+
     # Filters
     def self.filter(query, params)
       params = params.to_unsafe_hash
       and_conds = []
-      
+
       #filters
       if params["filters"].present?
         params["filters"].each do |ft|
@@ -107,7 +107,7 @@ module Erp::Payments
           and_conds << '('+or_conds.join(' OR ')+')' if !or_conds.empty?
         end
       end
-      
+
       #keywords
       if params["keywords"].present?
         params["keywords"].each do |kw|
@@ -118,10 +118,10 @@ module Erp::Payments
           and_conds << '('+or_conds.join(' OR ')+')'
         end
       end
-      
+
       # add conditions to query
       query = query.where(and_conds.join(' AND ')) if !and_conds.empty?
-      
+
       # global filter
       global_filter = params[:global_filter]
 
@@ -156,25 +156,25 @@ module Erp::Payments
 
 			end
       # end// global filter
-      
+
       return query
     end
-    
+
     def self.search(params)
       query = self.all
       query = self.filter(query, params)
-      
+
       # order
       if params[:sort_by].present?
         order = params[:sort_by]
         order += " #{params[:sort_direction]}" if params[:sort_direction].present?
-        
+
         query = query.order(order)
       end
-      
+
       return query
     end
-    
+
     # Display name
     def accountant_name
       accountant.present? ? accountant.name : ''
@@ -197,10 +197,10 @@ module Erp::Payments
 				elsif is_payment_voucher?
 					query = Erp::Payments::PaymentRecord.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY)
 				end
-				
+
 				str = (is_receipt_voucher? ? 'PT' : 'PC')
 				num = query.where('payment_date >= ? AND payment_date <= ?', self.payment_date.beginning_of_month, self.payment_date.end_of_month).count + 1
-				
+
 				self.code = str + payment_date.strftime("%m") + payment_date.strftime("%Y").last(2) + "-" + num.to_s.rjust(3, '0')
 			end
 		end
@@ -350,7 +350,7 @@ module Erp::Payments
       end
 
       if params[:period].present?
-        query = query.where("payment_date >= ? AND payment_date <= ?", 
+        query = query.where("payment_date >= ? AND payment_date <= ?",
                             Erp::Periods::Period.find(params[:period]).from_date.beginning_of_day,
                             Erp::Periods::Period.find(params[:period]).to_date.end_of_day)
       end
@@ -390,6 +390,31 @@ module Erp::Payments
                                                    Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER)])
                           .sum(:amount)
       return total
+    end
+
+    # customer commission amount
+    def customer_commission_percent
+      return self.customer.present? ? self.customer.commission_percent : 0
+    end
+
+    def commission_amount
+      return self.amount*(self.customer_commission_percent/100)
+    end
+
+    # check if new account
+    def new_customer?
+      return false if self.customer.nil?
+
+      orders = Erp::Orders::Order.where(status: Erp::Orders::Order::STATUS_CONFIRMED)
+        .where(customer_id: self.customer_id)
+        .where('order_date <= ?', (self.payment_date - 1.month).end_of_month)
+
+      return orders.count == 0
+    end
+
+    # new account commission
+    def new_account_commission_amount
+      self.new_customer? ? self.customer.new_account_commission_amount : 0
     end
   end
 end
