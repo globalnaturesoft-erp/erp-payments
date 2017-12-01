@@ -556,6 +556,7 @@ vi:
             account_number: "Số tài khoản"
             delete: "Xóa tài khoản"
             delete_confirm: "Bạn có chắc muốn xóa?"
+            no_matching_records_found: "Danh sách tài khoản không được tìm thấy"
           new:
             accounts: "Tài khoản ngân hàng"
             create: "Thêm tài khoản"
