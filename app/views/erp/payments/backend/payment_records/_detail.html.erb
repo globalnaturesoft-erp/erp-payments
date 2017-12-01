@@ -1,32 +1,40 @@
 <div class="invoice-content-2 bordered">
     <div class="row invoice-head head">
         <div class="col-xs-7">
+            <%
+                @owner = Erp::Contacts::Contact.get_main_contact
+            %>
             <div class="company-address-left">
-                <span class="bold uppercase">CÔNG TY TNHH GP CNTT & TT HOÀNG KHANG</span>
-                <br/> 188, Đường số 1, Phường 16, Quận Gò Vấp
-                <br/> TP. Hồ Chí Minh, Việt Nam
+                <span class="bold uppercase"><%= @owner.name %></span>
+                <br/> <%= display_contact_address(@owner) %>
                 <br/>
-                <span class="bold">Điện thoại: </span> 1800 123 456
+                <% if @owner.phone.present? %>
+                <span class="bold">Điện thoại: </span> <%= @owner.phone %>
                 <br/>
-                <span class="bold">Email: </span> support@globalnaturesoft.com
+                <% end %>
+                <% if @owner.email.present? %>
+                <span class="bold">Email: </span> <%= @owner.email %>
                 <br/>
-                <span class="bold">Website: </span> www.globalnaturesoft.com
+                <% end %>
+                <% if @owner.website.present? %>
+                <span class="bold">Website: </span> <%= @owner.website %>
                 <br/>
+                <% end %>
             </div>
         </div>
         <div class="col-xs-5">
             <div class="order-detail">
-                <span class="bold"><%= t('.code') %>:
-                </span> <%= payment_record.code %>
+                <span><%= 'Mẫu số' %>: <%= payment_record.is_receipt_voucher? ? '01-TT' : '02-TT' %>
+                </span> 
                 <br/>
-                <span class="bold"><%= t('.order_code') %>:
-                </span> <%= payment_record.order_code(params) %>
+                <span>Quyển số:
+                </span> .........
                 <br/>
-                <span class="bold"><%= t('.order_date') %>:
-                </span> <%= format_date(payment_record.order_date(params)) %>
+                <span>Nợ:
+                </span> .........
                 <br/>
-                <span class="bold"><%= t('.payment_deadline') %>:
-                </span> <%= format_date(payment_record.payment_deadline(params)) %>
+                <span>Có:
+                </span> .........
                 <br/>
             </div>
         </div>
@@ -35,42 +43,47 @@
         <div class="col-xs-12">
             <div class="invoice-title title">
                 <h1 class="uppercase">
-                    <%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.receipt_voucher') : t('.payment_voucher') %>
+                    <%= payment_record.is_receipt_voucher? ? t('.receipt_voucher') : t('.payment_voucher') %>
                 </h1>
-                <h2><%= t('.dd') %> ... <%= t('.mm') %> ... <%= t('.yyyy') %> ....</h2>
+                <h2 style="margin-top: 5px">
+                    <i> <%= t('.dd') %> <%= payment_record.payment_date.strftime('%d') %>
+                        <%= t('.mm') %> <%= payment_record.payment_date.strftime('%m') %>
+                        <%= t('.yyyy') %> <%= payment_record.payment_date.strftime('%Y') %>
+                    </i>
+                </h2>
+                <h2>Số: <%= payment_record.code %></h2>
             </div>
         </div>
     </div>
     <div class="row invoice-content">
         <div class="col-xs-7">
-            <h2 class="invoice-title title"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.payer') : t('.receiver') %>:
-            <strong><%= '' %></strong></h2>
+            <h2 class="invoice-title title"><%= payment_record.is_receipt_voucher? ? t('.payer') : t('.receiver') %>:
+            <strong><%= payment_record.get_contact.name %></strong></h2>
         </div>
         
         <div class="col-xs-5">
             <h2 class="invoice-title title"><%= t('.phone') %>:
-            <strong><%= '' %></strong></h2>
+            <strong><%= payment_record.get_contact.phone %></strong></h2>
         </div>
         
         <div class="col-xs-12">
             <h2 class="invoice-title title"><%= t('.address') %>:
-            <strong><%= '' %></strong></h2>
+            <strong><%= display_contact_address(payment_record.get_contact) if payment_record.get_contact %></strong></h2>
         </div>
         <div class="col-xs-12">
-            <h2 class="invoice-title title"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.receive_description') : t('.pay_description') %>:
+            <h2 class="invoice-title title"><%= payment_record.is_receipt_voucher? ? t('.receive_description') : t('.pay_description') %>:
             <%= payment_record.description %>
         </div>
         <div class="col-xs-4">
             <h2 class="invoice-title title"><%= t('.total_amount') %>:
-            <strong><%= payment_record.amount %></strong></h2>
+            <strong><%= format_price(payment_record.amount) %></strong></h2>
         </div>
         <div class="col-xs-8">
             <h2 class="invoice-title title"><%= t('.in_words') %>:
             <strong><%= docso(payment_record.amount) %></strong></h2>
         </div>
-        <div class="col-xs-4">
-            <h2 class="invoice-title title"><%= t('.attached_business_documents') %>:
-            <strong>@TODO</strong></h2>
+        <div class="col-xs-12">
+            <h2 class="invoice-title title"><%= t('.attached_business_documents') %> ...... chứng từ gốc.</h2>
         </div>
     </div>
     
@@ -81,7 +94,7 @@
             <p class="invoice-desc"><%= payment_record.creator_name %></p>
         </div>
         <div class="col-xs-3 center">
-            <h2 class="invoice-title sign title"><%= payment_record.pay_receive == Erp::Payments::PaymentRecord::TYPE_RECEIVE ? t('.payer') : t('.receiver') %></h2>
+            <h2 class="invoice-title sign title"><%= payment_record.is_receipt_voucher? ? t('.payer') : t('.receiver') %></h2>
             <span class="inv-sign"><%= t('.sign_name') %></span>
             <p class="invoice-desc"><%= '' %></p>
         </div>
@@ -93,7 +106,7 @@
         <div class="col-xs-3 center">
             <h2 class="invoice-title sign title"><%= t('.director') %></h2>
             <span class="inv-sign"><%= t('.sign_name_seal') %></span>
-            <p class="invoice-desc">@TODO </p>
+            <p class="invoice-desc"><%= '' %></p>
         </div>
     </div>
 </div>

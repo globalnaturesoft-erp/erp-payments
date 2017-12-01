@@ -1,0 +1,20 @@
+<% content_for :title do %>
+    <%= @payment_record.code %>
+<% end %>
+
+<div class="text-right">
+    <%= erp_component('button/actions', {
+        actions:
+        [
+            {
+                text: '<i class="fa fa-print"></i> '+t(".print_#{@payment_record.pay_receive}"),
+                url: erp_payments.backend_payment_record_path(@payment_record),
+                target: "_blank"
+            }
+        ],
+        text: t('options'),
+        class: 'btn-noborder'
+    }) %>
+</div>
+
+<%= render 'detail', payment_record: @payment_record %>

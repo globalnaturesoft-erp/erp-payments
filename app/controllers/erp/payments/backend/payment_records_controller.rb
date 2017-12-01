@@ -2,7 +2,7 @@ module Erp
   module Payments
     module Backend
       class PaymentRecordsController < Erp::Backend::BackendController
-        before_action :set_payment_record, only: [:pdf, :show, :show_list, :edit, :update, :set_done, :set_deleted]
+        before_action :set_payment_record, only: [:pdf, :show, :show_list, :show_modal, :edit, :update, :set_done, :set_deleted]
         before_action :set_payment_records, only: [:set_done_all, :set_deleted_all]
 
         # GET /payment_records

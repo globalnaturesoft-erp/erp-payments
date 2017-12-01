@@ -8,6 +8,7 @@ vi:
   receive: "Phiếu thu"
   pay: "Phiếu chi"
   confirm: "Xác nhận"
+  view_print: "Xem & In"
   layouts:
     erp:
       backend:
@@ -217,6 +218,9 @@ vi:
             delete: "Hủy phiếu"
             delete_confirm: "Bạn có chắc muốn hủy phiếu này?"
             confirm_confirm: "Bạn đồng ý xác nhận phiếu?"
+          show_modal:
+            print_receive: "In phiếu thu"
+            print_pay: "In phiếu chi"
           form:
             code_receive: "Mã phiếu thu"
             code_pay: "Mã phiếu chi"
@@ -313,6 +317,8 @@ vi:
             yyyy: "năm"
             payer: "Người nộp tiền"
             receiver: "Người nhận tiền"
+            address: "Địa chỉ"
+            phone: "Điện thoại"
             pay_description: "Lý do chi tiền"
             receive_description: "Lý do nộp tiền"
             total_amount: "Số tiền"
