@@ -59,6 +59,13 @@
             )
         }
         actions << {
+            text: '<i class=""></i> '+t('.pay_product_return'),
+            url: erp_payments.new_backend_payment_record_path(
+                pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_PRODUCT_RETURN)
+            )
+        }
+        actions << {
             text: '<i class=""></i> '+t('.pay_commission'),
             url: erp_payments.new_backend_payment_record_path(
                 pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,

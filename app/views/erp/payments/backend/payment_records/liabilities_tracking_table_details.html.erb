@@ -21,13 +21,13 @@
                 <table class="table table-bordered table-advance order-column">
                     <thead class="flip-content">
                         <tr>
-                            <th width="15%" class="text-left bg-yellow bg-font-yellow text-nowrap">Mã thanh toán</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap">Hình thức</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap">Tên khách hàng</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap text-right">Số tiền</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap">Ngày thanh toán</th>
-                            <th width="20%" class="bg-yellow bg-font-yellow text-nowrap">Ghi chú</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap text-right"><%= t('.actions') %></th>
+                            <th width="15%" class="bg-yellow bg-font-yellow text-nowrap text-center">Mã thanh toán</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap text-center">Hình thức</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap text-center">Tên khách hàng</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap text-center">Số tiền</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap text-center">Ngày thanh toán</th>
+                            <th width="20%" class="bg-yellow bg-font-yellow text-nowrap text-center">Ghi chú</th>
+                            <th class="bg-yellow bg-font-yellow text-nowrap text-center"><%= t('.actions') %></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,18 +48,14 @@
                                     <%= erp_datalist_row_actions(
                                         [
                                             {
-                                                text: '<i class="fa fa-file-pdf-o"></i> '+t('.view'),
+                                                text: '<i class="fa fa-print"></i> '+t('view_print'),
                                                 url: erp_payments.show_modal_backend_payment_records_path(id: payment_record),
                                                 class: "modal-link"
                                             },
                                             {
-                                                text: '<i class="fa fa-print"></i> '+t('view_print'),
-                                                url: erp_payments.backend_payment_record_path(payment_record),
-                                                target: "_blank"
-                                            },
-                                            {
                                                 text: '<i class="fa fa-edit"></i> '+t('.edit'),
-                                                url: erp_payments.edit_backend_payment_record_path(payment_record)
+                                                url: erp_payments.edit_backend_payment_record_path(payment_record),
+                                                class: "modal-link"
                                             },
                                             {
                                                 text: '<i class="fa fa-trash"></i> '+t('.delete'),
@@ -85,10 +81,10 @@
                 <table class="table table-bordered table-advance order-column">
                     <thead class="flip-content">
                         <tr>
-                            <th width="20%" class="text-left bg-yellow bg-font-yellow text-nowrap">Mã hóa đơn</th>
-                            <th width="10%" class="text-center bg-yellow bg-font-yellow text-nowrap">Ngày đặt hàng</th>
-                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Tổng cộng</th>
-                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap">Nhân viên bán hàng</th>
+                            <th width="20%" class="bg-yellow bg-font-yellow text-nowrap text-center">Mã hóa đơn</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-center">Ngày đặt hàng</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-center">Tổng cộng</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-center">N.viên kinh doanh</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,12 +95,12 @@
                         </tr>
                         <% @orders.each do |order| %>
                             <tr>
-                                <td class="text-left"><strong>
+                                <td class="text-center"><strong>
                                     <%= link_to order.code,
                                         erp_orders.backend_order_path(order),
                                         title: order.code, class: "font-blue sbold", target: "_blank" %>
                                 </strong></td> <!-- @todo modal link_to for order details -->
-                                <td class="text-center"><%= format_date(order.order_date) %></td>
+                                <td class="text-left"><%= format_date(order.order_date) %></td>
                                 <td class=" text-right"><%= format_price(order.cache_total) %></td>
                                 <td class="text-left"><%= order.employee_name %></td>
                             </tr>
