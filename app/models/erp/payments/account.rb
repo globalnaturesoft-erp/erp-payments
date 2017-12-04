@@ -125,19 +125,33 @@ module Erp::Payments
 		end
 		
     # --------- Report Functions - Start ---------
-		# So du tai khoan cuoi ky
-		def self.account_balance(params={})
-      total = 0.0
-      total = total + Erp::Payments::PaymentRecord.all_done.all_received(params).sum(:amount)
-      total = total - Erp::Payments::PaymentRecord.all_done.all_paid(params).sum(:amount)
-      return total
+    # So tien thu vao tai khoan
+    def received(params={})
+      return Erp::Payments::PaymentRecord.all_done.all_received(params).where(account_id: self.id).sum(:amount)
     end
     
+    # So tien chi ra tu tai khoan
+    def paid(params={})
+      return Erp::Payments::PaymentRecord.all_done.all_paid(params).where(account_id: self.id).sum(:amount)
+    end
+    
+    # Tong tien thu vao
+    def self.received(params={})
+      return Erp::Payments::PaymentRecord.received_amount(params)
+    end
+    
+    # Tong tien chi ra
+    def self.paid(params={})
+      return Erp::Payments::PaymentRecord.paid_amount(params)
+    end
+    
+    # So du tai khoan dau ky / cuoi ky
     def account_balance(params={})
-      total = 0.0
-      total = total + Erp::Payments::PaymentRecord.all_done.all_received(params).where(account_id: self.id).sum(:amount)
-      total = total - Erp::Payments::PaymentRecord.all_done.all_paid(params).where(account_id: self.id).sum(:amount)
-      return total
+      return self.received(params) - self.paid(params)
+    end
+    
+    def self.account_balance(params={})
+      return self.received(params) - self.paid(params)
     end
     # --------- Report Functions - End ---------
   end
