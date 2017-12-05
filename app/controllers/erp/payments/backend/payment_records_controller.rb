@@ -456,6 +456,13 @@ module Erp
                                                         .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION).id)
         end
 
+        # Export excel file
+        def xlsx
+          respond_to do |format|
+            format.xlsx
+          end
+        end
+
         private
           # Use callbacks to share common setup or constraints between actions.
           def set_payment_record

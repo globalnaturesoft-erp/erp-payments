@@ -1,3 +1,37 @@
+<div class="custom-show text-center">
+    <h4 class="font-blue-madison bold uppercase no-margin">
+        Công nợ nhà cung cấp <br>
+        <span class="font-sm">
+            <% if @period_name.nil? %>
+                (<%= 'Từ ' + @from.strftime('%d/%m/%Y') if !@from.nil? %><%= !@to.nil? ? ' Đến ' + @to.strftime('%d/%m/%Y') : ' đến nay' %>)
+            <% else %>
+                (<%= @period_name %>)
+            <% end %>
+        </span>
+    </h4>
+</div>
+
+<div class="portlet m-grid m-grid-demo">
+    <div class="m-grid-row">
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
+            <%= t('.total_begin_of_period_amount') %><br>
+            <strong><%= format_price(@suppliers.purchase_debt_amount(to_date: (@from - 1.day))) %></strong>
+        </div>
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
+            <%= t('.total_period_amount') %><br>
+            <strong><%= format_price(@suppliers.purchase_total_amount(from_date: @from, to_date: @to)) %></strong>
+        </div>
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
+            <%= t('.total_paid_amount') %><br>
+            <strong><%= format_price(@suppliers.purchase_paid_amount(from_date: @from, to_date: @to)) %></strong>
+        </div>
+        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
+            <%= t('.total_end_of_period_amount') %><br>
+            <strong><%= format_price(@suppliers.purchase_debt_amount(to_date: @to)) %></strong>
+        </div>
+    </div>
+</div>
+
 <table class="table table-advance table-hover table-striped table-checkable order-column">
     <thead>
         <tr>

@@ -1,3 +1,39 @@
+<div class="custom-show text-center">
+    <h4 class="font-blue-madison bold uppercase no-margin">
+        Tổng hợp thu - chi <br>
+        <span class="font-sm">
+            <% if @period_name.nil? %>
+                (<%= 'Từ ' + @from.strftime('%d/%m/%Y') if !@from.nil? %><%= !@to.nil? ? ' Đến ' + @to.strftime('%d/%m/%Y') : ' đến nay' %>)
+            <% else %>
+                (<%= @period_name %>)
+            <% end %>
+        </span>
+    </h4>
+</div>
+
+<div class="text-right mb-10">
+<%= actions = []
+    actions << {
+        text: 'Xuất theo danh sách',
+        url: erp_payments.xlsx_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'xlsx'})),
+        target: "_blank"
+    }
+    actions << {
+        text: 'Nhật ký thu tiền',
+        url: 'javascript:;'
+    }
+    actions << {
+        text: 'Nhật ký chi tiền',
+        url: 'javascript:;'
+    }
+    erp_component('button/actions', {
+        actions: actions,
+        text: 'Xuất excel',
+        class: 'btn-primary',
+        icon: 'fa fa-file-excel-o'
+    }) %>
+</div>
+
 <div class="portlet m-grid m-grid-demo">
     <div class="m-grid-row">
         <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.opening_funds') %>: <strong><%= format_price(@begin_period_amount) %></strong></div>
@@ -7,153 +43,151 @@
     </div>
 </div>
 
-<div class="">
-    <table class="table table-advance table-hover table-striped table-checkable order-column" id="">
-        <thead>
-            <tr>
-                <th width='1%'>
-                    <%= erp_datalist_check_all %>
+<table class="table table-advance table-hover table-striped table-checkable order-column" id="">
+    <thead>
+        <tr>
+            <th width='1%'>
+                <%= erp_datalist_check_all %>
+            </th>
+            <% if get_columns(params).include?("code") %>
+                <th>
+                    <%= t('.code') %>
                 </th>
+            <% end %>
+            <% if get_columns(params).include?("payment_date") %>
+                <th class="sortable" sort-by='erp_payments_payment_records.payment_date'>
+                    <%= t('.payment_date') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("payment_type") %>
+                <th>
+                    <%= t('.payment_type') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("contact_name") %>
+                <th>
+                    <%= t('.contact_name') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("amount") %>
+                <th class="text-right sortable" sort-by='erp_payments_payment_records.amount'>
+                    <%= t('.amount') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("description") %>
+                <th>
+                    <%= t('.description') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("status") %>
+                <th>
+                    <%= t('status') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("creator") %>
+                <th>
+                    <%= t('creator') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("created_at") %>
+                <th class="sortable" sort-by='erp_payments_payment_records.created_at'>
+                    <%= t('created_at') %>
+                </th>
+            <% end %>
+            <th width="7%"><%= t('actions') %></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @payment_records.each do |payment_record| %>
+            <tr class="odd gradeX">
+                <td>
+                    <%= erp_datalist_check_row(id: payment_record.id) %>
+                </td>
                 <% if get_columns(params).include?("code") %>
-                    <th>
-                        <%= t('.code') %>
-                    </th>
+                    <td class="title"><%= payment_record.code %></td>
                 <% end %>
                 <% if get_columns(params).include?("payment_date") %>
-                    <th class="sortable" sort-by='erp_payments_payment_records.payment_date'>
-                        <%= t('.payment_date') %>
-                    </th>
+                    <td><%= format_date(payment_record.payment_date) %></td>
                 <% end %>
                 <% if get_columns(params).include?("payment_type") %>
-                    <th>
-                        <%= t('.payment_type') %>
-                    </th>
+                    <td>
+                        <%= t(".#{display_payment_record_type(payment_record)}") %>
+                    </td>
                 <% end %>
                 <% if get_columns(params).include?("contact_name") %>
-                    <th>
-                        <%= t('.contact_name') %>
-                    </th>
+                    <td>
+                        <%= raw 'KH: ' + payment_record.customer_name + '<br>' if payment_record.customer.present? %>
+                        <%= raw 'NCC: ' + payment_record.supplier_name + '<br>' if payment_record.supplier.present? %>
+                        <%= raw 'Sell: ' + payment_record.employee_name + '<br>' if payment_record.employee.present? %>
+                    </td>
+                <% end %>
+                <% if get_columns(params).include?("supplier_name") %>
+                    <td><%= payment_record.supplier_name %></td>
                 <% end %>
                 <% if get_columns(params).include?("amount") %>
-                    <th class="text-right sortable" sort-by='erp_payments_payment_records.amount'>
-                        <%= t('.amount') %>
-                    </th>
+                    <td class="text-right"><%= format_price(payment_record.amount) %></td>
                 <% end %>
                 <% if get_columns(params).include?("description") %>
-                    <th>
-                        <%= t('.description') %>
-                    </th>
+                    <td><%= payment_record.description %></td>
                 <% end %>
                 <% if get_columns(params).include?("status") %>
-                    <th>
-                        <%= t('status') %>
-                    </th>
+                <td>
+                    <% if payment_record.is_done? == true %>
+                    <span class="label label-sm label-success"><%= t('.done') %></span>
+                    <% else %>
+                    <span class="label label-sm label-deleted"><%= t('.deleted') %></span>
+                    <% end %>
+                </td>
                 <% end %>
                 <% if get_columns(params).include?("creator") %>
-                    <th>
-                        <%= t('creator') %>
-                    </th>
+                    <td>
+                        <%= erp_component('avatar', {
+                            user: payment_record.creator
+                        }) %>
+                    </td>
                 <% end %>
                 <% if get_columns(params).include?("created_at") %>
-                    <th class="sortable" sort-by='erp_payments_payment_records.created_at'>
-                        <%= t('created_at') %>
-                    </th>
+                    <td><%= format_date(payment_record.created_at) %></td>
                 <% end %>
-                <th width="7%"><%= t('actions') %></th>
+                <td>
+                    <%= erp_datalist_row_actions(
+                        [
+                            {
+                                text: '<i class="fa fa-print"></i> '+t('.view_print'),
+                                url: erp_payments.backend_payment_record_path(payment_record),
+                                target: '_blank'
+                            },
+                            {
+                                text: '<i class="fa fa-edit"></i> '+t('.edit'),
+                                url: erp_payments.edit_backend_payment_record_path(payment_record)
+                            },
+                            {
+                                text: '<i class="fa fa-check"></i> '+t('confirm'),
+                                url: erp_payments.set_done_backend_payment_records_path(id: payment_record),
+                                data_method: 'PUT',
+                                hide: payment_record.is_done?,
+                                class: 'ajax-link',
+                                data_confirm: t('.confirm_confirm')
+                            },
+                            {
+                                divider: true
+                            },
+                            {
+                                text: '<i class="fa fa-trash"></i> '+t('.delete'),
+                                url: erp_payments.set_deleted_backend_payment_records_path(id: payment_record),
+                                data_method: 'PUT',
+                                class: 'ajax-link',
+                                data_confirm: t('.delete_confirm')
+                            }
+                        ]
+                    ) %>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <% @payment_records.each do |payment_record| %>
-                <tr class="odd gradeX">
-                    <td>
-                        <%= erp_datalist_check_row(id: payment_record.id) %>
-                    </td>
-                    <% if get_columns(params).include?("code") %>
-                        <td class="title"><%= payment_record.code %></td>
-                    <% end %>
-                    <% if get_columns(params).include?("payment_date") %>
-                        <td><%= format_date(payment_record.payment_date) %></td>
-                    <% end %>
-                    <% if get_columns(params).include?("payment_type") %>
-                        <td>
-                            <%= t(".#{display_payment_record_type(payment_record)}") %>
-                        </td>
-                    <% end %>
-                    <% if get_columns(params).include?("contact_name") %>
-                        <td>
-                            <%= raw 'KH: ' + payment_record.customer_name + '<br>' if payment_record.customer.present? %>
-                            <%= raw 'NCC: ' + payment_record.supplier_name + '<br>' if payment_record.supplier.present? %>
-                            <%= raw 'Sell: ' + payment_record.employee_name + '<br>' if payment_record.employee.present? %>
-                        </td>
-                    <% end %>
-                    <% if get_columns(params).include?("supplier_name") %>
-                        <td><%= payment_record.supplier_name %></td>
-                    <% end %>
-                    <% if get_columns(params).include?("amount") %>
-                        <td class="text-right"><%= format_price(payment_record.amount) %></td>
-                    <% end %>
-                    <% if get_columns(params).include?("description") %>
-                        <td><%= payment_record.description %></td>
-                    <% end %>
-                    <% if get_columns(params).include?("status") %>
-                    <td>
-                        <% if payment_record.is_done? == true %>
-                        <span class="label label-sm label-success"><%= t('.done') %></span>
-                        <% else %>
-                        <span class="label label-sm label-deleted"><%= t('.deleted') %></span>
-                        <% end %>
-                    </td>
-                    <% end %>
-                    <% if get_columns(params).include?("creator") %>
-                        <td>
-                            <%= erp_component('avatar', {
-                                user: payment_record.creator
-                            }) %>
-                        </td>
-                    <% end %>
-                    <% if get_columns(params).include?("created_at") %>
-                        <td><%= format_date(payment_record.created_at) %></td>
-                    <% end %>
-                    <td>
-                        <%= erp_datalist_row_actions(
-                            [
-                                {
-                                    text: '<i class="fa fa-print"></i> '+t('.view_print'),
-                                    url: erp_payments.backend_payment_record_path(payment_record),
-                                    target: '_blank'
-                                },
-                                {
-                                    text: '<i class="fa fa-edit"></i> '+t('.edit'),
-                                    url: erp_payments.edit_backend_payment_record_path(payment_record)
-                                },
-                                {
-                                    text: '<i class="fa fa-check"></i> '+t('confirm'),
-                                    url: erp_payments.set_done_backend_payment_records_path(id: payment_record),
-                                    data_method: 'PUT',
-                                    hide: payment_record.is_done?,
-                                    class: 'ajax-link',
-                                    data_confirm: t('.confirm_confirm')
-                                },
-                                {
-                                    divider: true
-                                },
-                                {
-                                    text: '<i class="fa fa-trash"></i> '+t('.delete'),
-                                    url: erp_payments.set_deleted_backend_payment_records_path(id: payment_record),
-                                    data_method: 'PUT',
-                                    class: 'ajax-link',
-                                    data_confirm: t('.delete_confirm')
-                                }
-                            ]
-                        ) %>
-                    </td>
-                </tr>
-            <% end %>
-        </tbody>
-    </table>
-    <% if @payment_records.empty? %>
-        <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
-    <% end %>
-        
-    <%= erp_datalist_pagination(@payment_records) %>
-</div>
+        <% end %>
+    </tbody>
+</table>
+<% if @payment_records.empty? %>
+    <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
+<% end %>
+    
+<%= erp_datalist_pagination(@payment_records) %>

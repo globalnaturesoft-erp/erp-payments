@@ -1,0 +1,16 @@
+wb = xlsx_package.workbook
+xlsx_package.use_autowidth = true
+
+wb.styles do |s|
+  wb.add_worksheet(name: "Tổng hợp thu - chi") do |sheet|
+    # style
+    bg_info = {:bg_color => "305496", :fg_color => "FF"}
+    text_center = {alignment: { horizontal: :center }}
+    text_left = {alignment: { horizontal: :left }}
+    text_right = {alignment: { horizontal: :right }}
+
+    # Title
+    sheet.add_row ["TỔNG HỢP THU - CHI"], sz: 16
+    sheet.add_row ["TỪ 01/11/2017 ĐẾN 30/11/2017"], sz: 12    
+  end
+end
