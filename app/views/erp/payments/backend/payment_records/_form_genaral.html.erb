@@ -23,10 +23,13 @@
                         }) %>
                     </div>
                 </div>
-                
+
                 <div class="ajax-box"
-                    data-url="<%= erp_payments.ajax_amount_field_backend_payment_records_path(amount: payment_record.amount,
-                                                payment_type_code: payment_record.payment_type_code) %>"
+                    data-url="<%= erp_payments.ajax_amount_field_backend_payment_records_path(
+                        amount: payment_record.amount,
+                        payment_type_code: payment_record.payment_type_code,
+                        period_id: params[:period_id]
+                    ) %>"
                     data-control="
                         [name='payment_record[order_id]'],
                         [name='payment_record[customer_id]'],
@@ -47,7 +50,7 @@
                     errors: payment_record.errors.full_messages_for(:accountant_id)
                 }) %>
             </div>
-            
+
             <div class="col-md-6">
                 <%= erp_form_control("dataselect", {
                     name: 'payment_record[account_id]',

@@ -79,6 +79,10 @@ module Erp
             @payment_record.employee_id = params[:employee_id]
           end
 
+          if params[:period_id].present?
+            @period = Erp::Periods::Period.find(params[:period_id])
+          end
+
           if Erp::Core.available?("orders")
             if params[:order_id].present?
               if Erp::Orders::Order.find(params[:order_id]).sales?
@@ -243,6 +247,17 @@ module Erp
         end
 
         def ajax_info_form_for_commission
+          @options = {}
+          if params[:period_id].present?
+            @period = Erp::Periods::Period.find(params[:period_id])
+
+            @options = {
+              from_date: @period.from_date.beginning_of_day,
+              to_date: @period.to_date.end_of_day,
+              target_period: @period,
+            }
+          end
+
           @employee = Erp::User.where(id: params[:datas][0]).first
         end
 
@@ -289,6 +304,17 @@ module Erp
             end
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_COMMISSION
               @amount = @employee.commission_remain_amount
+              if params[:period_id].present?
+                @period = Erp::Periods::Period.find(params[:period_id])
+
+                @options = {
+                  from_date: @period.from_date.beginning_of_day,
+                  to_date: @period.to_date.end_of_day,
+                  target_period: @period,
+                }
+
+                @amount = @employee.commission_remain_amount(@options)
+              end
             end
           end
         end

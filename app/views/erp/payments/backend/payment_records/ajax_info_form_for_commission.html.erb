@@ -4,19 +4,19 @@
             <tr>
                 <td> Tổng hoa hồng: </td>
                 <td>
-                    <strong><%= format_price(@employee.commission_amount) %></strong>
+                    <strong><%= format_price(@employee.commission_amount(@options)) %></strong>
                 </td>
             </tr>
             <tr>
                 <td> Tổng hoa hồng đã chi: </td>
                 <td>
-                    <strong><%= format_price(@employee.commission_paid_amount) %></strong>
+                    <strong><%= format_price(@employee.commission_paid_amount(@options)) %></strong>
                 </td>
             </tr>
             <tr>
                 <td> Tổng chưa chi (còn lại): </td>
                 <td>
-                    <strong><%= format_price(@employee.commission_remain_amount) %></strong>
+                    <strong><%= format_price(@employee.commission_remain_amount(@options)) %></strong>
                 </td>
             </tr>
         </tbody>
