@@ -2,7 +2,7 @@ module Erp
   module Payments
     module Backend
       class AccountsController < Erp::Backend::BackendController
-        before_action :set_account, only: [:archive, :unarchive, :edit, :update, :destroy]
+        before_action :set_account, only: [:set_active, :set_deleted, :archive, :unarchive, :edit, :update, :destroy]
         before_action :set_accounts, only: [:archive_all, :unarchive_all, :delete_all]
     
         # POST /debts/list
@@ -25,6 +25,7 @@ module Erp
         def create
           @account = Account.new(account_params)
           @account.creator = current_user
+          @account.set_active
     
           if @account.save
             if request.xhr?
@@ -141,6 +142,34 @@ module Erp
               }
             }
           end          
+        end
+        
+        # Set active /accounts/active?id=1
+        def set_active
+          @account.set_active
+          respond_to do |format|
+            format.html { redirect_to erp_payments.backend_accounts_path, notice: t('.success') }
+            format.json {
+              render json: {
+                'message': t('.success'),
+                'type': 'success'
+              }
+            }
+          end
+        end
+        
+        # Set deleted /accounts/deleted?id=1
+        def set_deleted
+          @account.set_deleted
+          respond_to do |format|
+            format.html { redirect_to erp_payments.backend_accounts_path, notice: t('.success') }
+            format.json {
+              render json: {
+                'message': t('.success'),
+                'type': 'success'
+              }
+            }
+          end
         end
         
         def dataselect

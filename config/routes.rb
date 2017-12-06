@@ -80,6 +80,8 @@ Erp::Payments::Engine.routes.draw do
 					put 'unarchive'
 					put 'archive_all'
 					put 'unarchive_all'
+					put 'set_active'
+					put 'set_deleted'
 				end
 			end
 			resources :payment_types do

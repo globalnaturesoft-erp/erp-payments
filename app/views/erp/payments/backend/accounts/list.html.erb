@@ -1,11 +1,8 @@
 <table class="table table-advance table-hover table-striped table-checkable order-column">
     <thead>
         <tr>
-            <th width='1%'>
-                <%= erp_datalist_check_all %>
-            </th>
             <% if get_columns(params).include?("name") %>
-                <th>
+                <th width='25%' class="text-left">
                     <%= t('.name') %>
                 </th>
             <% end %>
@@ -17,6 +14,11 @@
             <% if get_columns(params).include?("owner") %>
                 <th>
                     <%= t('.owner') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("balance") %>
+                <th class="text-center">
+                    <%= t('.balance') %>
                 </th>
             <% end %>
             <% if get_columns(params).include?("status") %>
@@ -39,12 +41,9 @@
     </thead>
     <tbody>
         <% if @accounts.each do |account| %>
-            <tr class="odd gradeX">
-                <td>
-                    <%= erp_datalist_check_row(id: account.id) %>
-                </td>
+            <tr class="<%= 'blurred' if account.is_deleted? %> odd gradeX">
                 <% if get_columns(params).include?("name") %>
-                    <td><%= account.name %></td>
+                    <td class="text-left bold"><%= account.name %></td>
                 <% end %>
                 <% if get_columns(params).include?("account_number") %>
                     <td><%= account.account_number %></td>
@@ -52,9 +51,14 @@
                 <% if get_columns(params).include?("owner") %>
                     <td><%= account.owner %></td>
                 <% end %>
+                <% if get_columns(params).include?("balance") %>
+                    <td class="font-yellow-gold text-center">
+                        <%= format_number(account.account_balance(to_date: Time.now)) %>
+                    </td>
+                <% end %>
                 <% if get_columns(params).include?("status") %>
                 <td>
-                    
+                    <%= status_label(account.status) %>
                 </td>
                 <% end %>
                 <% if get_columns(params).include?("creator") %>
@@ -65,41 +69,47 @@
                     </td>
                 <% end %>
                 <% if get_columns(params).include?("created_at") %>
-                    <td><%= account.created_at.strftime("%d/%m/%Y") %></td>
+                    <td><%= format_date(account.created_at) %></td>
                 <% end %>
                 <td>
-                    <%= erp_datalist_row_actions(
-                        [
-                            {
-                                text: '<i class="fa fa-edit"></i> '+t('edit'),
-                                href: erp_payments.edit_backend_account_path(account)
-                            },
-                            {
-                                text: '<i class="fa fa-eye-slash"></i> '+t('archive'),
-                                url: erp_payments.archive_backend_accounts_path(id: account),
-                                data_method: 'PUT',
-                                hide: account.archived,
-                                class: 'ajax-link'
-                            },
-                            {
-                                text: '<i class="fa fa-eye"></i> '+t('unarchive'),
-                                url: erp_payments.unarchive_backend_accounts_path(id: account),
-                                data_method: 'PUT',
-                                hide: !account.archived,
-                                class: 'ajax-link'
-                            },
-                            {
-                                divider: true
-                            },
-                            {
-                                text: '<i class="fa fa-trash"></i> '+t('.delete'),
-                                url: erp_payments.backend_account_path(account),
-                                data_method: 'DELETE',
-                                class: 'ajax-link',
-                                data_confirm: t('delete_confirm')
-                            }
-                        ]
-                    ) %>
+                    <%
+                        actions = []
+                        actions << {
+                            text: '<i class="fa fa-edit"></i> '+t('edit'),
+                            href: erp_payments.edit_backend_account_path(account)
+                        }
+                        actions << {
+                            text: '<i class="fa fa-eye-slash"></i> '+t('archive'),
+                            url: erp_payments.archive_backend_accounts_path(id: account),
+                            data_method: 'PUT',
+                            hide: account.archived,
+                            class: 'ajax-link'
+                        } if !Erp::Core.available?("ortho_k")
+                        actions << {
+                            text: '<i class="fa fa-eye"></i> '+t('unarchive'),
+                            url: erp_payments.unarchive_backend_accounts_path(id: account),
+                            data_method: 'PUT',
+                            hide: !account.archived,
+                            class: 'ajax-link'
+                        } if !Erp::Core.available?("ortho_k")
+                        actions << {
+                            text: '<i class="fa fa-check"></i> '+t('.set_active'),
+                            url: erp_payments.set_active_backend_accounts_path(id: account),
+                            data_method: 'PUT',
+                            hide: account.is_active?,
+                            class: 'ajax-link'
+                        }
+                        actions << { divider: true } if !account.is_deleted?
+                        actions << {
+                            text: '<i class="fa fa-trash"></i> '+t('.set_deleted'),
+                            url: erp_payments.set_deleted_backend_accounts_path(id: account),
+                            data_method: 'PUT',
+                            hide: account.is_deleted?,
+                            class: 'ajax-link',
+                            data_confirm: t('.set_deleted_confirm')
+                        }
+                    %>
+                    <%= erp_datalist_row_actions(actions) %>
                 </td>
             </tr>
         <% end.empty? %>

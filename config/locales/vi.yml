@@ -551,6 +551,10 @@ vi:
             success: "Tài khoản được ẩn thành công."
           unarchive:
             success: "Tài khoản được hiển thị thành công."
+          set_active:
+            success: "Tài khoản được kích hoạt thành công."
+          set_deleted:
+            success: "Tài khoản đã xóa thành công."
           archive_all:
             success: "Tài khoản được ẩn thành công."
           unarchive_all:
@@ -559,19 +563,28 @@ vi:
             success: "Tài khoản được xóa thành công."
           index:
             accounts: "Tài khoản ngân hàng"
-            name: "Tên ngân hàng"
-            owner: "Chủ tài khoản"
+            name: "Tên tài khoản"
+            owner: "Chủ sở hữu"
             account_number: "Số tài khoản"
+            balance: "Số dư hiện tại"
             account_archived: "Tài khoản đã ẩn"
             create: "Thêm tài khoản"
             delete: "Xóa tài khoản"
             delete_confirm: "Bạn có chắc muốn xóa?"
             archive_confirm: "Bạn có chắc muốn ẩn tài khoản?"
             unarchive_confirm: "Bạn có chắc muốn hiện tài khoản?"
+            active: "Đang kích hoạt"
+            deleted: "Đã bị hủy"
           list:
-            name: "Tên ngân hàng"
-            owner: "Chủ tài khoản"
+            name: "Tên tài khoản"
+            owner: "Chủ sở hữu"
             account_number: "Số tài khoản"
+            balance: "Số dư hiện tại"
+            active: "Kích hoạt"
+            deleted: "Đã bị hủy"
+            set_active: "Kích hoạt"
+            set_deleted: "Hủy tài khoản"
+            set_deleted_confirm: "Bạn có chắc muốn hủy tài khoản này?"
             delete: "Xóa tài khoản"
             delete_confirm: "Bạn có chắc muốn xóa?"
             no_matching_records_found: "Danh sách tài khoản không được tìm thấy"
@@ -582,7 +595,7 @@ vi:
             edit: "Cập nhật"
             accounts: "Tài khoản ngân hàng"
           form:
-            name: "Tên ngân hàng (nơi mở tài khoản)"
+            name: "Tên tài khoản"
             owner: "Chủ tài khoản"
             account_number: "Số tài khoản"
         payment_types:

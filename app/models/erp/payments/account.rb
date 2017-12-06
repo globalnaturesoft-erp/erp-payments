@@ -3,6 +3,10 @@ module Erp::Payments
     belongs_to :creator, class_name: "Erp::User"
     validates :name, :account_number, :owner, presence: true
     
+    # class const
+    STATUS_ACTIVE = 'active'
+    STATUS_DELETED = 'deleted'
+    
     # Filters
     def self.filter(query, params)
       params = params.to_unsafe_hash
@@ -98,14 +102,14 @@ module Erp::Payments
     
     # data for dataselect ajax
     def self.dataselect(keyword='')
-      query = self.all
+      query = self.where(status: Erp::Payments::Account::STATUS_ACTIVE)
       
       if keyword.present?
         keyword = keyword.strip.downcase
         query = query.where('LOWER(name) LIKE ?', "%#{keyword}%")
       end
       
-      query = query.limit(8).map{|debt| {value: debt.id, text: debt.name} }
+      query = query.limit(10).map{|debt| {value: debt.id, text: debt.name} }
     end
     
     def archive
@@ -123,6 +127,23 @@ module Erp::Payments
     def self.unarchive_all
 			update_all(archived: false)
 		end
+    
+    def set_active
+      update_attributes(status: Erp::Payments::Account::STATUS_ACTIVE)
+    end
+
+    def set_deleted
+      update_attributes(status: Erp::Payments::Account::STATUS_DELETED)
+    end
+    
+    # Check is-active? / is-deleted?
+    def is_active?
+      return self.status == Erp::Payments::Account::STATUS_ACTIVE
+    end
+    
+    def is_deleted?
+      return self.status == Erp::Payments::Account::STATUS_DELETED
+    end
 		
     # --------- Report Functions - Start ---------
     # So tien thu vao tai khoan
