@@ -10,6 +10,51 @@
                 </div>
             </div>
             <div class="col-md-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-body form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <% if Erp::Core.available?("contacts") %>
+                                    <%= erp_form_control("dataselect", {
+                                        name: 'payment_record[customer_id]',
+                                        value: payment_record.customer_id,
+                                        text: payment_record.customer_name,
+                                        placeholder: 'Chọn khách hàng',
+                                        label: 'Khách hàng',
+                                        url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_customer: true),
+                                        errors: payment_record.errors.full_messages_for(:customer_id)
+                                    }) %>
+                                <% end %>
+                            </div>
+                            <div class="col-md-4">
+                                <% if Erp::Core.available?("contacts") %>
+                                    <%= erp_form_control("dataselect", {
+                                        name: 'payment_record[supplier_id]',
+                                        value: payment_record.supplier_id,
+                                        text: payment_record.supplier_name,
+                                        placeholder: 'Chọn NCC',
+                                        label: 'Nhà CC',
+                                        url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_supplier: true),
+                                        errors: payment_record.errors.full_messages_for(:supplier_id)
+                                    }) %>
+                                <% end %>
+                            </div>
+                            <div class="col-md-4">
+                                <%= erp_form_control("dataselect", {
+                                    name: 'payment_record[employee_id]',
+                                    value: payment_record.employee_id,
+                                    text: payment_record.employee_name,
+                                    placeholder: 'Chọn nhân viên',
+                                    label: 'Nhân viên',
+                                    url: erp.dataselect_backend_users_path(format: 'json'),
+                                    errors: payment_record.errors.full_messages_for(:employee_id)
+                                }) %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
                 <%= render 'form_genaral', payment_record: payment_record %>
             </div>
         </div>

@@ -1,4 +1,4 @@
-<table class="table table-advance table-hover table-striped table-checkable order-column">
+<table class="table table-advance table-hover table-striped order-column">
     <thead>
         <tr>
             <th width='1%'>
@@ -39,7 +39,12 @@
     </thead>
     <tbody>
         <% @customers.each do |customer| %>  <!-- todo update this function -->
-            <tr class="odd gradeX has-child-table" data-url="<%= erp_payments.customer_commission_details_backend_payment_records_path(customer_id: customer.id) %>">
+            <tr class="odd gradeX has-child-table"
+                data-url="<%= erp_payments.customer_commission_details_backend_payment_records_path(
+                    customer_id: customer.id,
+                    from_date: @from,
+                    to_date: @to,
+                ) %>">
                 <td>
                     <%= erp_datalist_check_row(id: customer.id) %>
                 </td>

@@ -1,0 +1,87 @@
+wb = xlsx_package.workbook
+xlsx_package.use_autowidth = true
+
+wb.styles do |s|
+  wb.add_worksheet(name: "Đơn mua hàng") do |sheet|
+    # style
+    bg_info = {:bg_color => "305496", :fg_color => "FF"}
+    bg_total = {:bg_color => "f0edbb"}
+    text_center = {alignment: { horizontal: :center }}
+    text_left = {alignment: { horizontal: :left }}
+    text_right = {alignment: { horizontal: :right }}
+
+    # Top head
+    sheet.add_row ["CÔNG TY TNHH ORTHO-K VIỆT NAM"]
+    sheet.add_row ["535 An Dương Vương, Phường 8, Quận 5"]
+
+    sheet.add_row []
+    # Title
+    sheet.add_row ["SỔ CHI TIẾT BÁN HÀNG - #{@customer.name}"], sz: 15
+    sheet.add_row ["Từ ngày #{@from.strftime('%d/%m/%Y')} đến ngày #{@to.strftime('%d/%m/%Y')}"]
+
+    sheet.add_row []
+    # Header
+    sheet.add_row [
+        "Ngày ghi sổ",
+        "Số chứng từ",
+        "Tên đối tượng",
+        "Diễn giải",
+        "Tình trạng hàng hoá",
+        "Đơn vị tính",
+        "Đơn giá",
+        "Số lượng",
+        "Thành tiền",
+        "Tên bệnh nhân",
+        "Tình trạng BN",
+        "MT/MP",
+        "Chiết khấu",
+        "Ghi chú",
+    ], style: (s.add_style bg_info)
+
+    # Order details
+    @orders.each do |order|
+        order.order_details.each do |order_detail|
+            sheet.add_row [
+                format_date(order.order_date),
+                order.code,
+                order.customer_name,
+                order_detail.product_name,
+                Erp::Products::State.first.name,
+                order_detail.product.unit_name,
+                order_detail.price,
+                order_detail.quantity,
+                order_detail.subtotal,
+                order.patient_name,
+                order.patient_state_name,
+                t('.eye_positions_' + order_detail.eye_position.to_s),
+                order_detail.customer_commission_amount,
+                order_detail.description,
+            ], style: [
+
+            ]
+        end
+    end
+
+    # Footer
+    sheet.add_row [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        @orders.sum(&:total_ordered_quantity),
+        @orders.cache_total,
+        "",
+        "",
+        "",
+        @orders.sum(&:customer_commission_amount),
+        "",
+    ], style: (s.add_style bg_total)
+
+    # setup
+    sheet.column_info.first.width = 15
+
+  end
+end

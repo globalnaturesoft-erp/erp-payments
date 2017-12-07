@@ -105,6 +105,11 @@ vi:
             started_on: "Bắt đầu từ"
             is_default: "Áp dụng mặc định"
         payment_records:
+          xlsx_export_liabilities:
+            eye_positions_left: 'MT'
+            eye_positions_left: 'MP'
+            eye_positions_both: 'MP/MT'
+            eye_positions_: ''
           create:
             success: "Phiếu thu/chi được tạo thành công."
           update:
@@ -204,6 +209,8 @@ vi:
             total_received: "Tổng thu"
             total_paid: "Tổng chi"
             no_matching_records_found: "Danh sách phiếu thanh toán không được tìm thấy"
+            payment_method_cash: 'Tiền mặt'
+            payment_method_account: 'Chuyển khoản'
           new:
             payment_records: "Quản lý thu - chi"
             create_receive: "Thêm phiếu thu"

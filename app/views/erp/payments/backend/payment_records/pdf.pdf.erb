@@ -20,11 +20,11 @@
 <% content_for :main_info_col_1 do %>
   <p class="mt-5">
     <label><%= @payment_record.is_receipt_voucher? ? 'Người nộp tiền' : 'Người nhận tiền' %>:</label>
-    <span><strong><%= @payment_record.get_contact.name %> </strong></span>
+    <span><strong><%= @payment_record.get_contact_name %> </strong></span>
   </p>
   <p class="mt-5">
     <label>Địa chỉ:</label>
-    <span><%= display_contact_address(@payment_record.get_contact) if @payment_record.get_contact %></span>
+    <span><%= @payment_record.address %></span>
   </p>
   <p class="mt-5">
     <label>Lý do <%= @payment_record.is_receipt_voucher? ? 'thu' : 'chi' %>:</label>
@@ -40,7 +40,7 @@
   </p>
   <p class="mt-5">
     <label>Kèm theo:</label>
-    <span>...... chứng từ gốc</span>
+    <span>...............................</span>
   </p>
 <% end %>
 

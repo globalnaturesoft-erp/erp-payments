@@ -109,10 +109,10 @@ module Erp
             end
           end
         end
-        
+
         def show_list
         end
-        
+
         # GET /orders/1
         def pdf
 
@@ -319,6 +319,22 @@ module Erp
           end
         end
 
+        def ajax_address_field
+          @customer = Erp::Contacts::Contact.where(id: params[:datas][0]).first
+          @supplier = Erp::Contacts::Contact.where(id: params[:datas][1]).first
+          @employee = Erp::User.where(id: params[:datas][2]).first
+
+          if @customer.present?
+            @address = view_context.display_contact_address(@customer)
+          end
+          if @supplier.present?
+            @address = view_context.display_contact_address(@supplier)
+          end
+          if @employee.present?
+            @address = @employee.address
+          end
+        end
+
         def ajax_employee_field
             # Payment record da ton tai employee
             if params[:employee_id].present?
@@ -371,9 +387,17 @@ module Erp
 
         # CUSTOMER / liabilities tracking table details
         def liabilities_tracking_table_details
-          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders.payment_for_contact_orders
+          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders.payment_for_contact_orders(params.to_unsafe_hash)
           @payment_records = Erp::Payments::PaymentRecord.where(customer_id: params[:customer_id])
                                                         .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER).id)
+          # from to date
+          if params[:from_date].present?
+            @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
+          end
+
+          if params[:to_date].present?
+            @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
+          end
         end
 
         # SUPPLIER / liabilities tracking table
@@ -397,9 +421,18 @@ module Erp
 
         # SUPPLIER / liabilities tracking table details
         def supplier_liabilities_tracking_table_details
-          @orders = Erp::Contacts::Contact.find(params[:supplier_id]).purchase_orders.payment_for_contact_orders
+          @orders = Erp::Contacts::Contact.find(params[:supplier_id]).purchase_orders.payment_for_contact_orders(params.to_unsafe_hash)
           @payment_records = Erp::Payments::PaymentRecord.where(supplier_id: params[:supplier_id])
             .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER).id)
+
+          # from to date
+          if params[:from_date].present?
+            @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
+          end
+
+          if params[:to_date].present?
+            @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
+          end
         end
 
         # commission / SALESPERSON
@@ -477,13 +510,45 @@ module Erp
         end
 
         def customer_commission_details
-          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders.payment_for_contact_orders
+          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders.payment_for_contact_orders(params.to_unsafe_hash)
           @payment_records = Erp::Payments::PaymentRecord.where(customer_id: params[:customer_id])
-                                                        .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION).id)
+            .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION).id)
+
+          # from to date
+          if params[:from_date].present?
+            @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
+          end
+
+          if params[:to_date].present?
+            @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
+          end
         end
 
         # Export excel file
         def xlsx
+          respond_to do |format|
+            format.xlsx
+          end
+        end
+
+        def xlsx_export_liabilities
+          @from = (params[:from_date].present?) ? params[:from_date].to_date : Time.now.beginning_of_month
+          @to = (params[:to_date].present?) ? params[:to_date].to_date : Time.now
+
+          @customer = Erp::Contacts::Contact.find(params[:customer_id])
+          @orders = @customer.sales_orders.payment_for_contact_orders(params.to_unsafe_hash)
+          @payment_records = Erp::Payments::PaymentRecord.where(customer_id: params[:customer_id])
+            .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION).id)
+
+          # from to date
+          if params[:from_date].present?
+            @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
+          end
+
+          if params[:to_date].present?
+            @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
+          end
+
           respond_to do |format|
             format.xlsx
           end
@@ -501,7 +566,7 @@ module Erp
 
           # Only allow a trusted parameter "white list" through.
           def payment_record_params
-            params.fetch(:payment_record, {}).permit(:code, :amount, :payment_date, :pay_receive, :description, :status, :order_id, :delivery_id,
+            params.fetch(:payment_record, {}).permit(:address, :payment_method, :debit_account_id, :credit_account_id, :code, :amount, :payment_date, :pay_receive, :description, :status, :order_id, :delivery_id,
                                                      :accountant_id, :customer_id, :supplier_id, :employee_id, :account_id, :payment_type_id)
           end
       end

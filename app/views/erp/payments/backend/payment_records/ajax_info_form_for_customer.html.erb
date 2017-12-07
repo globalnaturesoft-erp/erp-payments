@@ -25,6 +25,15 @@
                     <strong><%= format_price(@customer.sales_debt_amount) %></strong>
                 </td>
             </tr>
+            <% customer_commission = @customer.customer_commission_debt_amount %>
+            <% if customer_commission > 0 %>
+                <tr class="text-danger">
+                    <td> Chiết khấu nợ khách hàng: </td>
+                    <td>
+                        <strong><%= format_price(customer_commission) %></strong>
+                    </td>
+                </tr>
+            <% end %>
         </tbody>
     </table>
 </div>

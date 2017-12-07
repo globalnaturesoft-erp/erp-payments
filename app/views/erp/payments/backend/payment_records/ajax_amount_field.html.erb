@@ -1,5 +1,6 @@
 <%= erp_form_control("number", {
     name: 'payment_record[amount]',
     value: @amount,
-    label: t('.amount')
+    label: t('.amount'),
+    required: true,
 }) %>

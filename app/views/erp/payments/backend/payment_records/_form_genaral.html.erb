@@ -25,6 +25,23 @@
                 </div>
 
                 <div class="ajax-box"
+                    data-url="<%= erp_payments.ajax_address_field_backend_payment_records_path(
+                        address: payment_record.address,
+                    ) %>"
+                    data-control="
+                        [name='payment_record[customer_id]'],
+                        [name='payment_record[supplier_id]'],
+                        [name='payment_record[employee_id]']
+                    ">
+                </div>
+                    <!--<%= erp_form_control("text", {
+                        name: 'payment_record[address]',
+                        value: payment_record.address,
+                        label: 'Địa chỉ',
+                        placeholder: 'Nhập địa chỉ'
+                    }) %>-->
+
+                <div class="ajax-box"
                     data-url="<%= erp_payments.ajax_amount_field_backend_payment_records_path(
                         amount: payment_record.amount,
                         payment_type_code: payment_record.payment_type_code,
@@ -52,27 +69,61 @@
             </div>
 
             <div class="col-md-6">
-                <%= erp_form_control("dataselect", {
-                    name: 'payment_record[account_id]',
-                    value: payment_record.account_id,
-                    text: payment_record.account_name,
-                    placeholder: t('.choose_bank_account'),
-                    label: t('.bank_account'),
-                    url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
-                    create: {
-                        url: erp_payments.new_backend_account_path,
-                        title: t('.create'),
-                        container_selector: '.new_account',
-                        input_selector: 'input[name="account[name]"]'
-                    },
-                    required: true,
-                    errors: payment_record.errors.full_messages_for(:account_id)
+                <div class="row">
+                    <div class="col-md-6">
+                        <%= erp_form_control("dataselect", {
+                            name: 'payment_record[credit_account_id]',
+                            value: payment_record.credit_account_id,
+                            text: payment_record.credit_account_name,
+                            placeholder: 'Chọn tài khoản có',
+                            label: 'Tài khoản có',
+                            url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+                            create: {
+                                url: erp_payments.new_backend_account_path,
+                                title: t('.create'),
+                                container_selector: '.new_account',
+                                input_selector: 'input[name="account[name]"]'
+                            },
+                            required: true,
+                            errors: payment_record.errors.full_messages_for(:credit_account_id)
+                        }) %>
+                    </div>
+                    <div class="col-md-6">
+                        <%= erp_form_control("dataselect", {
+                            name: 'payment_record[debit_account_id]',
+                            value: payment_record.debit_account_id,
+                            text: payment_record.debit_account_name,
+                            placeholder: 'Chọn tài khoản nợ',
+                            label: 'Tài khoản nợ',
+                            url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+                            create: {
+                                url: erp_payments.new_backend_account_path,
+                                title: t('.create'),
+                                container_selector: '.new_account',
+                                input_selector: 'input[name="account[name]"]'
+                            },
+                            required: true,
+                            errors: payment_record.errors.full_messages_for(:debit_account_id)
+                        }) %>
+                    </div>
+                </div>
+
+                <%= erp_form_control("select", {
+                    name: 'payment_record[payment_method]',
+                    value: payment_record.payment_method,
+                    text: payment_record.payment_method,
+                    placeholder: 'Chọn phương thức thanh toán',
+                    label: 'Phương thức thanh toán',
+                    options: [
+                        {text: 'Tiền mặt', value: Erp::Payments::PaymentRecord::PAYMENT_METHOD_CASH},
+                        {text: 'Chuyển khoản', value: Erp::Payments::PaymentRecord::PAYMENT_METHOD_ACCOUNT},
+                    ]
                 }) %>
+
                 <%= erp_form_control("textarea", {
                     name: 'payment_record[description]',
                     value: payment_record.description,
                     label: t('.description'),
-                    rows: 5
                 }) %>
             </div>
         </div>

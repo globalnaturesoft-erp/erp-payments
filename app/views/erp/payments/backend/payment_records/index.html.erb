@@ -40,7 +40,7 @@
         class: 'btn-noborder btn-sm',
         icon: 'fa fa-calendar-plus-o'
     }) %>
-    
+
     <!-- create pay -->
     <%=
         actions = []
@@ -100,29 +100,29 @@
 
 <% content_for :global_filter do %>
     <div class="row top-datalist">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <%= erp_form_control('date', {
                 label: t('.from_date'),
                 name: 'from_date',
                 placeholder: t('.select_from_date')
             }) %>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <%= erp_form_control('date', {
                 label: t('.to_date'),
                 name: 'to_date',
                 placeholder: t('.select_to_date')
             }) %>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <%= erp_form_control("dataselect", {
                 name: 'period',
                 label: t('.filter_period'),
-                placeholder: t('.choose_period'),
+                placeholder: 'Chọn thời gian',
                 url: erp_periods.dataselect_backend_periods_path(format: 'json'),
             }) %>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <%= erp_form_control("dataselect", {
                 name: 'employee',
                 label: t('.filter_employee'),
@@ -130,7 +130,7 @@
                 url: erp.dataselect_backend_users_path(format: 'json'),
             }) %>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <%= erp_form_control("dataselect", {
                 name: 'customer',
                 label: t('.filter_customer'),
@@ -139,7 +139,7 @@
                     contact_id: Erp::Contacts::Contact.get_main_contact.id),
             }) %>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <%= erp_form_control("dataselect", {
                 name: 'supplier',
                 label: t('.filter_supplier'),
@@ -148,13 +148,44 @@
                     contact_id: Erp::Contacts::Contact.get_main_contact.id),
             }) %>
         </div>
-        <div class="col-md-6">
+    </div>
+    <div class="row top-datalist">
+        <div class="col-md-2">
+            <%= erp_form_control("dataselect", {
+                name: 'credit_account',
+                label: 'Tài khoản có',
+                placeholder: 'Chọn tài khoản',
+                url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+            }) %>
+        </div>
+        <div class="col-md-2">
+            <%= erp_form_control("dataselect", {
+                name: 'debit_account',
+                label: 'Tài khoản nợ',
+                placeholder: 'Chọn tài khoản',
+                url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+            }) %>
+        </div>
+        <div class="col-md-2">
             <%= erp_form_control("dataselect", {
                 name: 'payment_type',
                 label: t('.filter_payment_type'),
                 placeholder: t('.choose_payment_type'),
                 url: erp_payments.dataselect_backend_payment_types_path(format: 'json'),
                 multiple: true
+            }) %>
+        </div>
+        <div class="col-md-2">
+            <%= erp_form_control("select", {
+                name: 'payment_method',
+                label: 'Phương thức thanh toán',
+                placeholder: 'Chọn phương thức',
+                url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+                options: [
+                    {text: 'Tất cả', value: ''},
+                    {text: 'Tiền mặt', value: Erp::Payments::PaymentRecord::PAYMENT_METHOD_CASH},
+                    {text: 'Chuyển khoản', value: Erp::Payments::PaymentRecord::PAYMENT_METHOD_ACCOUNT},
+                ]
             }) %>
         </div>
     </div>
@@ -208,7 +239,7 @@
         }
     ],
     actions: [
-        
+
     ],
     filters: filters,
     columns: [
@@ -226,6 +257,15 @@
         },
         {
             text: t('.amount'), name: 'amount', value: true, checked: true
+        },
+        {
+            text: 'Phương thức T.Toán', name: 'payment_method', value: true, checked: false
+        },
+        {
+            text: 'Tài khoản nợ', name: 'debit_account', value: true, checked: false
+        },
+        {
+            text: 'Tài khoản có', name: 'credit_account', value: true, checked: false
         },
         {
             text: t('.description'), name: 'description', value: true, checked: false

@@ -1,26 +1,30 @@
 <%= form_for([erp_payments, :backend, account]) do |f| %>
     <%= erp_form_control("text", {
+        name: 'account[code]',
+        value: account.code,
+        label: 'Mã số',
+        required: true,
+    }) %>
+    <%= erp_form_control("text", {
         name: 'account[name]',
-        value: account.name,                   
-        label: t('.name'),
+        value: account.name,
+        label: 'Tên tài khoản',
         required: true,
         errors: account.errors.full_messages_for(:name)
     }) %>
     <%= erp_form_control("text", {
         name: 'account[owner]',
-        value: account.owner,                   
+        value: account.owner,
         label: t('.owner'),
-        required: true,
         errors: account.errors.full_messages_for(:owner)
     }) %>
     <%= erp_form_control("text", {
         name: 'account[account_number]',
-        value: account.account_number,                   
+        value: account.account_number,
         label: t('.account_number'),
-        required: true,
         errors: account.errors.full_messages_for(:account_number)
     }) %>
-    
+
     <%= erp_component('button/save', {
         text: t('submit')
     }) %>

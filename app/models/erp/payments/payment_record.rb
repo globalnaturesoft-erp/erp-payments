@@ -3,8 +3,15 @@ module Erp::Payments
     belongs_to :creator, class_name: "Erp::User"
     belongs_to :accountant, class_name: "Erp::User"
     belongs_to :employee, class_name: "Erp::User", optional: true
-    belongs_to :account, class_name: "Erp::Payments::Account"
+    belongs_to :account, class_name: "Erp::Payments::Account", optional: true
     belongs_to :payment_type, class_name: "Erp::Payments::PaymentType"
+
+    belongs_to :debit_account, class_name: "Erp::Payments::Account"
+    belongs_to :credit_account, class_name: "Erp::Payments::Account"
+
+    PAYMENT_METHOD_CASH = 'cash'
+    PAYMENT_METHOD_ACCOUNT = 'account'
+
     if Erp::Core.available?("contacts")
       belongs_to :customer, class_name: "Erp::Contacts::Contact", optional: true
       belongs_to :supplier, class_name: "Erp::Contacts::Contact", optional: true
@@ -163,7 +170,22 @@ module Erp::Payments
 				if global_filter[:payment_type].present?
 					query = query.where(payment_type_id: global_filter[:payment_type])
 				end
-        
+
+				# filter by debit account
+				if global_filter[:debit_account].present?
+					query = query.where(debit_account_id: global_filter[:debit_account])
+				end
+
+				# filter by employee
+				if global_filter[:credit_account].present?
+					query = query.where(credit_account_id: global_filter[:credit_account])
+				end
+
+				# filter by payment method
+				if global_filter[:payment_method].present?
+					query = query.where(payment_method: global_filter[:payment_method])
+				end
+
 			end
       # end// global filter
 
@@ -197,7 +219,23 @@ module Erp::Payments
     def account_name
       account.present? ? account.name : ''
     end
-    
+
+    def credit_account_name
+      credit_account.present? ? credit_account.display_name : ''
+    end
+
+    def debit_account_name
+      debit_account.present? ? debit_account.display_name : ''
+    end
+
+    def credit_account_code
+      credit_account.present? ? credit_account.code : ''
+    end
+
+    def debit_account_code
+      debit_account.present? ? debit_account.code : ''
+    end
+
     def get_contact
       if [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_SALES_ORDER).id,
         Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER).id].include?(payment_type_id)
@@ -229,6 +267,18 @@ module Erp::Payments
         end
       end
       return query
+    end
+
+    def get_contact_name
+      if customer.present?
+        return customer.name
+      end
+      if supplier.present?
+        return supplier.name
+      end
+      if employee.present?
+        employee.name
+      end
     end
 
     # Generate code

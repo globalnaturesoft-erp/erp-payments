@@ -1,6 +1,11 @@
 <table class="table table-advance table-hover table-striped table-checkable order-column">
     <thead>
         <tr>
+            <% if get_columns(params).include?("code") %>
+                <th width='5%' class="text-left">
+                    Mã số
+                </th>
+            <% end %>
             <% if get_columns(params).include?("name") %>
                 <th width='25%' class="text-left">
                     <%= t('.name') %>
@@ -42,6 +47,9 @@
     <tbody>
         <% if @accounts.each do |account| %>
             <tr class="<%= 'blurred' if account.is_deleted? %> odd gradeX">
+                <% if get_columns(params).include?("code") %>
+                    <td class="text-left bold"><%= account.code %></td>
+                <% end %>
                 <% if get_columns(params).include?("name") %>
                     <td class="text-left bold"><%= account.name %></td>
                 <% end %>
