@@ -148,12 +148,12 @@ module Erp::Payments
     # --------- Report Functions - Start ---------
     # So tien thu vao tai khoan
     def received(params={})
-      return Erp::Payments::PaymentRecord.all_done.all_received(params).where(account_id: self.id).sum(:amount)
+      return Erp::Payments::PaymentRecord.all_done.all_received(params).where(credit_account_id: self.id).sum(:amount)
     end
 
     # So tien chi ra tu tai khoan
     def paid(params={})
-      return Erp::Payments::PaymentRecord.all_done.all_paid(params).where(account_id: self.id).sum(:amount)
+      return Erp::Payments::PaymentRecord.all_done.all_paid(params).where(debit_account_id: self.id).sum(:amount)
     end
 
     # Tong tien thu vao

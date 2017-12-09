@@ -368,11 +368,11 @@ module Erp::Payments
 		end
 
     def set_done
-      update_columns(status: Erp::Payments::PaymentRecord::STATUS_DONE)
+      update_attributes(status: Erp::Payments::PaymentRecord::STATUS_DONE)
     end
 
     def set_deleted
-      update_columns(status: Erp::Payments::PaymentRecord::STATUS_DELETED)
+      update_attributes(status: Erp::Payments::PaymentRecord::STATUS_DELETED)
     end
 
     def self.confirm_all
@@ -474,13 +474,15 @@ module Erp::Payments
       # Tong tien thu duoc tu khach hang
       total = total + self.all_done.all_received(params)
                           .where(payment_type_id: [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_SALES_ORDER),
-                                                   Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER)])
+                                                   Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER),
+                                                   Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION)])
                           .sum(:amount)
 
       # Tong tien tra lai cho khach hang
       total = total - self.all_done.all_paid(params)
                           .where(payment_type_id: [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_SALES_ORDER),
-                                                   Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER)])
+                                                   Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER),
+                                                   Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION)])
                           .sum(:amount)
       return total
     end
@@ -490,8 +492,15 @@ module Erp::Payments
       return self.customer.present? ? self.customer.commission_percent : 0
     end
 
-    def commission_amount
-      return self.amount*(self.customer_commission_percent.to_f/100)
+    #
+    def for_contact_commission_amount(options={})
+      debt_amount = customer.sales_debt_amount(to_date: options[:to_date]) + amount
+      commission_amount = customer.customer_commission_debt_amount(to_date: options[:to_date])
+      percent = customer_commission_percent.to_f
+
+      commission_result = ((amount/debt_amount) * (debt_amount - commission_amount)) * (percent/100.0)
+
+      return commission_result
     end
 
     # check if new account
@@ -508,6 +517,26 @@ module Erp::Payments
     # new account commission
     def new_account_commission_amount
       return (self.new_customer? ? self.customer.new_account_commission_amount.to_f : 0)
+    end
+
+    # ======================== COMMISSION CACHE =====================================================
+    after_save :update_cache_for_order_commission_amount
+
+    # get for order commission amount when has first payment
+    def for_order_commission_amount
+      total = 0.0
+      if order.present? and order.payment_for == Erp::Orders::Order::PAYMENT_FOR_ORDER
+        # check if order has older payment records
+        if order.done_receiced_payment_records.where('payment_date < ?', self.payment_date).empty?
+          total = order.commission_amount
+        end
+      end
+      return total
+    end
+
+    # Save cache for commissions
+    def update_cache_for_order_commission_amount
+      update_columns(cache_for_order_commission_amount: self.for_order_commission_amount)
     end
   end
 end

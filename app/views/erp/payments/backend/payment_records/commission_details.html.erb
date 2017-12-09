@@ -4,7 +4,7 @@
         <li class="active">
             <a href="#tab_<%= uid %>_1" data-toggle="tab">
                 <i class="glyphicon glyphicon-list-alt"></i>
-                <%= t('.orders_list') %>
+                Hoa hồng trên đơn hàng lẻ
             </a>
         </li>
         <li>
@@ -58,7 +58,7 @@
                                 <td class="text-left"><%= format_date(pr.order.order_date) %></td>
                                 <td class="text-right"><%= format_price(pr.order.total) %></td>
                                 <td class="text-right"><%= format_price(pr.amount) %></td>
-                                <td class="text-right"><%= format_price(pr.order.commission_amount) %></td>
+                                <td class="text-right"><%= format_price(pr.for_order_commission_amount) %></td>
                                 <td class="text-right"><%= pr.description %></td>
                             </tr>
                         <% end %>
@@ -78,6 +78,8 @@
                     <thead class="flip-content">
                         <tr>
                             <th width="20%" class="bg-yellow bg-font-yellow text-nowrap text-left">Tên khách hàng</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Tổng mua hàng</th>
+                            <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Chiết khấu</th>
                             <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Số tiền thu</th>
                             <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">New Acc</th>
                             <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Hoa hồng (%)</th>
@@ -89,7 +91,13 @@
                         <tr>
                             <td class="bg-green"><strong></strong></td>
                             <td class="bg-green text-right"><strong>
-                                <%= format_price(@payment_for_contact_sales_paid_amount) %>
+
+                            </strong></td>
+                            <td class="bg-green text-right"><strong>
+
+                            </strong></td>
+                            <td class="bg-green text-right"><strong>
+
                             </strong></td>
                             <td class="bg-green text-right"><strong class="text-danger"><%= format_price(@new_account_commission_amount) %></strong></td>
                             <td class="bg-green text-right"><strong></strong></td>
@@ -101,10 +109,12 @@
                         <% @payment_for_contact_sales_payment_records.each do |pr| %>
                             <tr>
                                 <td class="text-left"><strong><%= link_to pr.customer.name, 'javascript:;' %></strong></td>
+                                <td class="text-right"><%= format_price(pr.customer.sales_debt_amount(to_date: @options[:to_date]) + pr.amount) %></td>
+                                <td class="text-right"><%= format_price(pr.customer.customer_commission_debt_amount(to_date: @options[:to_date])) %></td>
                                 <td class="text-right"><%= format_price(pr.amount) %></td>
                                 <td class="text-right"><%= format_price(pr.new_account_commission_amount) %></td>
                                 <td class="text-right"><%= pr.customer_commission_percent.to_f %>%</td>
-                                <td class="text-right"><%= format_price(pr.commission_amount) %></td>
+                                <td class="text-right"><%= format_price(pr.for_contact_commission_amount(@options)) %></td>
                                 <td class="text-right"><%= pr.description %></td>
                             </tr>
                         <% end %>
@@ -120,34 +130,56 @@
         </div>
         <div class="tab-pane" id="tab_<%= uid %>_3">
             <% if true %>
-                <div class="m-grid m-grid-demo">
-                    <div class="m-grid-row">
-                        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.target_amount') %>
-                            <br>
-                            <strong>
-                                <%= @target.present? ? format_price(@target.amount) : '--' %>
-                            </strong>
-                        </div>
-                        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_sales_amount') %> <br><strong>
-                            <%= format_price(@employee.sales_total_amount(@period)) %>
-                        </strong></div>
-                        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.amount_received') %> <br><strong>
+
+                <table class="table table-bordered table-advance order-column">
+                    <tr>
+                        <th width="1%">1</th>
+                        <th width="30%" class="text-left">Doanh số thu bán lẻ (<%= @payment_for_order_sales_payment_records.count %> ca)</th>
+                        <td class="text-right">
+                            <%= format_price(@employee.revenue_sales_order_by_period(@period)) %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="1%">2</th>
+                        <th width="30%" class="text-left">Doanh số thu công nợ</th>
+                        <td class="text-right">
+                            <%= format_price(@employee.revenue_customer_by_period(@period)) %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="1%">3</th>
+                        <th width="30%" class="text-left">Chiết khấu cho khách hàng</th>
+                        <td class="text-right">
+                            <%= format_price(@employee.revenue_customer_commission_by_period(@period)) %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="1%">4</th>
+                        <th width="30%" class="text-left">Tổng doanh thu (= 1 + 2 + 3)</th>
+                        <td class="text-right text-bold">
                             <%= format_price(@employee.revenue_by_period(@period)) %>
-                        </strong></div>
-                        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
-                            <%= t('.percentage_achieved') %> (mốc) <br><strong>
-                            <%= @target.present? ? @employee.target_commission_by_period(@period).percent.to_s + '%' : '--' %>
-                        </strong></div>
-                        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
-                            <%= t('.commission_amount') %> <br><strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="1%">5</th>
+                        <th width="30%" class="text-left"><%= t('.target_amount') %></th>
+                        <td class="text-right text-bold"><%= @target.present? ? format_price(@target.amount) : '--' %></td>
+                    </tr>
+                    <tr>
+                        <th width="1%">6</th>
+                        <th width="30%" class="text-left"><%= t('.percentage_achieved') %> (mốc)</th>
+                        <td class="text-right text-bold">
+                            <%= @target.present? ? (@employee.target_commission_by_period(@period).present? ? @employee.target_commission_by_period(@period).percent.to_s + '%' : 'Chưa đạt') : '--' %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="1%">7</th>
+                        <th width="30%" class="text-left"><%= t('.commission_amount') %></th>
+                        <td class="text-right text-bold text-danger text-lg">
                             <%= @target.present? ? format_price(@employee.employee_target_commission_amount(@options)) : '--' %>
-                        </strong></div>
-                        <div class="m-grid-col m-grid-col-middle m-grid-col-center">
-                            Số lần thu <br><strong>
-                            <%= @payment_for_contact_sales_payment_records.count %>
-                        </strong></div>
-                    </div>
-                </div>
+                        </td>
+                    </tr>
+                </table>
             <% else %>
                 <div class="alert alert-warning alert-dismissable no-margin">
                     Chưa có target tương ứng cho nhân viên trong kỳ này!
