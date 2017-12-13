@@ -8,7 +8,7 @@
     <%= erp_form_control("text", {
         name: 'account[name]',
         value: account.name,
-        label: 'Tên tài khoản',
+        label: t('.name'),
         required: true,
         errors: account.errors.full_messages_for(:name)
     }) %>

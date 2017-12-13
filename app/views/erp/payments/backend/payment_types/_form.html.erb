@@ -1,7 +1,7 @@
 <%= form_for([erp_payments, :backend, payment_type]) do |f| %>
     <%= erp_form_control("text", {
         name: 'payment_type[name]',
-        value: payment_type.name,                   
+        value: payment_type.name,
         label: t('.name')
     }) %>
     <div class="row">
