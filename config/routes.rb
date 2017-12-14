@@ -95,6 +95,11 @@ Erp::Payments::Engine.routes.draw do
 					put 'set_deleted'
 				end
 			end
+			resources :accounting_accounts do
+				collection do
+          get 'dataselect'
+        end
+      end
 		end
 	end
 end

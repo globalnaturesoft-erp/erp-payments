@@ -6,8 +6,8 @@ module Erp::Payments
     belongs_to :account, class_name: "Erp::Payments::Account", optional: true
     belongs_to :payment_type, class_name: "Erp::Payments::PaymentType"
 
-    belongs_to :debit_account, class_name: "Erp::Payments::Account"
-    belongs_to :credit_account, class_name: "Erp::Payments::Account"
+    belongs_to :debit_account, class_name: "Erp::Payments::AccountingAccount"
+    belongs_to :credit_account, class_name: "Erp::Payments::AccountingAccount"
 
     PAYMENT_METHOD_CASH = 'cash'
     PAYMENT_METHOD_ACCOUNT = 'account'
@@ -169,6 +169,11 @@ module Erp::Payments
 				# filter by employee
 				if global_filter[:payment_type].present?
 					query = query.where(payment_type_id: global_filter[:payment_type])
+				end
+
+				# filter by account
+				if global_filter[:account].present?
+					query = query.where(account_id: global_filter[:account])
 				end
 
 				# filter by debit account

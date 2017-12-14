@@ -24,7 +24,7 @@
   </p>
   <p class="mt-5">
     <label>Địa chỉ:</label>
-    <span><%= @payment_record.address %></span>
+    <span><%= @payment_record.address.present? ? @payment_record.address : display_contact_address(@payment_record.get_contact) %></span>
   </p>
   <p class="mt-5">
     <label>Lý do <%= @payment_record.is_receipt_voucher? ? 'thu' : 'chi' %>:</label>

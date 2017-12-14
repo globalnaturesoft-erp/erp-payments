@@ -152,18 +152,26 @@
     <div class="row top-datalist">
         <div class="col-md-2">
             <%= erp_form_control("dataselect", {
+                name: 'account',
+                label: 'Tài khoản thu/chi',
+                placeholder: 'Chọn TK lưu trữ (thu/chi)',
+                url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+            }) %>
+        </div>
+        <div class="col-md-2">
+            <%= erp_form_control("dataselect", {
                 name: 'credit_account',
                 label: 'Tài khoản có',
-                placeholder: 'Chọn tài khoản',
-                url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+                placeholder: 'Chọn TK kế toán',
+                url: erp_payments.dataselect_backend_accounting_accounts_path(format: 'json'),
             }) %>
         </div>
         <div class="col-md-2">
             <%= erp_form_control("dataselect", {
                 name: 'debit_account',
                 label: 'Tài khoản nợ',
-                placeholder: 'Chọn tài khoản',
-                url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+                placeholder: 'Chọn TK kế toán',
+                url: erp_payments.dataselect_backend_accounting_accounts_path(format: 'json'),
             }) %>
         </div>
         <div class="col-md-2">
@@ -260,6 +268,9 @@
         },
         {
             text: 'Phương thức T.Toán', name: 'payment_method', value: true, checked: false
+        },
+        {
+            text: 'Tài khoản dòng tiền', name: 'account', value: true, checked: false
         },
         {
             text: 'Tài khoản nợ', name: 'debit_account', value: true, checked: false

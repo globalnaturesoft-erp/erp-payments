@@ -79,14 +79,19 @@
                     PTTT
                 </th>
             <% end %>
+            <% if get_columns(params).include?("account") %>
+                <th>
+                    Tk dòng tiền
+                </th>
+            <% end %>
             <% if get_columns(params).include?("debit_account") %>
                 <th>
-                    tk nợ
+                    Tk nợ
                 </th>
             <% end %>
             <% if get_columns(params).include?("credit_account") %>
                 <th>
-                    tk có
+                    Tk có
                 </th>
             <% end %>
             <% if get_columns(params).include?("description") %>
@@ -144,6 +149,9 @@
                 <% end %>
                 <% if get_columns(params).include?("payment_method") %>
                     <td class="text-left"><%= t('.payment_method_' + payment_record.payment_method) if payment_record.payment_method.present? %></td>
+                <% end %>
+                <% if get_columns(params).include?("account") %>
+                    <td class="text-left"><%= payment_record.account_name %></td>
                 <% end %>
                 <% if get_columns(params).include?("debit_account") %>
                     <td class="text-left"><%= payment_record.debit_account_code %></td>

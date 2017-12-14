@@ -323,6 +323,7 @@ module Erp
           @customer = Erp::Contacts::Contact.where(id: params[:datas][0]).first
           @supplier = Erp::Contacts::Contact.where(id: params[:datas][1]).first
           @employee = Erp::User.where(id: params[:datas][2]).first
+          @order = Erp::Orders::Order.where(id: params[:datas][3]).first
 
           if @customer.present?
             @address = view_context.display_contact_address(@customer)
@@ -332,6 +333,13 @@ module Erp
           end
           if @employee.present?
             @address = @employee.address
+          end
+          if @order.present?
+            if @order.sales?
+              @address = view_context.display_contact_address(@order.customer)
+            else
+              @address = view_context.display_contact_address(@order.supplier)
+            end
           end
         end
 

@@ -19,7 +19,7 @@ puts '==== Payment type created ===='
 
 # Hệ thống tài khoản kế toán
 user = Erp::User.first
-Erp::Payments::Account.destroy_all
+Erp::Payments::AccountingAccount.destroy_all
 account_types = [
   {code: '121', name: 'Tiền mặt'},
   {code: '1111', name: 'Tiền mặt Việt Nam'},
@@ -147,7 +147,7 @@ account_types = [
 ]
 
 account_types.each do |acc|
-  puts Erp::Payments::Account.create(
+  puts Erp::Payments::AccountingAccount.create(
     code: acc[:code],
     name: acc[:name],
     creator_id: user.id,

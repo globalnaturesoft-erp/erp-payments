@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Accounting Accounts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @accounting_accounts.each do |accounting_account| %>
+      <tr>
+        <td><%= link_to 'Show', accounting_account %></td>
+        <td><%= link_to 'Edit', edit_accounting_account_path(accounting_account) %></td>
+        <td><%= link_to 'Destroy', accounting_account, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Accounting Account', new_accounting_account_path %>

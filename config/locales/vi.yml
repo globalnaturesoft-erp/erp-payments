@@ -289,8 +289,9 @@ vi:
             accountant: "Nhân viên kế toán"
             choose_accountant: "Chọn nhân viên kế toán"
             description: "Mô tả / Ghi chú"
-            bank_account: "Tài khoản"
-            choose_bank_account: "Chọn tài khoản thu/chi của cơ quan bạn"
+            bank_account: "Tài khoản thanh toán"
+            choose_bank_account_receive: "Chọn tài khoản thu (nộp vào)"
+            choose_bank_account_pay: "Chọn tài khoản chi (trích ra)"
           ajax_employee_field:
             employee: "Nhân viên bán hàng"
             choose_employee: "Vui lòng chọn nhân viên bán hàng"
