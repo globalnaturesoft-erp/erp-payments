@@ -49,6 +49,7 @@ Erp::Payments::Engine.routes.draw do
 					get 'ajax_info_form_for_commission'
 					get 'ajax_info_form_for_customer_commission'
 					get 'ajax_info_form_for_delivery'
+					get 'ajax_payment_type_limits_info'
 					get 'ajax_employee_field'
 					get 'ajax_amount_field'
 					get 'ajax_address_field'
@@ -95,6 +96,11 @@ Erp::Payments::Engine.routes.draw do
 					put 'set_deleted'
 				end
 			end
+			resources :payment_type_limits do
+				collection do
+          get 'line_form'
+        end
+      end
 			resources :accounting_accounts do
 				collection do
           get 'dataselect'

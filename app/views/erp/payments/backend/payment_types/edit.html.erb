@@ -9,17 +9,13 @@
 <% end %>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <% if @payment_type.errors.any? %>
             <%= erp_form_control("form_error_message") %>
         <% end %>
         
         <!-- BEGIN SAMPLE FORM PORTLET-->
-        <div class="portlet light bordered">
-            <div class="portlet-body">
-                <%= render 'form', payment_type: @payment_type %>
-            </div>
-        </div>
+        <%= render 'form', payment_type: @payment_type %>
         <!-- END SAMPLE FORM PORTLET-->
     </div>
 </div>

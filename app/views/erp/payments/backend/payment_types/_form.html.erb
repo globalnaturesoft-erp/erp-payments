@@ -1,31 +1,64 @@
 <%= form_for([erp_payments, :backend, payment_type]) do |f| %>
-    <%= erp_form_control("text", {
-        name: 'payment_type[name]',
-        value: payment_type.name,
-        label: t('.name')
-    }) %>
-    <div class="row">
-        <div class="col-md-6 col-sm-6 col-xs-6">
-            <%= erp_form_control('checkbox', {
-                name: 'payment_type[is_payable]',
-                id: 'payment_type_is_payable',
-                value: payment_type.is_payable,
-                not_selected_value: 'false',
-                options: [{value: 'true', text: t('.is_payable')}],
-                errors: payment_type.errors.full_messages_for(:is_payable),
-                alert: true
-            }) %>
-        </div>
-        <div class="col-md-6 col-sm-6 col-xs-6">
-            <%= erp_form_control('checkbox', {
-                name: 'payment_type[is_receivable]',
-                id: 'payment_type_is_receivable',
-                value: payment_type.is_receivable,
-                not_selected_value: 'false',
-                options: [{value: 'true', text: t('.is_receivable')}]
-            }) %>
+    <div class="portlet light bordered">
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <%= erp_form_control("text", {
+                        name: 'payment_type[name]',
+                        value: payment_type.name,
+                        label: t('.name')
+                    }) %>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <%= erp_form_control('checkbox', {
+                                name: 'payment_type[is_payable]',
+                                id: 'payment_type_is_payable',
+                                value: payment_type.is_payable,
+                                not_selected_value: 'false',
+                                options: [{value: 'true', text: t('.is_payable')}],
+                                errors: payment_type.errors.full_messages_for(:is_payable),
+                                alert: true,
+                                label: 'Sử dụng để chi trả?'
+                            }) %>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <%= erp_form_control('checkbox', {
+                                name: 'payment_type[is_receivable]',
+                                id: 'payment_type_is_receivable',
+                                value: payment_type.is_receivable,
+                                not_selected_value: 'false',
+                                options: [{value: 'true', text: t('.is_receivable')}],
+                                label: 'Sử dụng để thu tiền?'
+                            }) %>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet-body form">
+                    <div class="custom-show">
+                        <h5 class="profile-desc-title bold font-blue-madison">Cấu hình hạn mức thanh toán</h5>
+                        <hr>
+                    </div>
+                    <%= erp_form_control("addableform", {
+                        add_button: 'Thêm hạn mức',
+                        partial: 'erp/payments/backend/payment_type_limits/line_form',
+                        partial_url: erp_payments.line_form_backend_payment_type_limits_path,
+                        items: @payment_type.payment_type_limits,
+                        item: :payment_type_limit
+                    }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <%= erp_component('button/save', {
         text: t('submit')
     }) %>

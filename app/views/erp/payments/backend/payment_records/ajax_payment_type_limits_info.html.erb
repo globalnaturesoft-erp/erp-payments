@@ -1,0 +1,15 @@
+<div class="alert alert-info">
+    <strong>HẠN MỨC THANH TOÁN</strong> <br>
+    <% if @payment_type_limits.empty? %>
+        - Chưa được cấu hình. Vui lòng
+        <%= link_to('chọn vào đây', erp_payments.edit_backend_payment_type_path(@payment_type), target: "_blank") %> để cài đặt.
+    <% else %>
+        <% @payment_type_limits.each do |ptl| %>
+            - <%= ptl.period_name %> (
+              Hạn mức: <%= format_price(ptl.amount) %> |
+              Đã thanh toán: <%= format_price(ptl.get_usage) %> |
+              Còn lại: <%= format_price(ptl.amount-ptl.get_usage) %> 
+              )<br>
+        <% end %>
+    <% end %>
+</div>

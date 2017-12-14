@@ -272,6 +272,16 @@ module Erp
           render layout: false
         end
 
+        def ajax_payment_type_limits_info
+          @payment_date = params[:datas][0]
+          if params[:payment_type_id].present?
+            @payment_type = Erp::Payments::PaymentType.find(params[:payment_type_id])
+            @payment_type_limits = @payment_type.get_limits(date: @payment_date)
+          end
+          #@contact = @delivery.customer
+          render layout: false
+        end
+
         def ajax_amount_field
           @order = Erp::Orders::Order.where(id: params[:datas][0]).first
           @customer = Erp::Contacts::Contact.where(id: params[:datas][1]).first

@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-md-3">
+        <label><%= 'Thời gian áp dụng' %></label>
+    </div>
+    <div class="col-md-3">
+        <label><%= 'Số tiền hạn mức' %></label>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <input type="hidden" name="payment_type[payment_type_limits_attributes][<%= uid %>][id]" value="<%= payment_type_limit.id %>">
+        <input type="hidden" name="payment_type[payment_type_limits_attributes][<%= uid %>][_destroy]" value="">
+        <%= erp_form_control("dataselect", {
+            name: 'payment_type[payment_type_limits_attributes][' + uid + '][period_id]',
+            value: payment_type_limit.period_id,
+            text: payment_type_limit.period_name,
+            url: erp_periods.dataselect_backend_periods_path(format: 'json'),
+            create: {
+                url: erp_periods.new_backend_period_path,
+                title: 'Thêm thời gian cố định',
+                container_selector: '.new_period',
+                input_selector: 'input[name="period[name]"]'
+            },
+            required: true
+        }) %>
+    </div>
+    <div class="col-md-3">
+        <%= erp_form_control("number", {
+            name: 'payment_type[payment_type_limits_attributes][' + uid + '][amount]',
+            value: payment_type_limit.amount,
+            text: payment_type_limit.amount
+        }) %>
+    </div>
+    <div class="col-md-3">
+        <%= erp_form_control("addableform_remove_button", {
+            is_nested_form: true
+        }) %>
+    </div>
+</div>

@@ -1,6 +1,9 @@
 module Erp::Payments
   class PaymentType < ApplicationRecord
     
+    has_many :payment_type_limits, inverse_of: :payment_type, dependent: :destroy
+    accepts_nested_attributes_for :payment_type_limits, :reject_if => lambda { |a| a[:period_id].blank? or a[:amount].blank? }, :allow_destroy => true
+    
     # class const
     CODE_SALES_ORDER = 'sales_order'
     CODE_PURCHASE_ORDER = 'purchase_order'
@@ -122,6 +125,18 @@ module Erp::Payments
     
     def is_deleted?
       return self.status == Erp::Payments::PaymentType::STATUS_DELETED
+    end
+    
+    # Get payment type limits
+    def get_limits(params={})
+      periods = Erp::Periods::Period.where(status: Erp::Periods::Period::STATUS_ACTIVE)
+      if params[:date].present?
+        periods = periods.where('from_date <= ? AND to_date >= ?', params[:date].to_date.end_of_day, params[:date].to_date.beginning_of_day)
+      end
+      return [] if periods.empty?
+      return Erp::Payments::PaymentTypeLimit.where(payment_type_id: self.id)
+            .where(period_id: periods.map{|p| p.id})
+      
     end
     
     # Payment record amount by payment type
