@@ -147,7 +147,7 @@ vi:
             pay_for_contact: "Công nợ cho NCC"
             pay_product_return: "Hàng bán bị trả lại"
             pay_commission: "Hoa hồng nhân viên"
-            pay_customer_commission: "Hoa hồng khách hàng"
+            pay_customer_commission: "Chiết khấu khách hàng"
             pay_custom: "Lập phiếu chi khác"
             
             from_date: "Từ ngày"
@@ -253,7 +253,7 @@ vi:
             employee: "Nhân viên"
             choose_employee: "Chọn nhân viên thụ hưởng"
           form_customer_commission:
-            customer_commission: "Hoa hồng khách hàng"
+            customer_commission: "Chiết khấu khách hàng"
             customer: "Khách hàng"
             choose_customer: "Chọn khách hàng trong danh sách"
             help_customer: "Khách hàng được hưởng hoa hồng"
@@ -455,7 +455,7 @@ vi:
             payment_record_for_commission: "Phiếu chi"
           commission_details:
             orders_list: "Hoa hồng trên đơn hàng"
-            contacts_list: "Hoa hồng trên khách hàng"
+            contacts_list: "Chiết khấu trên khách hàng"
             commission_with_target: "Thưởng theo Target"
             commission_with_revenue: "Thưởng doanh thu (1%)"
             target_amount: "Target cần đạt"
@@ -465,7 +465,7 @@ vi:
             commission_amount: "Tiền thưởng"
             notes: "Ghi chú"
           customer_commission:
-            customer_commission: "Hoa hồng khách hàng"
+            customer_commission: "Chiết khấu khách hàng"
             from_date: "Từ ngày"
             to_date: "Đến ngày"
             select_from_date: "Chọn ngày đầu kỳ"

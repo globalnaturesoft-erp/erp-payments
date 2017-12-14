@@ -4,7 +4,7 @@ Erp::Payments::PaymentType.create(name: 'Đơn hàng đặt mua lẻ', code: Erp
 Erp::Payments::PaymentType.create(name: 'Công nợ khách hàng', code: Erp::Payments::PaymentType::CODE_CUSTOMER, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true, is_receivable: true)
 Erp::Payments::PaymentType.create(name: 'Công nợ nhà cung cấp', code: Erp::Payments::PaymentType::CODE_SUPPLIER, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true, is_receivable: true)
 Erp::Payments::PaymentType.create(name: 'Hoa hồng nhân viên', code: Erp::Payments::PaymentType::CODE_COMMISSION, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true, is_receivable: true)
-Erp::Payments::PaymentType.create(name: 'Hoa hồng khách hàng', code: Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true, is_receivable: true)
+Erp::Payments::PaymentType.create(name: 'Chiết khấu khách hàng', code: Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true, is_receivable: true)
 Erp::Payments::PaymentType.create(name: 'Hàng bán bị trả lại', code: Erp::Payments::PaymentType::CODE_PRODUCT_RETURN, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true, is_receivable: true)
 
 Erp::Payments::PaymentType.create(name: 'Cố định: nhà + lương', code: Erp::Payments::PaymentType::CODE_CUSTOM, status: Erp::Payments::PaymentType::STATUS_ACTIVE, is_payable: true)

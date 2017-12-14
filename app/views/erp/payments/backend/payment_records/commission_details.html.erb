@@ -223,35 +223,41 @@
         </div>
     </div>
     <br />
-    <h4 class="text-left">
-        <label style="width: 200px">Hoa hồng trên đơn hàng:</label>
-        <strong style="width: 100px; display: inline-block" class="text- text-right">
-            <%= format_price(@payment_for_order_sales_commission_amount) %>
-        </strong>
-    </h4>
-    <h4 class="text-left">
-        <label style="width: 200px">Hoa hồng thu công nợ:</label>
-        <strong style="width: 100px; display: inline-block" class="text- text-right">
-            <%= format_price(@new_account_commission_amount + @payment_for_contact_sales_commission_amount) %>
-        </strong>
-    </h4>
-    <h4 class="text-left">
-        <label style="width: 200px">Thưởng theo target:</label>
-        <strong style="width: 100px; display: inline-block" class="text- text-right">
-            <%= @target.present? ? format_price(@employee.employee_target_commission_amount(@options)) : '--' %>
-        </strong>
-    </h4>
-    <h4 class="text-left">
-        <label style="width: 200px">Thưởng doanh thu (1%):</label>
-        <strong style="width: 100px; display: inline-block" class="text- text-right">
-            <%= @company_target.present? ? format_price(@company_target.commission_amount) : '--' %>
-        </strong>
-    </h4>
-    <hr style="border-color: #fff;width: 400px">
-    <h4 class="text-left">
-        <label style="width: 200px">Tổng hoa hồng:</label>
-        <strong style="width: 100px; display: inline-block" class="text-danger text-right">
-            <%= format_price(@employee.commission_amount(@options)) %>
-        </strong>
-    </h4>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="portlet light">
+                <h4 class="text-left">
+                    <label style="width: 200px">Hoa hồng trên đơn hàng:</label>
+                    <strong style="width: 100px; display: inline-block" class="text- text-right">
+                        <%= format_price(@payment_for_order_sales_commission_amount) %>
+                    </strong>
+                </h4>
+                <h4 class="text-left">
+                    <label style="width: 200px">Hoa hồng thu công nợ:</label>
+                    <strong style="width: 100px; display: inline-block" class="text- text-right">
+                        <%= format_price(@new_account_commission_amount + @payment_for_contact_sales_commission_amount) %>
+                    </strong>
+                </h4>
+                <h4 class="text-left">
+                    <label style="width: 200px">Thưởng theo target:</label>
+                    <strong style="width: 100px; display: inline-block" class="text- text-right">
+                        <%= @target.present? ? format_price(@employee.employee_target_commission_amount(@options)) : '--' %>
+                    </strong>
+                </h4>
+                <h4 class="text-left">
+                    <label style="width: 200px">Thưởng doanh thu (1%):</label>
+                    <strong style="width: 100px; display: inline-block" class="text- text-right">
+                        <%= @company_target.present? ? format_price(@company_target.commission_amount) : '--' %>
+                    </strong>
+                </h4>
+                <hr />
+                <h4 class="text-left">
+                    <label style="width: 200px">Tổng hoa hồng:</label>
+                    <strong style="width: 100px; display: inline-block" class="text-danger text-right">
+                        <%= format_price(@employee.commission_amount(@options)) %>
+                    </strong>
+                </h4>
+            </div>
+        </div>
+    </div>
 </div
