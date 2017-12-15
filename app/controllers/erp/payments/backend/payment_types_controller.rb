@@ -14,6 +14,7 @@ module Erp
         # GET /payment_types/new
         def new
           @payment_type = PaymentType.new
+          @payment_type.code = Erp::Payments::PaymentType::CODE_CUSTOM
         end
 
         # GET /payment_types/1/edit
@@ -25,7 +26,7 @@ module Erp
           @payment_type = PaymentType.new(payment_type_params)
 
           if @payment_type.save
-            @payment_type.set_code_is_custom
+            #@payment_type.set_code_is_custom
             @payment_type.set_active
             if request.xhr?
               render json: {
@@ -44,7 +45,7 @@ module Erp
         # PATCH/PUT /payment_types/1
         def update
           if @payment_type.update(payment_type_params)
-            @payment_type.set_code_is_custom
+            #@payment_type.set_code_is_custom
 
             if request.xhr?
               render json: {
