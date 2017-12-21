@@ -4,19 +4,13 @@
         <li class="active">
             <a href="#tab_<%= uid %>_1" data-toggle="tab">
                 <i class="fa fa-history"></i>
-                Thanh toán trong kỳ
+                Lịch sử thanh toán trong kỳ
             </a>
         </li>
         <li>
             <a href="#tab_<%= uid %>_2" data-toggle="tab">
                 <i class="glyphicon glyphicon-list-alt"></i>
-                Hóa đơn trong kỳ
-            </a>
-        </li>
-        <li>
-            <a href="#tab_<%= uid %>_3" data-toggle="tab">
-                <i class="glyphicon glyphicon-list-alt"></i>
-                Sổ chi tiết
+                Sổ chi tiết bán/trả trong kỳ
             </a>
         </li>
     </ul>
@@ -26,20 +20,20 @@
                 <table class="table table-bordered table-advance order-column">
                     <thead class="flip-content">
                         <tr>
-                            <th width="15%" class="bg-yellow bg-font-yellow text-nowrap text-center">Mã thanh toán</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap text-center">Hình thức</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap text-center">Tên khách hàng</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap text-center">Số tiền</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap text-center">Ngày thanh toán</th>
-                            <th width="20%" class="bg-yellow bg-font-yellow text-nowrap text-center">Ghi chú</th>
-                            <th class="bg-yellow bg-font-yellow text-nowrap text-center"><%= t('.actions') %></th>
+                            <th width="15%" class="bg-yellow-mint bg-font-yellow-mint text-nowrap text-center">Mã thanh toán</th>
+                            <th class="bg-yellow-mint bg-font-yellow-mint text-nowrap text-center">Hình thức</th>
+                            <th class="bg-yellow-mint bg-font-yellow-mint text-nowrap text-center">Tên khách hàng</th>
+                            <th class="bg-yellow-mint bg-font-yellow-mint text-nowrap text-center">Số tiền</th>
+                            <th class="bg-yellow-mint bg-font-yellow-mint text-nowrap text-center">Ngày thanh toán</th>
+                            <th width="20%" class="bg-yellow-mint bg-font-yellow-mint text-nowrap text-center">Ghi chú</th>
+                            <th class="bg-yellow-mint bg-font-yellow-mint text-nowrap text-center"><%= t('.actions') %></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="bg-green" colspan="3"><strong>  </strong></td>
-                            <td class="bg-green text-right"><strong><%= format_price(@payment_records.sum(&:amount)) %></strong></td> <!-- @todo sum amount for payment records -->
-                            <td class="bg-green" colspan="3"><strong>  </strong></td>
+                            <td class="bg-green-haze bg-font-green-haze text-center bold" colspan="3">Tổng trả</td>
+                            <td class="bg-green-haze bg-font-green-haze text-right bold"><%= format_price(@payment_records.sum(&:amount)) %></td> <!-- @todo sum amount for payment records -->
+                            <td class="bg-green-haze bg-font-green-haze" colspan="3"></td>
                         </tr>
                         <% @payment_records.each do |payment_record| %>
                             <tr>
@@ -81,89 +75,90 @@
             <% end %>
         </div>
         <div class="tab-pane" id="tab_<%= uid %>_2">
-            <% if @orders.count > 0 %>
-
-                <table class="table table-bordered table-advance order-column">
-                    <thead class="flip-content">
-                        <tr>
-                            <th width="" class="bg-yellow bg-font-yellow text-nowrap text-center">Mã hóa đơn</th>
-                            <th width="" class="bg-yellow bg-font-yellow text-nowrap text-center">Ngày đặt hàng</th>
-                            <th width="" class="bg-yellow bg-font-yellow text-nowrap text-center">Tổng cộng</th>
-                            <th width="" class="bg-yellow bg-font-yellow text-nowrap text-center">N.viên kinh doanh</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="bg-green" colspan="2"><strong>  </strong></td>
-                            <td class="bg-green text-right">
-                                <strong><%= format_price(@orders.sum(&:total)) %></strong>
-                            </td> <!-- @todo sum total for orders -->
-                            <td class="bg-green"></td>
-                        </tr>
-                        <% @orders.each do |order| %>
+            <% if @orders.count > 0 || @product_returns.count > 0 %>
+                <% if @orders.count > 0 %>
+                    <h4 class="profile-desc-title bold"><i class="glyphicon glyphicon-hand-right"></i> Chi tiết bán hàng</h4>
+                    <table class="table table-bordered table-advance order-column">
+                        <thead class="flip-content">
                             <tr>
-                                <td class="text-center"><strong>
-                                    <%= link_to order.code,
-                                        erp_orders.backend_order_path(order),
-                                        title: order.code, class: "font-blue sbold", target: "_blank" %>
-                                </strong></td> <!-- @todo modal link_to for order details -->
-                                <td class="text-left"><%= format_date(order.order_date) %></td>
-                                <td class=" text-right"><%= format_price(order.cache_total) %></td>
-                                <td class="text-left"><%= order.employee_name %></td>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-left text-nowrap">Mã hóa đơn</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-left">Ngày đặt hàng</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-left">Sản phẩm</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-right">Đơn giá</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-center">Số lượng</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-right">Giảm giá</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-right">Tổng cộng</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-left">N.viên kinh doanh</th>
                             </tr>
-                        <% end %>
-                    </tbody>
-                </table>
-            <% else %>
-                <div class="alert alert-warning alert-dismissable no-margin">Chưa có đơn hàng nào ghi vào công nợ kỳ này!</div>
-            <% end %>
-        </div>
-        <div class="tab-pane" id="tab_<%= uid %>_3">
-            <% if @orders.count > 0 %>
-
-                <table class="table table-bordered table-advance order-column">
-                    <thead class="flip-content">
-                        <tr>
-                            <th width="" class="bg-yellow bg-font-yellow text-nowrap text-left text-nowrap">Mã hóa đơn</th>
-                            <th width="" class="bg-yellow bg-font-yellow text-nowrap text-left">Ngày đặt hàng</th>
-                            <th width="" class="bg-yellow bg-font-yellow text-nowrap text-left">Sản phẩm</th>
-                            <th width="" class="bg-yellow bg-font-yellow text-nowrap text-right">Đơn giá</th>
-                            <th width="" class="bg-yellow bg-font-yellow text-nowrap text-center">Số lượng</th>
-                            <th width="" class="bg-yellow bg-font-yellow text-nowrap text-right">Tổng cộng</th>
-                            <th width="" class="bg-yellow bg-font-yellow text-nowrap text-left">N.viên kinh doanh</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="bg-green"><strong>  </strong></td>
-                            <td class="bg-green"></td>
-                            <td class="bg-green"></td>
-                            <td class="bg-green"></td>
-                            <td class="bg-green"></td>
-                            <td class="bg-green text-right"><strong><%= format_price(@orders.sum(&:total)) %></strong></td> <!-- @todo sum total for orders -->
-                            <td class="bg-green"></td>
-                        </tr>
-                        <% @orders.each do |order| %>
-                            <% order.order_details.each do |order_detail| %>
-                                <tr>
-                                    <td class="text-left text-nowrap"><strong>
-                                        <%= link_to order.code,
-                                            erp_orders.backend_order_path(order),
-                                            title: order.code, class: "font-blue sbold", target: "_blank" %>
-                                    </strong></td>
-                                    <td class="text-left"><%= format_date(order.order_date) %></td>
-                                    <td class="text-left"><%= order_detail.product_name %></td>
-                                    <td class=" text-right"><%= format_price(order_detail.price) %></td>
-                                    <td class=" text-center"><%= order_detail.quantity %></td>
-                                    <td class=" text-right"><%= format_price(order_detail.subtotal) %></td>
-                                    <td class="text-left"><%= order.employee_name %></td>
-                                </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bg-green-haze bg-font-green-haze text-center bold" colspan="4">Tổng cộng</td>
+                                <td class="bg-green-haze bg-font-green-haze text-center bold"><%= @orders.sum(&:items_count) %></td>
+                                <td class="bg-green-haze bg-font-green-haze text-right bold"><%= format_price(@orders.sum(&:discount_amount)) %></td>
+                                <td class="bg-green-haze bg-font-green-haze text-right bold"><%= format_price(@orders.sum(&:cache_total)) %></td> <!-- @todo sum total for orders -->
+                                <td class="bg-green-haze"></td>
+                            </tr>
+                            <% @orders.each do |order| %>
+                                <% order.order_details.each do |order_detail| %>
+                                    <tr>
+                                        <td class="text-left text-nowrap bold"><%= order_link(order) %></td>
+                                        <td class="text-left"><%= format_date(order.order_date) %></td>
+                                        <td class="text-left"><%= order_detail.product_name %></td>
+                                        <td class=" text-right"><%= format_price(order_detail.price) %></td>
+                                        <td class=" text-center"><%= order_detail.quantity %></td>
+                                        <td class=" text-right"><%= format_price(order_detail.discount_amount) %></td>
+                                        <td class=" text-right"><%= format_price(order_detail.subtotal) %></td>
+                                        <td class="text-left"><%= order.employee_name %></td>
+                                    </tr>
+                                <% end %>
                             <% end %>
-                        <% end %>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                <% end %>
+                
+                <%= raw '<br>' if (@orders.count > 0 && @product_returns.count > 0) %>
+                
+                <% if @product_returns.count > 0 %>
+                    <h4 class="profile-desc-title bold"><i class="glyphicon glyphicon-hand-right"></i> Chi tiết hàng bán bị trả lại</h4>
+                    <table class="table table-bordered table-advance order-column">
+                        <thead class="flip-content">
+                            <tr>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-left text-nowrap">Mã trả hàng</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-left">Ngày trả hàng</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-left">Sản phẩm</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-right">Đơn giá</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-center">Số lượng</th>
+                                <th width="" class="bg-yellow-mint bg-font-yellow text-nowrap text-right">Tổng cộng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bg-green-haze bg-font-green-haze text-center bold" colspan="4">Tổng trả</td>
+                                <td class="bg-green-haze bg-font-green-haze text-center bold"><%= @product_returns.total_delivery_quantity %></td>
+                                <td class="bg-green-haze bg-font-green-haze text-right bold"><%= format_price(@product_returns.total_amount) %></td>
+                            </tr>
+                            <% @product_returns.each do |product_return| %>
+                                <% product_return.delivery_details.each do |delivery_detail| %>
+                                    <tr>
+                                        <td class="text-left text-nowrap"><strong>
+                                            <%= link_to product_return.code,
+                                                erp_qdeliveries.backend_delivery_path(product_return),
+                                                title: product_return.code, class: "font-blue sbold", target: "_blank" %>
+                                        </strong></td>
+                                        <td class="text-left"><%= format_date(product_return.date) %></td>
+                                        <td class="text-left"><%= delivery_detail.product_name %></td>
+                                        <td class=" text-right"><%= format_price(delivery_detail.price) %></td>
+                                        <td class=" text-center"><%= delivery_detail.quantity %></td>
+                                        <td class=" text-right"><%= format_price(delivery_detail.cache_total) %></td>
+                                    </tr>
+                                <% end %>
+                            <% end %>
+                        </tbody>
+                    </table>
+                <% end %>
             <% else %>
-                <div class="alert alert-warning alert-dismissable no-margin">Chưa có đơn hàng nào ghi vào công nợ kỳ này!</div>
+                <div class="alert alert-warning alert-dismissable no-margin">Không tìm thấy chi tiết bán hàng và trả hàng cho công nợ kỳ này!</div>
             <% end %>
         </div>
     </div>

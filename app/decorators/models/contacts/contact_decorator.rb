@@ -143,4 +143,16 @@ Erp::Contacts::Contact.class_eval do
   def customer_commission_debt_amount(params={})
     self.customer_commission_total_amount(params) - self.customer_commission_paid_amount(params)
   end
+  
+  # Get sales product returns
+  def self.sales_product_returns
+    query = Erp::Qdeliveries::Delivery.all_delivered.where(delivery_type: Erp::Qdeliveries::Delivery::TYPE_SALES_IMPORT)
+      .where(customer_id: self.ids)
+    return query
+  end
+  
+  def sales_product_returns
+    query = Erp::Contacts::Contact.sales_product_returns.where(customer_id: self.id)
+    return query
+  end
 end
