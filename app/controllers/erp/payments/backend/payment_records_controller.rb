@@ -125,10 +125,10 @@ module Erp
                 page_size: 'A5',
                 orientation: 'Landscape',
                 margin: {
-                  top: 7,                     # default 10 (mm)
-                  bottom: 7,
-                  left: 7,
-                  right: 7
+                  top: 15,                     # default 10 (mm)
+                  bottom: 15,
+                  left: 15,
+                  right: 15
                 }
             end
           end

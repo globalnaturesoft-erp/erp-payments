@@ -1,10 +1,24 @@
-<% content_for :form_num do %>
-    01-TT
+<% content_for :style do %>
+    .header .right .default {
+      display: none;
+    }
 <% end %>
-<% content_for :form_info do %>
-    Quyển số: ...<br>
-    Nợ: ...<br>
-    Có: ...
+
+<% content_for :format_info do %>
+    <div class="text-center" style="color: #000;">
+      <strong>Mẫu số <%= @payment_record.is_receipt_voucher? ? '01-TT' : '02-TT' %></strong>
+      <br>
+      (Ban hành theo Thông tư số 133/2016/TT-BTC<br>
+      ngày 26/8/2016 của Bộ Tài chính)
+    </div>
+<% end %>
+<% content_for :accounting_info do %>
+    <br>
+    <div style="position: absolute; width: 100px; right: 50px; font-style: normal; color: #000;">
+      Quyển số: ......<br>
+      Nợ: <%= @payment_record.debit_account_code %><br>
+      Có: <%= @payment_record.credit_account_code %>
+    </div>
 <% end %>
 <% content_for :title_line_1 do %>
     <%= @payment_record.is_receipt_voucher? ? 'PHIẾU THU' : 'PHIẾU CHI' %>
@@ -18,27 +32,26 @@
 <% end %>
 
 <% content_for :main_info_col_1 do %>
-  <p class="mt-5">
+  <p style="margin-top: 10px;">
     <label><%= @payment_record.is_receipt_voucher? ? 'Người nộp tiền' : 'Người nhận tiền' %>:</label>
     <span><strong><%= @payment_record.get_contact_name %> </strong></span>
   </p>
-  <p class="mt-5">
+  <p style="margin-top: 5px;">
     <label>Địa chỉ:</label>
     <span><%= @payment_record.address.present? ? @payment_record.address : display_contact_address(@payment_record.get_contact) %></span>
   </p>
-  <p class="mt-5">
+  <p style="margin-top: 5px;">
     <label>Lý do <%= @payment_record.is_receipt_voucher? ? 'thu' : 'chi' %>:</label>
     <span><%= @payment_record.description %></span>
   </p>
-  <p class="mt-5">
+  <p style="margin-top: 5px;">
     <label>Số tiền:</label>
-    <span><strong><%= format_number(@payment_record.amount) %> VNĐ</strong></span>
-  </p>
-  <p class="mt-5">
+    <span class="mr-30"><strong><%= format_number(@payment_record.amount) %> VNĐ</strong></span>
+    
     <label>Viết bằng chữ:</label>
     <span><strong><i><%= docso(@payment_record.amount) %>.</i></strong></span>
   </p>
-  <p class="mt-5">
+  <p style="margin-top: 5px;">
     <label>Kèm theo:</label>
     <span>...............................</span>
   </p>
@@ -75,5 +88,11 @@
             <strong><%= @payment_record.is_receipt_voucher? ? 'Người nộp tiền' : 'Người nhận tiền' %></strong><br/>
             <i>(Ký, họ tên)</i>
         </p>
+    </div>
+<% end %>
+
+<% content_for :bottom do %>
+    <div class="bottom left" style="bottom: -70px;">
+        Thời điểm in: <%= Time.now.strftime('%d/%m/%Y, %I:%M %p') %>
     </div>
 <% end %>
