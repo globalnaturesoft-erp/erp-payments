@@ -38,7 +38,7 @@
   </p>
   <p style="margin-top: 5px;">
     <label>Địa chỉ:</label>
-    <span><%= @payment_record.address.present? ? @payment_record.address : display_contact_address(@payment_record.get_contact) %></span>
+    <span><%= @payment_record.address %></span>
   </p>
   <p style="margin-top: 5px;">
     <label>Lý do <%= @payment_record.is_receipt_voucher? ? 'thu' : 'chi' %>:</label>
