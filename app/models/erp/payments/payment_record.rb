@@ -193,6 +193,15 @@ module Erp::Payments
 
 			end
       # end// global filter
+      
+      # single keyword
+      if params[:keyword].present?
+				keyword = params[:keyword].strip.downcase
+				keyword.split(' ').each do |q|
+					q = q.strip
+					query = query.where('LOWER(erp_payments_payment_records.cache_search) LIKE ?', '%'+q+'%')
+				end
+			end
 
       return query
     end
@@ -240,6 +249,20 @@ module Erp::Payments
     def debit_account_code
       debit_account.present? ? debit_account.code : ''
     end
+    
+    after_save :update_cache_search
+		def update_cache_search
+			str = []
+			str << customer_name.to_s.downcase.strip if customer_name.to_s.downcase.strip.present?
+			str << supplier_name.to_s.downcase.strip if supplier_name.to_s.downcase.strip.present?
+			str << employee_name.to_s.downcase.strip if employee_name.to_s.downcase.strip.present?
+			str << description.to_s.downcase.strip if description.to_s.downcase.strip.present?
+			str << address.to_s.downcase.strip if address.to_s.downcase.strip.present?
+			str << debit_account_code.to_s.downcase.strip if debit_account_code.to_s.downcase.strip.present?
+			str << credit_account_code.to_s.downcase.strip if credit_account_code.to_s.downcase.strip.present?
+
+			self.update_column(:cache_search, str.join(" ") + " " + str.join(" ").to_ascii)
+		end
 
     def get_contact
       if [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_SALES_ORDER).id,
