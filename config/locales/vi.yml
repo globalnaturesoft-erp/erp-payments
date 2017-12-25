@@ -292,6 +292,8 @@ vi:
             bank_account: "Tài khoản thanh toán"
             choose_bank_account_receive: "Chọn tài khoản thu (nộp vào)"
             choose_bank_account_pay: "Chọn tài khoản chi (trích ra)"
+            pay: "chi"
+            receive: "thu"
           ajax_employee_field:
             employee: "Nhân viên bán hàng"
             choose_employee: "Vui lòng chọn nhân viên bán hàng"

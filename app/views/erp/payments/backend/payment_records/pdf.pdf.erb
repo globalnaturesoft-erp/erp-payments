@@ -53,7 +53,7 @@
   </p>
   <p style="margin-top: 5px;">
     <label>Kèm theo:</label>
-    <span>...............................</span>
+    <span><%= @payment_record.origin_doc.present? ? @payment_record.origin_doc : '...............................' %></span>
   </p>
 <% end %>
 
