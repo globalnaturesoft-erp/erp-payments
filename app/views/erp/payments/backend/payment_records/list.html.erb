@@ -46,11 +46,9 @@
 <table class="table table-advance table-hover table-striped table-checkable order-column" id="">
     <thead>
         <tr>
-            <th width='1%'>
-                <%= erp_datalist_check_all %>
-            </th>
+            
             <% if get_columns(params).include?("code") %>
-                <th class="sortable" sort-by='erp_payments_payment_records.code'>
+                <th width="10%" class="sortable" sort-by='erp_payments_payment_records.code'>
                     <%= t('.code') %>
                 </th>
             <% end %>
@@ -120,9 +118,6 @@
     <tbody>
         <% @payment_records.each do |payment_record| %>
             <tr class="odd gradeX">
-                <td>
-                    <%= erp_datalist_check_row(id: payment_record.id) %>
-                </td>
                 <% if get_columns(params).include?("code") %>
                     <td class="title"><%= payment_record.code %></td>
                 <% end %>
