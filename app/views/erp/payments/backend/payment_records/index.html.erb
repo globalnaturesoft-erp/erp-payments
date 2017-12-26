@@ -160,16 +160,16 @@
         </div>
         <div class="col-md-2">
             <%= erp_form_control("dataselect", {
-                name: 'credit_account',
-                label: 'Tài khoản có',
+                name: 'debit_account',
+                label: 'Tài khoản nợ',
                 placeholder: 'Chọn TK kế toán',
                 url: erp_payments.dataselect_backend_accounting_accounts_path(format: 'json'),
             }) %>
         </div>
         <div class="col-md-2">
             <%= erp_form_control("dataselect", {
-                name: 'debit_account',
-                label: 'Tài khoản nợ',
+                name: 'credit_account',
+                label: 'Tài khoản có',
                 placeholder: 'Chọn TK kế toán',
                 url: erp_payments.dataselect_backend_accounting_accounts_path(format: 'json'),
             }) %>

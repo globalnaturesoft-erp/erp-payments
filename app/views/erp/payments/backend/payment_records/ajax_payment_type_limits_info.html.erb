@@ -7,8 +7,8 @@
         <% @payment_type_limits.each do |ptl| %>
             - <%= ptl.period_name %> (
               Hạn mức: <%= format_price(ptl.amount) %> |
-              Đã thanh toán: <%= format_price(ptl.get_usage) %> |
-              Còn lại: <%= format_price(ptl.amount-ptl.get_usage) %> 
+              Đã sử dụng: <%= format_price(ptl.get_usage) %> |
+              Còn lại: <%= format_price(ptl.amount-ptl.get_usage) %>
               )<br>
         <% end %>
     <% end %>
