@@ -555,29 +555,6 @@ module Erp
           end
         end
 
-        def xlsx_export_liabilities
-          @from = (params[:from_date].present?) ? params[:from_date].to_date : Time.now.beginning_of_month
-          @to = (params[:to_date].present?) ? params[:to_date].to_date : Time.now
-
-          @customer = Erp::Contacts::Contact.find(params[:customer_id])
-          @orders = @customer.sales_orders.payment_for_contact_orders(params.to_unsafe_hash)
-          @payment_records = Erp::Payments::PaymentRecord.where(customer_id: params[:customer_id])
-            .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION).id)
-
-          # from to date
-          if params[:from_date].present?
-            @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
-          end
-
-          if params[:to_date].present?
-            @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
-          end
-
-          respond_to do |format|
-            format.xlsx
-          end
-        end
-
         private
           # Use callbacks to share common setup or constraints between actions.
           def set_payment_record
