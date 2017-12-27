@@ -149,7 +149,11 @@ module Erp
                 value: @payment_record.id
               }
             else
-              redirect_to erp_payments.backend_payment_records_path, notice: t('.success')
+              if params.to_unsafe_hash[:save_print].present?
+                redirect_to erp_payments.backend_payment_record_path(@payment_record), notice: t('.success')
+              else
+                redirect_to erp_payments.backend_payment_records_path, notice: t('.success')
+              end
             end
           else
             render :new
@@ -166,7 +170,11 @@ module Erp
                 value: @payment_record.id
               }
             else
-              redirect_to erp_payments.backend_payment_records_path, notice: t('.success')
+              if params.to_unsafe_hash[:save_print].present?
+                redirect_to erp_payments.backend_payment_record_path(@payment_record), notice: t('.success')
+              else
+                redirect_to erp_payments.backend_payment_records_path, notice: t('.success')
+              end
             end
           else
             render :edit
@@ -407,13 +415,13 @@ module Erp
         def liabilities_tracking_table_details
           @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders
             .payment_for_contact_orders(params.to_unsafe_hash)
-            
+
           @product_returns = Erp::Contacts::Contact.find(params[:customer_id]).sales_product_returns
             .get_deliveries_with_payment_for_contact(params.to_unsafe_hash)
-            
+
           @payment_records = Erp::Payments::PaymentRecord.where(customer_id: params[:customer_id])
             .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER).id)
-          
+
           # from to date
           if params[:from_date].present?
             @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)

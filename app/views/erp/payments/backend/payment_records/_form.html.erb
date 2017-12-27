@@ -1,4 +1,4 @@
-<%= form_for([erp_payments, :backend, payment_record]) do |f| %>    
+<%= form_for([erp_payments, :backend, payment_record]) do |f| %>
     <input type="hidden" name="payment_record[order_id]" value="<%= params[:order_id] %>">
     <input type="hidden" name="payment_record[ptype]" value="<%= params[:ptype] %>">
     <div class="form-body">
@@ -98,6 +98,7 @@
     <%= erp_component('button/save', {
         text: t('submit')
     }) %>
+    <input type="submit" name="save_print" value="LƯU & IN PHIẾU" class="btn green-seagreen" />
     <%= erp_component('button/cancel', {
         text: t('cancel'),
         href: erp_payments.backend_payment_records_path
