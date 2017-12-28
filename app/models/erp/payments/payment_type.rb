@@ -10,6 +10,7 @@ module Erp::Payments
     CODE_CUSTOMER = 'customer'
     CODE_SUPPLIER = 'supplier'
     CODE_PRODUCT_RETURN = 'product_return'
+    #CODE_SUPPLIER_PRODUCT_RETURN = 'supplier_product_return' Cập nhật thêm phần này
     CODE_COMMISSION = 'commission'
     CODE_CUSTOMER_COMMISSION = 'customer_commission'
     # hoat dong tai chinh, quan ly doanh nghiep
@@ -96,9 +97,14 @@ module Erp::Payments
       self.update_columns(code: Erp::Payments::PaymentType::CODE_CUSTOM)
     end
     
+    def self.all_active
+      query = self.where(status: Erp::Payments::PaymentType::STATUS_ACTIVE)
+      return query
+    end
+    
     def self.get_custom_payment_types
-      self.where(status: Erp::Payments::PaymentType::STATUS_ACTIVE)
-          .where(code: Erp::Payments::PaymentType::CODE_CUSTOM)
+      query = self.all_active.where(code: Erp::Payments::PaymentType::CODE_CUSTOM)
+      return query
     end
     
     def self.payables

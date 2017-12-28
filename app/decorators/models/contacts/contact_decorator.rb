@@ -2,7 +2,7 @@ Erp::Contacts::Contact.class_eval do
 
   # Get sales orders for contact (is ordered)
   def self.sales_orders
-    query = Erp::Orders::Order.sales_orders.where(status: Erp::Orders::Order::STATUS_CONFIRMED)
+    query = Erp::Orders::Order.all_confirmed.sales_orders
       .where(customer_id: self.ids)
     return query
   end
@@ -14,7 +14,7 @@ Erp::Contacts::Contact.class_eval do
 
   # Get purchase orders for contact (is ordered)
   def self.purchase_orders
-    query = Erp::Orders::Order.purchase_orders.where(status: Erp::Orders::Order::STATUS_CONFIRMED)
+    query = Erp::Orders::Order.all_confirmed.purchase_orders
       .where(supplier_id: self.ids)
     return query
   end
@@ -23,21 +23,63 @@ Erp::Contacts::Contact.class_eval do
     query = Erp::Contacts::Contact.purchase_orders.where(supplier_id: self.id)
     return query
   end
+  
+  # Get sales product returns
+  def self.sales_product_returns
+    query = Erp::Qdeliveries::Delivery.all_delivered.sales_import_deliveries
+      .where(customer_id: self.ids)
+    return query
+  end
+  
+  def sales_product_returns
+    query = Erp::Contacts::Contact.sales_product_returns.where(customer_id: self.id)
+    return query
+  end
 
-  # Sales total amount for contact
-  def self.sales_total_amount(params={})
+  # Tong ban hang
+  def self.sales_order_total_amount(params={})
     query = self.sales_orders.payment_for_contact_orders(params)
       .where(customer_id: self.ids)
 
     return query.sum(:cache_total)
   end
-
-  def sales_total_amount(params={})
-    query = self.sales_orders.payment_for_contact_orders(params)
-
+  
+  # Tong hang ban bi tra lai
+  def self.sales_return_total_amount(params={})
+    query = self.sales_product_returns.get_deliveries_with_payment_for_contact(params)
     return query.sum(:cache_total)
   end
 
+  # Tong ban hang sau khi da tru hang bi tra lai
+  def self.sales_total_amount(params={})
+    total = self.sales_order_total_amount(params)
+    
+    total -= self.sales_return_total_amount(params)
+
+    return total
+  end
+  
+  # Tong tien hoa don ban hang
+  def sales_order_total_amount(params={})
+    query = self.sales_orders.payment_for_contact_orders(params)
+    return query.sum(:cache_total)
+  end
+  
+  # Tong tien hang ban bi tra lai
+  def sales_return_total_amount(params={})
+    query = self.sales_product_returns.get_deliveries_with_payment_for_contact(params)
+    return query.sum(:cache_total)
+  end
+
+  # Tong doanh thu ban hang (sau khi da tru hang bi tra lai)
+  def sales_total_amount(params={})
+    total = self.sales_order_total_amount(params)
+    
+    total -= self.sales_return_total_amount(params)
+
+    return total
+  end
+  
   # Sales total amount for contact without commission
   def sales_total_without_commission_amount(params={})
     return self.sales_total_amount(params) - self.customer_commission_total_amount(params)
@@ -46,9 +88,9 @@ Erp::Contacts::Contact.class_eval do
   # Sales paid amount for contact
   def self.sales_paid_amount(params={})
     query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
-                                        .includes(:payment_type)
-                                        .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
-                                        .where(customer_id: self.ids)
+      .includes(:payment_type)
+      .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
+      .where(customer_id: self.ids)
 
     result = - query.all_paid(params).sum(:amount) + query.all_received(params).sum(:amount)
 
@@ -57,9 +99,9 @@ Erp::Contacts::Contact.class_eval do
 
   def sales_paid_amount(params={})
     query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
-                                        .includes(:payment_type)
-                                        .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
-                                        .where(customer_id: self.id)
+      .includes(:payment_type)
+      .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
+      .where(customer_id: self.id)
 
     result = - query.all_paid(params).sum(:amount) + query.all_received(params).sum(:amount)
 
@@ -91,9 +133,9 @@ Erp::Contacts::Contact.class_eval do
   # Purchase paid amount for contact
   def self.purchase_paid_amount(params={})
     query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
-                                        .includes(:payment_type)
-                                        .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
-                                        .where(supplier_id: self.ids)
+      .includes(:payment_type)
+      .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
+      .where(supplier_id: self.ids)
 
     result = query.all_paid(params).sum(:amount) - query.all_received(params).sum(:amount)
 
@@ -102,9 +144,9 @@ Erp::Contacts::Contact.class_eval do
 
   def purchase_paid_amount(params={})
     query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
-                                        .includes(:payment_type)
-                                        .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
-                                        .where(supplier_id: self.id)
+      .includes(:payment_type)
+      .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
+      .where(supplier_id: self.id)
 
     result = query.all_paid(params).sum(:amount) - query.all_received(params).sum(:amount)
 
@@ -130,9 +172,9 @@ Erp::Contacts::Contact.class_eval do
   # Customer commission paid amount
   def customer_commission_paid_amount(params={})
     query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
-                                        .includes(:payment_type)
-                                        .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION})
-                                        .where(customer_id: self.id)
+      .includes(:payment_type)
+      .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION})
+      .where(customer_id: self.id)
 
     result = query.all_paid(params).sum(:amount) - query.all_received(params).sum(:amount)
 
@@ -142,17 +184,5 @@ Erp::Contacts::Contact.class_eval do
   # Customer commission debt amount
   def customer_commission_debt_amount(params={})
     self.customer_commission_total_amount(params) - self.customer_commission_paid_amount(params)
-  end
-  
-  # Get sales product returns
-  def self.sales_product_returns
-    query = Erp::Qdeliveries::Delivery.all_delivered.where(delivery_type: Erp::Qdeliveries::Delivery::TYPE_SALES_IMPORT)
-      .where(customer_id: self.ids)
-    return query
-  end
-  
-  def sales_product_returns
-    query = Erp::Contacts::Contact.sales_product_returns.where(customer_id: self.id)
-    return query
   end
 end
