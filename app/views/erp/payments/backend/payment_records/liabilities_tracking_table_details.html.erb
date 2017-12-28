@@ -141,11 +141,7 @@
                             <% @product_returns.each do |product_return| %>
                                 <% product_return.delivery_details.each do |delivery_detail| %>
                                     <tr>
-                                        <td class="text-left text-nowrap"><strong>
-                                            <%= link_to product_return.code,
-                                                erp_qdeliveries.backend_delivery_path(product_return),
-                                                title: product_return.code, class: "font-blue sbold", target: "_blank" %>
-                                        </strong></td>
+                                        <td class="text-left text-nowrap bold"><%= qdelivery_link(product_return) %></td>
                                         <td class="text-left"><%= format_date(product_return.date) %></td>
                                         <td class="text-left"><%= delivery_detail.product_name %></td>
                                         <td class=" text-right"><%= format_price(delivery_detail.price) %></td>
