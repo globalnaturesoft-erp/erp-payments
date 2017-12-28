@@ -183,19 +183,6 @@
                 multiple: true
             }) %>
         </div>
-        <div class="col-md-2">
-            <%= erp_form_control("select", {
-                name: 'payment_method',
-                label: 'Phương thức thanh toán',
-                placeholder: 'Chọn phương thức',
-                url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
-                options: [
-                    {text: 'Tất cả', value: ''},
-                    {text: 'Tiền mặt', value: Erp::Payments::PaymentRecord::PAYMENT_METHOD_CASH},
-                    {text: 'Chuyển khoản', value: Erp::Payments::PaymentRecord::PAYMENT_METHOD_ACCOUNT},
-                ]
-            }) %>
-        </div>
     </div>
 <% end %>
 
@@ -247,10 +234,7 @@
             text: t('.amount'), name: 'amount', value: true, checked: true
         },
         {
-            text: 'Phương thức T.Toán', name: 'payment_method', value: true, checked: false
-        },
-        {
-            text: 'Tài khoản dòng tiền', name: 'account', value: true, checked: false
+            text: 'Tài khoản thanh toán', name: 'account', value: true, checked: false
         },
         {
             text: 'Tài khoản nợ', name: 'debit_account', value: true, checked: false

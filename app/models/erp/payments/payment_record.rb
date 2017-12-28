@@ -9,9 +9,6 @@ module Erp::Payments
     belongs_to :debit_account, class_name: "Erp::Payments::AccountingAccount"
     belongs_to :credit_account, class_name: "Erp::Payments::AccountingAccount"
 
-    PAYMENT_METHOD_CASH = 'cash'
-    PAYMENT_METHOD_ACCOUNT = 'account'
-
     if Erp::Core.available?("contacts")
       belongs_to :customer, class_name: "Erp::Contacts::Contact", optional: true
       belongs_to :supplier, class_name: "Erp::Contacts::Contact", optional: true

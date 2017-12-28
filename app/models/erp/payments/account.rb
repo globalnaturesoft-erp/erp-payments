@@ -1,11 +1,14 @@
 module Erp::Payments
   class Account < ApplicationRecord
     belongs_to :creator, class_name: "Erp::User"
-    validates :code, :name, presence: true
+    validates :name, presence: true
 
     # class const
     STATUS_ACTIVE = 'active'
     STATUS_DELETED = 'deleted'
+    
+    PAYMENT_METHOD_CASH = 'cash'
+    PAYMENT_METHOD_ACCOUNT = 'account'
 
     # Filters
     def self.filter(query, params)

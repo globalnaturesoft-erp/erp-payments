@@ -1,11 +1,5 @@
 <%= form_for([erp_payments, :backend, account]) do |f| %>
     <%= erp_form_control("text", {
-        name: 'account[code]',
-        value: account.code,
-        label: 'Mã số',
-        required: true,
-    }) %>
-    <%= erp_form_control("text", {
         name: 'account[name]',
         value: account.name,
         label: t('.name'),
@@ -24,6 +18,19 @@
         label: t('.account_number'),
         errors: account.errors.full_messages_for(:account_number)
     }) %>
+    <% if Erp::Core.available?("ortho_k") %>
+        <%= erp_form_control("select", {
+            name: 'account[payment_method]',
+            value: account.payment_method,
+            text: account.payment_method,
+            placeholder: 'Chọn phương thức thanh toán',
+            label: 'Phương thức thanh toán',
+            options: [
+                {text: 'Tiền mặt', value: Erp::Payments::Account::PAYMENT_METHOD_CASH},
+                {text: 'Chuyển khoản', value: Erp::Payments::Account::PAYMENT_METHOD_ACCOUNT},
+            ]
+        }) %>
+    <% end %>
 
     <%= erp_component('button/save', {
         text: t('submit')
