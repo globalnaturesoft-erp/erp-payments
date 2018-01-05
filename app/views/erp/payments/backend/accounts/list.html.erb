@@ -1,11 +1,6 @@
 <table class="table table-advance table-hover table-striped table-checkable order-column">
     <thead>
         <tr>
-            <% if get_columns(params).include?("code") %>
-                <th width='5%' class="text-left">
-                    Mã số
-                </th>
-            <% end %>
             <% if get_columns(params).include?("name") %>
                 <th width='25%' class="text-left">
                     <%= t('.name') %>
@@ -24,6 +19,11 @@
             <% if get_columns(params).include?("balance") %>
                 <th class="text-center">
                     <%= t('.balance') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("payment_method") %>
+                <th>
+                    <%= t('.payment_method') %>
                 </th>
             <% end %>
             <% if get_columns(params).include?("status") %>
@@ -47,9 +47,6 @@
     <tbody>
         <% if @accounts.each do |account| %>
             <tr class="<%= 'blurred' if account.is_deleted? %> odd gradeX">
-                <% if get_columns(params).include?("code") %>
-                    <td class="text-left bold"><%= account.code %></td>
-                <% end %>
                 <% if get_columns(params).include?("name") %>
                     <td class="text-left bold"><%= account.name %></td>
                 <% end %>
@@ -62,6 +59,12 @@
                 <% if get_columns(params).include?("balance") %>
                     <td class="font-yellow-gold text-center">
                         <%= format_number(account.account_balance(to_date: Time.now)) %>
+                    </td>
+                <% end %>
+                <% if get_columns(params).include?("payment_method") %>
+                    <td class="text-left bold">
+                        <%= 'Tiền mặt' if account.payment_method == Erp::Payments::Account::PAYMENT_METHOD_CASH %>
+                        <%= 'Chuyển khoản' if account.payment_method == Erp::Payments::Account::PAYMENT_METHOD_ACCOUNT %>
                     </td>
                 <% end %>
                 <% if get_columns(params).include?("status") %>
