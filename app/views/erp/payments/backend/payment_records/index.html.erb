@@ -206,6 +206,9 @@
         divider: true
     }
     filters << {
+        text: t('.done'), name: 'status', value: Erp::Payments::PaymentRecord::STATUS_DONE, checked: true
+    }
+    filters << {
         text: t('.deleted'), name: 'status', value: Erp::Payments::PaymentRecord::STATUS_DELETED, checked: false
     }
 %>

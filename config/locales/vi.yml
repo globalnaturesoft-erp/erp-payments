@@ -167,7 +167,8 @@ vi:
             
             receipt_voucher: "Phiếu thu"
             payment_voucher: "Phiếu chi"
-            deleted: "Phiếu đã hủy"
+            done: "Đã xác nhận"
+            deleted: "Đã bị hủy"
           list:
             code: "Mã phiếu"
             payment_date: "Ngày thanh toán"
