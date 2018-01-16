@@ -502,6 +502,20 @@ vi:
             edit: "Chỉnh sửa"
             delete: "Xóa phiếu"
             delete_confirm: "Bạn có chắc chắn muốn xóa phiếu này?"
+          list_xlsx:
+            receive_sales_order: "Thu tiền đơn bán hàng"
+            receive_purchase_order: "Thu tiền đơn đặt hàng"
+            receive_customer: "Thu công nợ khách hàng"
+            receive_supplier: "Thu công nợ nhà cung cấp"
+            receive_custom: "Thu khác"
+            pay_sales_order: "Chi tiền đơn bán hàng"
+            pay_purchase_order: "Chi tiền đơn đặt hàng"
+            pay_customer: "Chi công nợ khách hàng"
+            pay_supplier: "Chi công nợ nhà cung cấp"
+            pay_commission: "Chi hoa hồng nhân viên"
+            pay_customer_commission: "Chi hoa hồng khách hàng"
+            pay_product_return: "Chi tiền hàng bị trả lại"
+            pay_custom: "Chi khác"
         debts:
           create:
             success: "Gia hạn công nợ được tạo thành công."

@@ -56,7 +56,7 @@ Erp::Payments::Engine.routes.draw do
 					get 'show_modal'
 					post 'show_list'
 					get 'pdf'
-					get 'xlsx'
+					get 'list_xlsx'
 					get 'pay_xlsx'
 					get 'receive_xlsx'
 

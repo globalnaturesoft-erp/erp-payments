@@ -17,9 +17,11 @@ module Erp
           if glb[:period].present?
             @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
             @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
+            @period_name = Erp::Periods::Period.find(glb[:period]).name
           else
-            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : nil
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+            @period_name = nil
           end
 
           #todo get dates from params
@@ -33,7 +35,7 @@ module Erp
           @total_paid = records.paid_amount(from_date: @from, to_date: @to)
 
           # Begin of period amount
-          @begin_period_amount = records.remain_amount(from_date: nil, to_date: (@from - 1.day))
+          @begin_period_amount = records.remain_amount(from_date: nil, to_date: (@from.nil? ? nil : (@from - 1.day)))
 
           # End of period amount
           @end_period_amount = records.remain_amount(from_date: nil, to_date: @to)
@@ -350,7 +352,7 @@ module Erp
             @address = view_context.display_contact_address(@supplier)
           end
           if @employee.present?
-            @address = @employee.address
+            @address = (@employee.contact.nil? ? '' : view_context.display_contact_address(@employee.contact))
           end
           if @order.present?
             if @order.sales?
@@ -582,9 +584,80 @@ module Erp
         end
 
         # Export excel file
-        def xlsx
+        def list_xlsx
+          records = PaymentRecord.search(params)
+
+          glb = params.to_unsafe_hash[:global_filter]
+          if glb[:period].present?
+            @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
+            @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
+            @period_name = Erp::Periods::Period.find(glb[:period]).name
+          else
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : nil
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+            @period_name = nil
+          end
+
+          # Recieved total
+          @total_received = records.received_amount(from_date: @from, to_date: @to)
+
+          # Paid total
+          @total_paid = records.paid_amount(from_date: @from, to_date: @to)
+
+          # Begin of period amount
+          @begin_period_amount = records.remain_amount(from_date: nil, to_date: (@from.nil? ? nil : (@from - 1.day)))
+
+          # End of period amount
+          @end_period_amount = records.remain_amount(from_date: nil, to_date: @to)
+
+          @payment_records = records
+          
           respond_to do |format|
-            format.xlsx
+            format.xlsx {
+              response.headers['Content-Disposition'] = "attachment; filename='Tong hop thu chi.xlsx'"
+            }
+          end
+        end
+        
+        def pay_xlsx
+          glb = params.to_unsafe_hash[:global_filter]
+          if glb[:period].present?
+            @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
+            @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
+            @period_name = Erp::Periods::Period.find(glb[:period]).name
+          else
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : nil
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+            @period_name = nil
+          end
+          
+          @payments = Erp::Payments::PaymentRecord.all_done.all_paid(from_date: @from, to_date: @to)
+          
+          respond_to do |format|
+            format.xlsx {
+              response.headers['Content-Disposition'] = "attachment; filename='Nhat ky chi tien.xlsx'"
+            }
+          end
+        end
+        
+        def receive_xlsx
+          glb = params.to_unsafe_hash[:global_filter]
+          if glb[:period].present?
+            @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
+            @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
+            @period_name = Erp::Periods::Period.find(glb[:period]).name
+          else
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : nil
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+            @period_name = nil
+          end
+          
+          @receipts = Erp::Payments::PaymentRecord.all_done.all_received(from_date: @from, to_date: @to)
+          
+          respond_to do |format|
+            format.xlsx {
+              response.headers['Content-Disposition'] = "attachment; filename='Nhat ky thu tien.xlsx'"
+            }
           end
         end
 

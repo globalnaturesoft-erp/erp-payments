@@ -1,47 +1,54 @@
 <div class="custom-show text-center">
     <h4 class="font-blue-madison bold uppercase no-margin">
-        Tổng hợp thu - chi <br>
-        <span class="font-sm">
-            <% if @period_name.nil? %>
-                (<%= 'Từ ' + @from.strftime('%d/%m/%Y') if !@from.nil? %><%= !@to.nil? ? ' Đến ' + @to.strftime('%d/%m/%Y') : ' đến nay' %>)
-            <% else %>
-                (<%= @period_name %>)
-            <% end %>
-        </span>
+        Tổng hợp thu - chi
+        <br>
+        <% if @from.present? %>
+            <span class="font-sm">
+                <% if @period_name.nil? %>
+                    (<%= 'Từ ' + @from.strftime('%d/%m/%Y') if !@from.nil? %><%= !@to.nil? ? ' Đến ' + @to.strftime('%d/%m/%Y') : ' đến nay' %>)
+                <% else %>
+                    (<%= @period_name %>)
+                <% end %>
+            </span>
+        <% end %>
     </h4>
 </div>
 
-<div class="text-right mb-10">
-<%= actions = []
-    actions << {
-        text: 'Xuất theo danh sách',
-        url: erp_payments.xlsx_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'xlsx'})),
-        target: "_blank"
-    }
-    actions << {
-        text: 'Nhật ký thu tiền',
-        url: 'javascript:;'
-    }
-    actions << {
-        text: 'Nhật ký chi tiền',
-        url: 'javascript:;'
-    }
-    erp_component('button/actions', {
-        actions: actions,
-        text: 'Xuất excel',
-        class: 'btn-primary',
-        icon: 'fa fa-file-excel-o'
-    }) %>
-</div>
-
-<div class="portlet m-grid m-grid-demo">
-    <div class="m-grid-row">
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.opening_funds') %>: <strong><%= format_price(@begin_period_amount) %></strong></div>
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_received') %>: <strong><%= format_price(@total_received) %></strong></div>
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_paid') %>: <strong><%= format_price(@total_paid) %></strong></div>
-        <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.closing_funds') %>: <strong><%= format_price(@end_period_amount) %></strong></div>
+<% if @from.present? %>
+    <div class="text-right mb-10">
+    <%= actions = []
+        actions << {
+            text: 'Xuất theo danh sách',
+            url: erp_payments.list_xlsx_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'xlsx'})),
+            target: "_blank"
+        }
+        actions << {
+            text: 'Nhật ký thu tiền',
+            url: erp_payments.receive_xlsx_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'xlsx'})),
+            target: "_blank"
+        }
+        actions << {
+            text: 'Nhật ký chi tiền',
+            url: erp_payments.pay_xlsx_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'xlsx'})),
+            target: "_blank"
+        }
+        erp_component('button/actions', {
+            actions: actions,
+            text: 'Xuất excel',
+            class: 'btn-primary',
+            icon: 'fa fa-file-excel-o'
+        }) %>
     </div>
-</div>
+
+    <div class="portlet m-grid m-grid-demo">
+        <div class="m-grid-row">
+            <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.opening_funds') %>: <strong><%= format_price(@begin_period_amount) %></strong></div>
+            <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_received') %>: <strong><%= format_price(@total_received) %></strong></div>
+            <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.total_paid') %>: <strong><%= format_price(@total_paid) %></strong></div>
+            <div class="m-grid-col m-grid-col-middle m-grid-col-center"><%= t('.closing_funds') %>: <strong><%= format_price(@end_period_amount) %></strong></div>
+        </div>
+    </div>
+<% end %>
 
 <table class="table table-advance table-hover table-striped table-checkable order-column" id="">
     <thead>

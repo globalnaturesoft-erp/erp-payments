@@ -1,0 +1,246 @@
+wb = xlsx_package.workbook
+xlsx_package.use_autowidth = true
+wb.styles do |s|
+  wb.styles.fonts.first.name = 'Calibri'
+  wb.add_worksheet(name: 'Nhật ký thu chi') do |sheet|
+    # style
+    bg_info = {:bg_color => "305496", :fg_color => "FF"}
+    bg_sum = {:bg_color => "ffff00", :fg_color => "00"}
+    text_center = {alignment: { horizontal: :center }}
+    text_left = {alignment: { horizontal: :left }}
+    text_right = {alignment: { horizontal: :right }}
+    middle_align = {alignment: { vertical: :center }}
+    number = {format_code: '#,##0'}
+    border = {border: { style: :thin, color: "00", :edges => [:left, :right, :bottom, :top] }}
+    bold = {b: true}
+    
+    # add empty row
+    sheet.add_row ['']
+    
+    # Title
+    if @period_name.nil?
+      date = "#{' TỪ ' + @from.to_date.strftime('%d/%m/%Y') if !@from.nil?}#{' ĐẾN ' + @to.to_date.strftime('%d/%m/%Y') if !@to.nil?}"
+    else
+      date = @period_name
+    end
+    
+    sheet.add_row ['TỔNG HỢP THU - CHI'], sz: 16, b: true, style: (s.add_style text_center)
+    sheet.add_row ['(' + date + ')'], sz: 14, b: true, style: (s.add_style text_center)
+    
+    # add empty row
+    sheet.add_row ['']
+    
+    # header
+    header = {columns: [], styles: []}
+    subheader = {columns: [], styles: []}
+    footer = {columns: [], styles: []}
+    header[:columns] = []
+    
+    #if get_columns(params).include?("ordinal_number") or get_columns(params).empty?
+    header[:columns] << 'Ngày ghi sổ'
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << ''
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col = 0
+    sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    
+    footer[:columns] << "Tổng cộng"
+    footer[:styles] << (s.add_style bold.deep_merge(border).deep_merge(text_center))
+    
+    header[:columns] << 'Ngày chứng từ'
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << ''
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    
+    footer[:columns] << ''
+    footer[:styles] << (s.add_style bold.deep_merge(border))
+    
+    header[:columns] << 'Mã thanh toán'
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << ''
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    
+    footer[:columns] << ''
+    footer[:styles] << (s.add_style number.deep_merge(bold).deep_merge(border))
+    
+    header[:columns] << 'Đối tượng'
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << ''
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    
+    footer[:columns] << ''
+    footer[:styles] << (s.add_style border)
+    
+    header[:columns] << 'Số tiền'
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << 'Thu'
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    t = col
+    
+    footer[:columns] << @total_received
+    footer[:styles] << (s.add_style border.deep_merge(number).deep_merge(bold))
+    
+    header[:columns] << ''
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << 'Chi'
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    c = col
+    sheet.merge_cells("#{('A'.codepoints.first + t).chr}5:#{('A'.codepoints.first + c).chr}5")
+    
+    footer[:columns] << @total_paid
+    footer[:styles] << (s.add_style border.deep_merge(number).deep_merge(bold))
+    
+    header[:columns] << 'Diễn giải'
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << ''
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    
+    footer[:columns] << ''
+    footer[:styles] << (s.add_style border)
+    
+    header[:columns] << 'TK dòng tiền'
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << ''
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    
+    footer[:columns] << ''
+    footer[:styles] << (s.add_style border)
+    
+    header[:columns] << 'TK nợ'
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << ''
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    
+    footer[:columns] << ''
+    footer[:styles] << (s.add_style border)
+    
+    header[:columns] << 'TK có'
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << ''
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    
+    footer[:columns] << ''
+    footer[:styles] << (s.add_style border)
+    
+    header[:columns] << 'Ghi chú'
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << ''
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    
+    footer[:columns] << ''
+    footer[:styles] << (s.add_style border)
+    
+    sheet.add_row header[:columns], style: header[:styles]
+    sheet.add_row subheader[:columns], style: subheader[:styles]
+    
+    # rows
+    @payment_records.each_with_index do |payment_record,index|
+      row = {columns: [], styles: []}
+      row[:columns] = []
+    
+      row[:columns] << payment_record.created_at.strftime('%d/%m/%Y')
+      row[:styles] << (s.add_style text_center.deep_merge(border))
+    
+      row[:columns] << payment_record.payment_date.strftime('%d/%m/%Y')
+      row[:styles] << (s.add_style text_center.deep_merge(border))
+    
+      row[:columns] << payment_record.code
+      row[:styles] << (s.add_style text_center.deep_merge(number).deep_merge(border))
+    
+      row[:columns] << payment_record.get_contact_name
+      row[:styles] << (s.add_style text_left.deep_merge(border))
+    
+      row[:columns] << (payment_record.is_receipt_voucher? ? payment_record.amount : '')
+      row[:styles] << (s.add_style text_right.deep_merge(number).deep_merge(border))
+    
+      row[:columns] << (payment_record.is_payment_voucher? ? payment_record.amount : '')
+      row[:styles] << (s.add_style text_right.deep_merge(number).deep_merge(border))
+    
+      row[:columns] << t(".#{display_payment_record_type(payment_record)}")
+      row[:styles] << (s.add_style text_left.deep_merge(border))
+    
+      row[:columns] << payment_record.account_name
+      row[:styles] << (s.add_style text_left.deep_merge(border))
+    
+      row[:columns] << payment_record.debit_account_code
+      row[:styles] << (s.add_style text_center.deep_merge(border))
+    
+      row[:columns] << payment_record.credit_account_code
+      row[:styles] << (s.add_style text_center.deep_merge(border))
+    
+      row[:columns] << payment_record.description
+      row[:styles] << (s.add_style text_left.deep_merge(border))
+    
+      sheet.add_row row[:columns], style: row[:styles]
+    end
+    
+    # footer
+    sheet.add_row footer[:columns], style: footer[:styles]
+    
+    sheet.add_row []
+    sum_1 = {columns: [], styles: []}
+    sum_1[:columns] = []
+    sum_2 = {columns: [], styles: []}
+    sum_2[:columns] = []
+    sum_3 = {columns: [], styles: []}
+    sum_3[:columns] = []
+    sum_4 = {columns: [], styles: []}
+    sum_4[:columns] = []
+  
+    sum_1[:columns] << 'Tổng dư đầu kỳ: '
+    sum_1[:styles] << (s.add_style text_left.deep_merge(bold).deep_merge(bg_sum))
+    sum_1[:columns] << ''
+    sum_1[:styles] << (s.add_style text_left.deep_merge(bold).deep_merge(bg_sum))
+    sum_1[:columns] << @begin_period_amount
+    sum_1[:styles] << (s.add_style text_right.deep_merge(bold).deep_merge(bg_sum).deep_merge(number))
+    sheet.add_row sum_1[:columns], style: sum_1[:styles]
+    
+    sum_2[:columns] << 'Tổng thu phát sinh: '
+    sum_2[:styles] << (s.add_style text_left.deep_merge(bold).deep_merge(bg_sum))
+    sum_2[:columns] << ''
+    sum_2[:styles] << (s.add_style text_left.deep_merge(bold).deep_merge(bg_sum))
+    sum_2[:columns] << @total_received
+    sum_2[:styles] << (s.add_style text_right.deep_merge(bold).deep_merge(bg_sum).deep_merge(number))
+    sheet.add_row sum_2[:columns], style: sum_2[:styles]
+    
+    sum_3[:columns] << 'Tổng chi phát sinh: '
+    sum_3[:styles] << (s.add_style text_left.deep_merge(bold).deep_merge(bg_sum))
+    sum_3[:columns] << ''
+    sum_3[:styles] << (s.add_style text_left.deep_merge(bold).deep_merge(bg_sum))
+    sum_3[:columns] << @total_paid
+    sum_3[:styles] << (s.add_style text_right.deep_merge(bold).deep_merge(bg_sum).deep_merge(number))
+    sheet.add_row sum_3[:columns], style: sum_3[:styles]
+    
+    sum_4[:columns] << 'Tổng dư cuối kỳ: '
+    sum_4[:styles] << (s.add_style text_left.deep_merge(bold).deep_merge(bg_sum))
+    sum_4[:columns] << ''
+    sum_4[:styles] << (s.add_style text_left.deep_merge(bold).deep_merge(bg_sum))
+    sum_4[:columns] << @end_period_amount
+    sum_4[:styles] << (s.add_style text_right.deep_merge(bold).deep_merge(bg_sum).deep_merge(number))
+    sheet.add_row sum_4[:columns], style: sum_4[:styles]
+    
+    # Setup
+    sheet.column_widths 15, 15, 15, 22
+    sheet.merge_cells("A2:K2")
+    sheet.merge_cells("A3:K3")
+    #sheet.merge_cells("A#{@customers.count+5}:B#{@customers.count+5}")
+  end
+end
