@@ -403,11 +403,24 @@ module Erp
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
           end
 
+          @customers = Erp::Contacts::Contact
+
           if glb[:customer].present?
-            @customers = Erp::Contacts::Contact.where(id: glb[:customer])
+            @customers = @customers.where(id: glb[:customer])
           else
-            @customers = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
-                                              .where(is_customer: true)
+            @customers = @customers.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
+              .where(is_customer: true)
+          end
+
+          #filters
+          if params.to_unsafe_hash["filters"].present?
+            params.to_unsafe_hash["filters"].each do |ft|
+              ft[1].each do |cond|
+                if cond[1]["name"] == 'in_period_active'
+                  @customers = @customers.get_sales_payment_chasing_contacts(from_date: @from, to_date: @to)
+                end
+              end
+            end
           end
         end
 
@@ -447,7 +460,19 @@ module Erp
             @suppliers = Erp::Contacts::Contact.where(id: glb[:supplier])
           else
             @suppliers = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
-                                              .where(is_supplier: true)
+              .where(is_supplier: true)
+          end
+
+          # only suppliers with records
+          #filters
+          if params.to_unsafe_hash["filters"].present?
+            params.to_unsafe_hash["filters"].each do |ft|
+              ft[1].each do |cond|
+                if cond[1]["name"] == 'in_period_active'
+                  @suppliers = @suppliers.get_purchase_payment_chasing_contacts(from_date: @from, to_date: @to)
+                end
+              end
+            end
           end
         end
 
