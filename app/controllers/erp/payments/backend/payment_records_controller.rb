@@ -511,7 +511,7 @@ module Erp
             @payment_for_order_sales_commission_amount = @employee.payment_for_order_sales_commission_amount(@options)
 
             # payment for contact orders
-            @payment_for_contact_sales_payment_records = @employee.payment_for_contact_sales_payment_records(@options)
+            @payment_for_contact_sales_payment_records = @employee.payment_for_contact_sales_payment_records(@options).order('payment_date')
             @payment_for_contact_sales_paid_amount = @employee.payment_for_contact_sales_paid_amount(@options)
             @payment_for_contact_sales_commission_amount = @employee.payment_for_contact_sales_commission_amount(@options)
             @new_account_commission_amount = @employee.new_account_commission_amount(@options)

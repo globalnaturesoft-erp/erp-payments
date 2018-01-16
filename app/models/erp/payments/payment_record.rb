@@ -190,7 +190,7 @@ module Erp::Payments
 
 			end
       # end// global filter
-      
+
       # single keyword
       if params[:keyword].present?
 				keyword = params[:keyword].strip.downcase
@@ -246,7 +246,7 @@ module Erp::Payments
     def debit_account_code
       debit_account.present? ? debit_account.code : ''
     end
-    
+
     after_save :update_cache_search
 		def update_cache_search
 			str = []
@@ -519,8 +519,14 @@ module Erp::Payments
 
     #
     def for_contact_commission_amount(options={})
-      debt_amount = customer.sales_debt_amount(to_date: options[:to_date]) + amount
-      commission_amount = customer.customer_commission_debt_amount(to_date: options[:to_date])
+      #debt_amount = customer.sales_debt_amount(to_date: options[:to_date]) + amount
+      #commission_amount = customer.customer_commission_debt_amount(to_date: options[:to_date])
+      #percent = customer_commission_percent.to_f
+      #
+      #commission_result = ((amount/debt_amount) * (debt_amount - commission_amount)) * (percent/100.0)
+
+      debt_amount = customer.sales_total_amount(to_date: options[:to_date])
+      commission_amount = customer.customer_commission_total_amount(to_date: options[:to_date])
       percent = customer_commission_percent.to_f
 
       commission_result = ((amount/debt_amount) * (debt_amount - commission_amount)) * (percent/100.0)

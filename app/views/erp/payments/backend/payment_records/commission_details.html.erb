@@ -77,6 +77,8 @@
                 <table class="table table-bordered table-advance order-column">
                     <thead class="flip-content">
                         <tr>
+                            <th width="20%" class="bg-yellow bg-font-yellow text-nowrap text-left">Chứng từ</th>
+                            <th width="20%" class="bg-yellow bg-font-yellow text-nowrap text-left">Ngày thu</th>
                             <th width="20%" class="bg-yellow bg-font-yellow text-nowrap text-left">Tên khách hàng</th>
                             <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Tổng mua hàng</th>
                             <th width="10%" class="bg-yellow bg-font-yellow text-nowrap text-right">Chiết khấu</th>
@@ -89,6 +91,8 @@
                     </thead>
                     <tbody>
                         <tr>
+                            <td class="bg-green"><strong></strong></td>
+                            <td class="bg-green"><strong></strong></td>
                             <td class="bg-green"><strong></strong></td>
                             <td class="bg-green text-right"><strong>
 
@@ -108,9 +112,11 @@
                         </tr>
                         <% @payment_for_contact_sales_payment_records.each do |pr| %>
                             <tr>
+                                <td class="text-left"><%= pr.code %></td>
+                                <td class="text-left"><%= format_date(pr.payment_date) %></td>
                                 <td class="text-left"><strong><%= link_to pr.customer.name, 'javascript:;' %></strong></td>
-                                <td class="text-right"><%= format_price(pr.customer.sales_debt_amount(to_date: @options[:to_date]) + pr.amount) %></td>
-                                <td class="text-right"><%= format_price(pr.customer.customer_commission_debt_amount(to_date: @options[:to_date])) %></td>
+                                <td class="text-right"><%= format_price(pr.customer.sales_total_amount(to_date: @options[:to_date])) %></td>
+                                <td class="text-right"><%= format_price(pr.customer.customer_commission_total_amount(to_date: @options[:to_date])) %></td>
                                 <td class="text-right"><%= format_price(pr.amount) %></td>
                                 <td class="text-right"><%= format_price(pr.new_account_commission_amount) %></td>
                                 <td class="text-right"><%= pr.customer_commission_percent.to_f %>%</td>
