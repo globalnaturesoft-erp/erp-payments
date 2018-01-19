@@ -507,6 +507,8 @@ module Erp
               to_date: @period.to_date.end_of_day,
               target_period: @period,
             }
+            
+            @company_target = Erp::Targets::CompanyTarget.get_by_period(@period)
           end
 
           # @todo change user 'admin@globalnaturesoft.com'

@@ -1,16 +1,46 @@
 <% if !@period.present? %>
-  <div class="alert alert-warning">
-      <p>Vui lòng chọn các tham số bắt buộc:
-          <br>- <strong>Chu kỳ thời gian</strong>
-      </p>
-  </div>
+    <div class="alert alert-warning">
+        <p>Vui lòng chọn các tham số bắt buộc:
+            <br>- <strong>Chu kỳ thời gian</strong>
+        </p>
+    </div>
 <% else %>
-  <h4 class="mb-10">
-    Chi hoa hồng nhân viên
-    <% if @period.present? %>
-      <strong><%= @period.name %></strong>
-    <% end %>
-  </h4>
+    <div class="custom-show text-center">
+        <h4 class="font-blue-madison bold uppercase no-margin">
+            Chi hoa hồng nhân viên
+            <br>
+            <% if @period.present? %>
+                <span class="font-sm">(<%= @period.name %>)</span>
+            <% end %>
+        </h4>
+    </div>
+    
+    <div class="text-right mb-10">
+        <%= actions = []
+            actions << {
+                text: 'Thưởng theo target NV ',
+                url: erp_payments.employee_target_xlsx_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'xlsx'})),
+                target: "_blank"
+            }
+            actions << {
+                text: 'Thưởng theo doanh thu (1%)',
+                url: erp_payments.company_target_xlsx_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'xlsx'})),
+                target: "_blank"
+            } if @company_target.present?
+            actions << {
+                text: 'Tổng chi hoa hồng',
+                url: erp_payments.commission_xlsx_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'xlsx'})),
+                target: "_blank"
+            }
+            erp_component('button/actions', {
+                actions: actions,
+                text: 'Xuất excel - Tổng hợp',
+                class: 'btn-primary',
+                icon: 'fa fa-file-excel-o'
+            })
+        %>
+    </div>
+    
     <table class="table table-advance table-hover table-striped table-checkable order-column">
         <thead>
             <tr>
@@ -70,13 +100,13 @@
                         </td>
                     <% end %>
                     <% if get_columns(params).include?("total_revenue") %>
-                        <td class="text-right"><%= format_price(25000000) %></td>
+                        <td class="text-right"><%= '??' %></td>
                     <% end %>
                     <% if get_columns(params).include?("total_received") %>
-                        <td class="text-right"><%= format_price(25000000) %></td> <!-- todo count with params -->
+                        <td class="text-right"><%= '??' %></td> <!-- todo count with params -->
                     <% end %>
                     <% if get_columns(params).include?("total_remain") %>
-                        <td class="text-right"><%= format_price(0) %></td> <!-- todo count with params -->
+                        <td class="text-right"><%= '??' %></td> <!-- todo count with params -->
                     <% end %>
                     <% if get_columns(params).include?("total_commission") %>
                         <td class="text-right"><%= format_price(employee.commission_amount(@options)) %></td>
@@ -98,6 +128,23 @@
                                 employee_id: employee.id,
                                 period_id: @period.id
                             )
+                        }
+                        actions << {divider: true}
+                        actions << {
+                            text: '<i class="fa fa-file-excel-o"></i> Bảng hoa hồng thu PK/bán lẻ',
+                            url: erp_payments.commission_with_for_order_xlsx_backend_payment_records_path(params.to_unsafe_hash.merge(
+                                employee_id: employee.id,
+                                format: 'xlsx',
+                            )),
+                            target: '_blank',
+                        }
+                        actions << {
+                            text: '<i class="fa fa-file-excel-o"></i> Bảng hoa hồng thu công nợ',
+                            url: erp_payments.commission_with_for_contact_xlsx_backend_payment_records_path(params.to_unsafe_hash.merge(
+                                employee_id: employee.id,
+                                format: 'xlsx',
+                            )),
+                            target: '_blank',
                         }
                         #actions << {divider: true}
                         #(1..3).each do |pr|
