@@ -555,19 +555,14 @@ module Erp::Payments
 
     # get for order commission amount when has first payment
     def for_order_commission_amount
-      total = 0.0
-      if order.present? and order.payment_for == Erp::Orders::Order::PAYMENT_FOR_ORDER
-        # check if order has older payment records
-        if order.done_receiced_payment_records.where('payment_date < ?', self.payment_date).empty?
-          total = order.commission_amount
-        end
-      end
-      return total
+      self.cache_for_order_commission_amount
     end
 
     # Save cache for commissions
     def update_cache_for_order_commission_amount
-      update_columns(cache_for_order_commission_amount: self.for_order_commission_amount)
+      if order.present? and order.payment_for == Erp::Orders::Order::PAYMENT_FOR_ORDER
+        order.update_cache_for_order_commission_amount
+      end
     end
   end
 end
