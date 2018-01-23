@@ -364,19 +364,19 @@ module Erp
         end
 
         def ajax_employee_field
-            # Payment record da ton tai employee
-            if params[:employee_id].present?
-              @employee = Erp::User.find(params[:employee_id])
+          # Payment record da ton tai employee
+          if params[:employee_id].present?
+            @employee = Erp::User.find(params[:employee_id])
 
-            # Payment record chua ton tai employee
-            # Lay employee theo order (payment for order)
-            elsif params[:type] == 'order' and params[:datas].present? and params[:datas][0].present?
-              @order = Erp::Orders::Order.where(id: params[:datas][0]).first
-              if @order.present? and @order.employee_id.present?
-                @employee = Erp::User.find(@order.employee_id)
-              else
-                @employee = Erp::User.new
-              end
+          # Payment record chua ton tai employee
+          # Lay employee theo order (payment for order)
+          elsif params[:type] == 'order' and params[:datas].present? and params[:datas][0].present?
+            @order = Erp::Orders::Order.where(id: params[:datas][0]).first
+            if @order.present? and @order.employee_id.present?
+              @employee = Erp::User.find(@order.employee_id)
+            else
+              @employee = Erp::User.new
+            end
 
             # Lay employee theo contact (payment for contact)
             elsif params[:type] == 'contact' and params[:datas].present? and params[:datas][0].present?
