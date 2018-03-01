@@ -127,10 +127,10 @@ module Erp
                 page_size: 'A5',
                 orientation: 'Landscape',
                 margin: {
-                  top: 15,                     # default 10 (mm)
-                  bottom: 15,
-                  left: 15,
-                  right: 15
+                  top: 7,                     # default 10 (mm)
+                  bottom: 7,
+                  left: 7,
+                  right: 7
                 }
             end
           end
@@ -507,7 +507,7 @@ module Erp
               to_date: @period.to_date.end_of_day,
               target_period: @period,
             }
-            
+
             @company_target = Erp::Targets::CompanyTarget.get_by_period(@period)
           end
 
@@ -613,14 +613,14 @@ module Erp
           @end_period_amount = records.remain_amount(from_date: nil, to_date: @to)
 
           @payment_records = records
-          
+
           respond_to do |format|
             format.xlsx {
               response.headers['Content-Disposition'] = "attachment; filename='Tong hop thu chi.xlsx'"
             }
           end
         end
-        
+
         def pay_xlsx
           glb = params.to_unsafe_hash[:global_filter]
           if glb[:period].present?
@@ -632,16 +632,16 @@ module Erp
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
             @period_name = nil
           end
-          
+
           @payments = Erp::Payments::PaymentRecord.all_done.all_paid(from_date: @from, to_date: @to)
-          
+
           respond_to do |format|
             format.xlsx {
               response.headers['Content-Disposition'] = "attachment; filename='Nhat ky chi tien.xlsx'"
             }
           end
         end
-        
+
         def receive_xlsx
           glb = params.to_unsafe_hash[:global_filter]
           if glb[:period].present?
@@ -653,9 +653,9 @@ module Erp
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
             @period_name = nil
           end
-          
+
           @receipts = Erp::Payments::PaymentRecord.all_done.all_received(from_date: @from, to_date: @to)
-          
+
           respond_to do |format|
             format.xlsx {
               response.headers['Content-Disposition'] = "attachment; filename='Nhat ky thu tien.xlsx'"

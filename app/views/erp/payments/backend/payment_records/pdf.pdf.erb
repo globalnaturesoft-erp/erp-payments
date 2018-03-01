@@ -2,6 +2,25 @@
     .header .right .default {
       display: none;
     }
+    body {
+        font-family: 'Arial';
+        font-size: 13px;
+    }
+    .text-small {
+        font-size: 12px;
+    }
+    .title .center .line-1 {
+      font-size: 16px;
+    }
+    .header {
+      font-size: 12px;
+    }
+    .header .right {
+      font-size: 12px;
+    }
+    .title .center .line-2 {
+      font-size: 12px;
+    }
 <% end %>
 
 <% content_for :format_info do %>
@@ -47,7 +66,7 @@
   <p style="margin-top: 5px;">
     <label>Số tiền:</label>
     <span class="mr-30"><strong><%= format_number(@payment_record.amount) %> VNĐ</strong></span>
-    
+
     <label>Viết bằng chữ:</label>
     <span><strong><i><%= docso(@payment_record.amount) %>.</i></strong></span>
   </p>
