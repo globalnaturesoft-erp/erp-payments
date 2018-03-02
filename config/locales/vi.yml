@@ -17,7 +17,7 @@ vi:
           payment_term: "Kỳ hạn thanh toán"
           payment_method: "Hình thức thanh toán"
           payment_record: "Sổ quỹ"
-          bank_account: "Tài khoản ngân hàng"
+          bank_account: "Tài khoản thanh toán"
   erp:
     payments:
       backend:
@@ -587,7 +587,7 @@ vi:
           delete_all:
             success: "Tài khoản được xóa thành công."
           index:
-            accounts: "Tài khoản ngân hàng"
+            accounts: "Tài khoản thanh toán"
             name: "Tên tài khoản"
             owner: "Chủ sở hữu"
             account_number: "Số tài khoản"
@@ -616,11 +616,11 @@ vi:
             delete_confirm: "Bạn có chắc muốn xóa?"
             no_matching_records_found: "Danh sách tài khoản không được tìm thấy"
           new:
-            accounts: "Tài khoản ngân hàng"
+            accounts: "Tài khoản thanh toán"
             create: "Thêm tài khoản"
           edit:
             edit: "Cập nhật"
-            accounts: "Tài khoản ngân hàng"
+            accounts: "Tài khoản thanh toán"
           form:
             name: "Tên tài khoản"
             owner: "Chủ tài khoản"

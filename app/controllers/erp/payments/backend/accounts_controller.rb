@@ -35,7 +35,7 @@ module Erp
                 value: @account.id
               }
             else
-              redirect_to erp_payments.edit_backend_account_path(@account), notice: t('.success')
+              redirect_to erp_payments.backend_accounts_path, notice: t('.success')
             end
           else
             render :new
@@ -52,7 +52,7 @@ module Erp
                 value: @account.id
               }
             else
-              redirect_to erp_payments.edit_backend_account_path(@account), notice: t('.success')
+              redirect_to erp_payments.backend_accounts_path, notice: t('.success')
             end
           else
             render :edit
