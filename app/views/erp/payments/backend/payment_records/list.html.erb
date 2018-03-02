@@ -53,7 +53,7 @@
 <table class="table table-advance table-hover table-striped table-checkable order-column" id="">
     <thead>
         <tr>
-            
+
             <% if get_columns(params).include?("code") %>
                 <th width="10%" class="sortable" sort-by='erp_payments_payment_records.code'>
                     <%= t('.code') %>
@@ -128,7 +128,7 @@
                 <% end %>
                 <% if get_columns(params).include?("payment_type") %>
                     <td>
-                        <%= t(".#{display_payment_record_type(payment_record)}") %>
+                        <%= payment_record.payment_type_name %>
                     </td>
                 <% end %>
                 <% if get_columns(params).include?("contact_name") %>
