@@ -693,6 +693,8 @@ vi:
               blank: "không được để trống."
             payment_date:
               blank: "không được để trống."
+            code:
+              taken: "đã tồn tại"
         erp/payments/account:
           attributes:
             name:
@@ -713,6 +715,7 @@ vi:
         contact_id: "Liên hệ này"
         accountant_id: "Thu ngân - kế toán"
         payment_date: "Ngày thanh toán"
+        code: "Mã thanh toán"
       erp/payments/account:
         name: "Tên ngân hàng"
         owner: "Chủ tài khoản"

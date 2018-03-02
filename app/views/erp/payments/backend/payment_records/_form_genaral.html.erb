@@ -20,7 +20,9 @@
                             value: payment_record.code,
                             label: t('.payment_code'),
                             help: 'Mã phiếu sẽ tự động tạo nếu bạn để trống',
-                            placeholder: t('.placeholder_payment_code')
+                            placeholder: t('.placeholder_payment_code'),
+                            required: !payment_record.id.nil?,
+                            errors: payment_record.errors.full_messages_for(:code)
                         }) %>
                     </div>
                     <div class="col-md-6">
