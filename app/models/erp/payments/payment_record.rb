@@ -350,6 +350,14 @@ module Erp::Payments
       end
     end
 
+    def order_name(params={})
+      if order.present?
+        order.get_name
+      elsif params[:order_id].present?
+        Erp::Orders::Order.find(params[:order_id]).get_name
+      end
+    end
+
     # order customer name
     def order_customer(params={})
       if order.present?
