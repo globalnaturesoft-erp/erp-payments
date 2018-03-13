@@ -424,6 +424,8 @@ module Erp
               end
             end
           end
+          
+          @customers = @customers.paginate(:page => params[:page], :per_page => 20)
         end
 
         # CUSTOMER / liabilities tracking table details
@@ -476,6 +478,8 @@ module Erp
               end
             end
           end
+          
+          @suppliers = @suppliers.paginate(:page => params[:page], :per_page => 20)
         end
 
         # SUPPLIER / liabilities tracking table details
