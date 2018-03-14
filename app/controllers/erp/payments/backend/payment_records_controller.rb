@@ -518,6 +518,8 @@ module Erp
           # @todo change user 'admin@globalnaturesoft.com'
           @employees = Erp::User.where('id != ?', Erp::User.first.id)
           @employees = Erp::User.where(id: @global_filters[:employee]) if @global_filters[:employee].present?
+          
+          @employees = @employees.paginate(:page => params[:page], :per_page => 10)
         end
 
         def commission_details
@@ -561,17 +563,21 @@ module Erp
           if glb[:period].present?
             @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
             @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
+            @period_name = Erp::Periods::Period.find(glb[:period]).name
           else
             @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+            @period_name = nil
           end
 
           if glb[:customer].present?
             @customers = Erp::Contacts::Contact.where(id: glb[:customer])
           else
             @customers = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
-                                              .where(is_customer: true)
+              .where(is_customer: true)
           end
+          
+          @customers = @customers.paginate(:page => params[:page], :per_page => 20)
         end
 
         def customer_commission_details

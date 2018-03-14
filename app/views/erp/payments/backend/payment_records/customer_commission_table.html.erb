@@ -1,97 +1,123 @@
-<table class="table table-advance table-hover table-striped order-column">
-    <thead>
-        <tr>
-            <th width='1%'>
-                <%= erp_datalist_check_all %>
-            </th>
-            <% if get_columns(params).include?("customer") %>
-                <th>
-                    <%= t('.customer') %>
+<% if (params.to_unsafe_hash[:global_filter][:from_date].present? &&
+      params.to_unsafe_hash[:global_filter][:to_date].present?) ||
+      params.to_unsafe_hash[:global_filter][:period].present? %>
+    
+    <div class="custom-show text-center">
+        <h4 class="font-blue-madison bold uppercase no-margin">
+            Chiết khấu khách hàng <br>
+            <span class="font-sm">
+                <% if @period_name.nil? %>
+                    (<%= 'Từ ' + @from.strftime('%d/%m/%Y') if !@from.nil? %> <%= ' Đến ' + @to.strftime('%d/%m/%Y') if !@to.nil? %>)
+                <% else %>
+                    (<%= @period_name %>)
+                <% end %>
+            </span>
+        </h4>
+    </div>
+    
+    <table class="table table-advance table-hover table-striped order-column">
+        <thead>
+            <tr>
+                <th width='1%'>
+                    <%= erp_datalist_check_all %>
                 </th>
-            <% end %>
-            <% if get_columns(params).include?("begin_of_period_amount") %>
-                <th>
-                    <%= t('.begin_of_period_amount') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("period_amount") %>
-                <th>
-                    <%= t('.period_amount') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("paid_amount") %>
-                <th>
-                    <%= t('.paid_amount') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("end_of_period_amount") %>
-                <th>
-                    <%= t('.end_of_period_amount') %>
-                </th>
-            <% end %>
-            <% if get_columns(params).include?("salesperson") %>
-                <th>
-                    <%= t('.salesperson') %>
-                </th>
-            <% end %>
-            <th width="7%"><%= t('actions') %></th>
-        </tr>
-    </thead>
-    <tbody>
-        <% @customers.each do |customer| %>  <!-- todo update this function -->
-            <tr class="odd gradeX has-child-table"
-                data-url="<%= erp_payments.customer_commission_details_backend_payment_records_path(
-                    customer_id: customer.id,
-                    from_date: @from,
-                    to_date: @to,
-                ) %>">
-                <td>
-                    <%= erp_datalist_check_row(id: customer.id) %>
-                </td>
                 <% if get_columns(params).include?("customer") %>
-                    <td>
-                        <i class="fa fa-plus expand tr-expand-button"></i>
-                        <strong><%= customer.name %></strong>
-                    </td>
+                    <th>
+                        <%= t('.customer') %>
+                    </th>
                 <% end %>
                 <% if get_columns(params).include?("begin_of_period_amount") %>
-                    <td><%= format_price(customer.customer_commission_debt_amount(to_date: (@from - 1.day))) %></td>
+                    <th>
+                        <%= t('.begin_of_period_amount') %>
+                    </th>
                 <% end %>
                 <% if get_columns(params).include?("period_amount") %>
-                    <td><%= format_price(customer.customer_commission_total_amount(from_date: @from, to_date: @to)) %></td>
+                    <th>
+                        <%= t('.period_amount') %>
+                    </th>
                 <% end %>
                 <% if get_columns(params).include?("paid_amount") %>
-                    <td><%= format_price(customer.customer_commission_paid_amount(from_date: @from, to_date: @to)) %></td>
-                <% end %>
-                <% if get_columns(params).include?("salesperson") %>
-                    <td>
-                        <!-- todo update salesperson for contact -->
-                    </td>
+                    <th>
+                        <%= t('.paid_amount') %>
+                    </th>
                 <% end %>
                 <% if get_columns(params).include?("end_of_period_amount") %>
-                    <td><%= format_price(customer.customer_commission_debt_amount(to_date: @to)) %></td>
+                    <th>
+                        <%= t('.end_of_period_amount') %>
+                    </th>
                 <% end %>
-                <td>
-                    <%= erp_datalist_row_actions(
-                        [
-                            {
-                                text: '<i class="fa fa-plus"></i> '+t('.create_pay_customer_commission'),
-                                url: erp_payments.new_backend_payment_record_path(
-                                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                                    payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION),
-                                    customer_id: customer.id
-                                )
-                            }
-                        ]
-                    ) %>
-                </td>
+                <% if get_columns(params).include?("salesperson") %>
+                    <th>
+                        <%= t('.salesperson') %>
+                    </th>
+                <% end %>
+                <th width="7%"><%= t('actions') %></th>
             </tr>
-        <% end %>
-    </tbody>
-</table>
-
- <!--if @contacts.empty? %>
-    <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
- end %>
-
-= erp_datalist_pagination(@contacts) %>-->
+        </thead>
+        <tbody>
+            <% @customers.each do |customer| %>  <!-- todo update this function -->
+                <tr class="odd gradeX has-child-table"
+                    data-url="<%= erp_payments.customer_commission_details_backend_payment_records_path(
+                        customer_id: customer.id,
+                        from_date: @from,
+                        to_date: @to,
+                    ) %>">
+                    <td>
+                        <%= erp_datalist_check_row(id: customer.id) %>
+                    </td>
+                    <% if get_columns(params).include?("customer") %>
+                        <td>
+                            <i class="fa fa-plus expand tr-expand-button"></i>
+                            <strong><%= customer.name %></strong>
+                        </td>
+                    <% end %>
+                    <% if get_columns(params).include?("begin_of_period_amount") %>
+                        <td><%= format_price(customer.customer_commission_debt_amount(to_date: (@from - 1.day))) %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("period_amount") %>
+                        <td><%= format_price(customer.customer_commission_total_amount(from_date: @from, to_date: @to)) %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("paid_amount") %>
+                        <td><%= format_price(customer.customer_commission_paid_amount(from_date: @from, to_date: @to)) %></td>
+                    <% end %>
+                    <% if get_columns(params).include?("salesperson") %>
+                        <td>
+                            <!-- todo update salesperson for contact -->
+                        </td>
+                    <% end %>
+                    <% if get_columns(params).include?("end_of_period_amount") %>
+                        <td><%= format_price(customer.customer_commission_debt_amount(to_date: @to)) %></td>
+                    <% end %>
+                    <td>
+                        <%= erp_datalist_row_actions(
+                            [
+                                {
+                                    text: '<i class="fa fa-plus"></i> '+t('.create_pay_customer_commission'),
+                                    url: erp_payments.new_backend_payment_record_path(
+                                        pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                                        payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION),
+                                        customer_id: customer.id
+                                    )
+                                }
+                            ]
+                        ) %>
+                    </td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+    
+     <% if @customers.empty? %>
+        <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
+     <% end %>
+    
+    <%= erp_datalist_pagination(@customers) %>
+    
+<% else %>
+    <div class="alert alert-warning">
+        <p>Vui lòng chọn 1 trong các tham số bắt buộc:
+            <br>- <strong>Từ ngày - Đến ngày</strong>
+            <br>- <strong>Chu kỳ thời gian</strong>
+        </p>
+    </div>
+<% end %>
