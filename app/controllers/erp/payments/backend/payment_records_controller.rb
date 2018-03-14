@@ -406,6 +406,10 @@ module Erp
           end
 
           @customers = Erp::Contacts::Contact
+          
+          if glb[:contact_group_id].present?
+            @customers = @customers.where(contact_group_id: glb[:contact_group_id])
+          end
 
           if glb[:customer].present?
             @customers = @customers.where(id: glb[:customer])
@@ -458,6 +462,10 @@ module Erp
           else
             @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          end
+          
+          if glb[:contact_group_id].present?
+            @suppliers = @suppliers.where(contact_group_id: glb[:contact_group_id])
           end
 
           if glb[:supplier].present?

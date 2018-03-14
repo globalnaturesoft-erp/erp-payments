@@ -12,21 +12,21 @@
 
 <% content_for :global_filter do %>
     <div class="row top-datalist">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <%= erp_form_control('date', {
                 label: t('.order_from_date'),
                 name: 'from_date',
                 placeholder: t('.select_from_date')
             }) %>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <%= erp_form_control('date', {
                 label: t('.order_to_date'),
                 name: 'to_date',
                 placeholder: t('.select_to_date')
             }) %>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <%= erp_form_control("dataselect", {
                 name: 'period',
                 label: t('.filter_period'),
@@ -34,12 +34,24 @@
                 url: erp_periods.dataselect_backend_periods_path(format: 'json'),
             }) %>
         </div>
+        <% if Erp::Core.available?("ortho_k") %>
+            <div class="col-md-3">
+                <%= erp_form_control("dataselect", {
+                    name: 'contact_group_id',
+                    label: 'Nhóm liên hệ',
+                    placeholder: 'Tìm theo nhóm',
+                    url: erp_contacts.dataselect_backend_contact_groups_path(format: 'json'),
+                    multiple: true
+                }) %>
+            </div>
+        <% end %>
         <div class="col-md-3">
             <%= erp_form_control("dataselect", {
                 name: 'customer',
                 label: t('.filter_customer'),
                 placeholder: t('.choose_customer'),
                 url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_customer: true),
+                multiple: true
             }) %>
         </div>
     </div>
