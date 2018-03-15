@@ -429,6 +429,8 @@ module Erp
             end
           end
           
+          @full_customers = @customers
+          
           @customers = @customers.paginate(:page => params[:page], :per_page => 20)
         end
 
@@ -486,6 +488,8 @@ module Erp
               end
             end
           end
+          
+          @full_suppliers = @suppliers
           
           @suppliers = @suppliers.paginate(:page => params[:page], :per_page => 20)
         end

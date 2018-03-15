@@ -15,19 +15,19 @@
     <div class="m-grid-row">
         <div class="m-grid-col m-grid-col-middle m-grid-col-center">
             <%= t('.total_begin_of_period_amount') %><br>
-            <strong><%= format_price(@customers.sales_debt_amount(to_date: (@from - 1.day))) %></strong>
+            <strong><%= format_price(@full_customers.sales_debt_amount(to_date: (@from - 1.day))) %></strong>
         </div>
         <div class="m-grid-col m-grid-col-middle m-grid-col-center">
             <%= t('.total_period_amount') %><br>
-            <strong><%= format_price(@customers.sales_total_amount(from_date: @from, to_date: @to)) %></strong>
+            <strong><%= format_price(@full_customers.sales_total_amount(from_date: @from, to_date: @to)) %></strong>
         </div>
         <div class="m-grid-col m-grid-col-middle m-grid-col-center">
             <%= t('.total_paid_amount') %><br>
-            <strong><%= format_price(@customers.sales_paid_amount(from_date: @from, to_date: @to)) %></strong>
+            <strong><%= format_price(@full_customers.sales_paid_amount(from_date: @from, to_date: @to)) %></strong>
         </div>
         <div class="m-grid-col m-grid-col-middle m-grid-col-center">
             <%= t('.total_end_of_period_amount') %><br>
-            <strong><%= format_price(@customers.sales_debt_amount(to_date: @to)) %></strong>
+            <strong><%= format_price(@full_customers.sales_debt_amount(to_date: @to)) %></strong>
         </div>
     </div>
 </div>
