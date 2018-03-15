@@ -539,7 +539,7 @@ module Erp::Payments
 
       commission_result = ((amount/debt_amount) * (debt_amount - commission_amount)) * (percent/100.0)
 
-      return commission_result
+      return debt_amount == 0.0 ? 0.0 : commission_result
     end
 
     # check if new account
