@@ -1,0 +1,90 @@
+<% content_for :title do %>
+    <%= t('.sales_orders_tracking') %>
+<% end %>
+
+<% content_for :page_title do %>
+    <i class="fa fa-bar-chart-o"></i> <%= t('.sales_orders_tracking') %>
+<% end %>
+
+<% content_for :page_toolbar do %>
+
+<% end %>
+
+<% content_for :global_filter do %>
+    <div class="row top-datalist">
+        <div class="col-md-2">
+            <%= erp_form_control('date', {
+                label: t('.from_date'),
+                name: 'from_date',
+                placeholder: t('.select_from_date')
+            }) %>
+        </div>
+        <div class="col-md-2">
+            <%= erp_form_control('date', {
+                label: t('.to_date'),
+                name: 'to_date',
+                placeholder: t('.select_to_date')
+            }) %>
+        </div>
+        <div class="col-md-2">
+            <%= erp_form_control("dataselect", {
+                name: 'period',
+                label: t('.filter_period'),
+                placeholder: t('.choose_period'),
+                url: erp_periods.dataselect_backend_periods_path(format: 'json'),
+            }) %>
+        </div>
+        <% if Erp::Core.available?("ortho_k") %>
+            <div class="col-md-3">
+                <%= erp_form_control("dataselect", {
+                    name: 'contact_group_id',
+                    label: 'Nhóm liên hệ',
+                    placeholder: 'Tìm theo nhóm',
+                    url: erp_contacts.dataselect_backend_contact_groups_path(format: 'json'),
+                    multiple: true
+                }) %>
+            </div>
+        <% end %>
+        <div class="col-md-3">
+            <%= erp_form_control("dataselect", {
+                name: 'customer',
+                label: t('.filter_customer'),
+                placeholder: t('.choose_customer'),
+                url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_customer: true),
+                multiple: true
+            }) %>
+        </div>
+    </div>
+<% end %>
+
+<%= erp_datalist(
+    url: erp_payments.sales_orders_tracking_table_backend_payment_records_path,
+    keyword: true,
+    actions: [
+
+    ],
+    filters: [
+        {text: 'Có phát sinh trong kỳ', name: 'in_period_active', value: true, checked: true}
+    ],
+    columns: [
+        {
+            text: t('.customer'), name: 'customer', value: true, checked: true
+        },
+        {
+            text: t('.begin_of_period_amount'), name: 'begin_of_period_amount', value: true, checked: true
+        },
+        {
+            text: t('.period_amount'), name: 'period_amount', value: true, checked: true
+        },
+        {
+            text: t('.paid_amount'), name: 'paid_amount', value: true, checked: true
+        },
+        {
+            text: t('.end_of_period_amount'), name: 'end_of_period_amount', value: true, checked: true
+        },
+        {
+            text: t('.salesperson'), name: 'salesperson', value: true, checked: false
+        }
+    ],
+    sort: {  }
+) %>

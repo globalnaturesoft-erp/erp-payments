@@ -1,0 +1,210 @@
+<% uid = unique_id %>
+<div class="tabbable-custom ">
+    <ul class="nav nav-tabs ">
+        <li class="active">
+            <a href="#tab_<%= uid %>_1" data-toggle="tab">
+                <i class="icon-clock"></i>
+                Lịch sử thanh toán trong kỳ
+            </a>
+        </li>
+        <li>
+            <a href="#tab_<%= uid %>_2" data-toggle="tab">
+                <i class="icon-basket"></i>
+                Chi tiết bán hàng trong kỳ
+            </a>
+        </li>
+        <li>
+            <a href="#tab_<%= uid %>_3" data-toggle="tab">
+                <i class="icon-action-undo"></i>
+                Chi tiết trả hàng trong kỳ
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_<%= uid %>_1">
+            <% if @payment_records.count > 0 %>
+                <h4 class="profile-desc-title bold"><i class="glyphicon glyphicon-hand-right"></i> Lịch sử thanh toán</h4>
+                <table class="table table-bordered table-advance order-column">
+                    <thead class="flip-content">
+                        <tr>
+                            <td class="text-center bold" colspan="3">Tổng cộng</td>
+                            <td class="stock-num text-center bold font-red-thunderbird"><%= format_price(@full_payment_records.sum(&:amount)) %></td>
+                            <td class="stock-num text-right bold font-red-thunderbird" colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <th width="15%" class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Mã thanh toán</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Ngày thanh toán</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Tên khách hàng</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Số tiền</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Hình thức</th>
+                            <th width="20%" class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Ghi chú</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center"><%= t('.actions') %></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% @payment_records.each do |payment_record| %>
+                            <tr>
+                                <td class="text-left"><strong><%= payment_record.code %></strong></td>
+                                <td class="text-left"><%= format_date(payment_record.payment_date) %></td>
+                                <td class="text-left"><%= payment_record.customer_name %></td>
+                                <td class="text-right"><%= format_price(payment_record.amount) %></td>
+                                <td class="text-left"><%= t(".#{display_payment_record_type(payment_record)}") %></td>
+                                <td class="text-justify"><%= raw payment_record.description %></td>
+                                <td class="text-right">
+                                    <%= erp_datalist_row_actions(
+                                        [
+                                            {
+                                                text: '<i class="fa fa-print"></i> '+t('view_print'),
+                                                url: erp_payments.show_modal_backend_payment_records_path(id: payment_record),
+                                                class: "modal-link"
+                                            },
+                                            {
+                                                text: '<i class="fa fa-edit"></i> '+t('edit'),
+                                                url: erp_payments.edit_backend_payment_record_path(payment_record),
+                                                class: "modal-link"
+                                            },
+                                            {
+                                                text: '<i class="fa fa-trash"></i> Hủy phiếu',
+                                                url: erp_payments.set_deleted_backend_payment_records_path(id: payment_record),
+                                                data_method: 'PUT',
+                                                class: 'ajax-link',
+                                                data_confirm: 'Bạn chắc chắn muốn hủy phiếu này?'
+                                            }
+                                        ]
+                                    ) %>
+                                </td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <%= erp_datalist_pagination(@payment_records) %>
+            <% else %>
+                <div class="alert alert-warning alert-dismissable no-margin">Chưa có lần thanh toán nào cho công nợ kỳ này!</div>
+            <% end %>
+        </div>
+        <div class="tab-pane" id="tab_<%= uid %>_2">
+            <% if @orders.count > 0 %>
+                <h4 class="profile-desc-title bold"><i class="glyphicon glyphicon-hand-right"></i> Chi tiết bán hàng</h4>
+                <table class="table table-bordered table-advance order-column">
+                    <thead class="flip-content">
+                        <tr>
+                            <td class="text-center bold" colspan="4">Tổng cộng</td>
+                            <td class="stock-num text-center bold font-red-thunderbird"><%= @full_orders.sum(&:items_count) %></td>
+                            <td class="stock-num text-right bold font-red-thunderbird"><%= format_price(@full_orders.sum(&:discount_amount)) %></td>
+                            <td class="stock-num text-right bold font-red-thunderbird"><%= format_price(@full_orders.sum(&:cache_total)) %></td> <!-- @todo sum total for orders -->
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Mã hóa đơn</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Ngày đặt hàng</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Sản phẩm</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Đơn giá</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Số lượng</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Giảm giá</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Tổng cộng</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">N.viên kinh doanh</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center"><%= t('.actions') %></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% @orders.each do |order| %>
+                            <tr>
+                                <td class="bg-grey bg-font-grey text-left text-nowrap bold"><%= order_link(order) %></td>
+                                <td class="bg-grey bg-font-grey text-center bold"><%= format_date(order.order_date) %></td>
+                                <td class="bg-grey bg-font-grey text-center bold" colspan="2">
+                                    <span title="
+                                        <%= t(".#{order.cache_payment_status}") %> <%= "(Còn lại: #{format_number(order.remain_amount)})" if order.remain_amount != 0 %>
+                                    ">
+                                        <%= status_label(order.cache_payment_status) %>
+                                    </span>
+                                </td>
+                                <td class="bg-grey bg-font-grey text-center bold"><%= order.items_count %></td>
+                                <td class="bg-grey bg-font-grey text-right bold"><%= format_price(order.discount_amount) %></td>
+                                <td class="bg-grey bg-font-grey text-right bold"><%= format_price(order.cache_total) %></td>
+                                <td class="bg-grey text-left"><%= order.employee_name %></td>
+                                <td class="bg-grey text-right">
+                                    <%= accounting_order_dropdown_actions(order) %>
+                                </td>
+                            </tr>
+                            <% order.order_details.each do |order_detail| %>
+                                <tr>
+                                    <td class="text-left" colspan="2"></td>
+                                    <td class="text-left"><%= order_detail.product_name %></td>
+                                    <td class=" text-right"><%= format_price(order_detail.price) %></td>
+                                    <td class=" text-center"><%= order_detail.quantity %></td>
+                                    <td class=" text-right"><%= format_price(order_detail.discount_amount) %></td>
+                                    <td class=" text-right"><%= format_price(order_detail.subtotal) %></td>
+                                    <td class="text-left" colspan="2"></td>
+                                </tr>
+                            <% end %>
+                        <% end %>
+                    </tbody>
+                </table>
+                <%= erp_datalist_pagination(@orders) %>
+            <% else %>
+                <div class="alert alert-warning alert-dismissable no-margin">
+                    Không tìm thấy chi tiết bán hàng kỳ này!
+                </div>
+            <% end %>
+        </div>
+        <div class="tab-pane" id="tab_<%= uid %>_3">                
+            <% if @product_returns.count > 0 %>
+                <h4 class="profile-desc-title bold"><i class="glyphicon glyphicon-hand-right"></i> Chi tiết hàng bán bị trả lại</h4>
+                <table class="table table-bordered table-advance order-column">
+                    <thead class="flip-content">
+                        <tr>
+                            <td class="text-center bold" colspan="4">Tổng trả</td>
+                            <td class="stock-num text-center bold font-red-thunderbird"><%= @full_product_returns.total_delivery_quantity %></td>
+                            <td class="stock-num text-right bold font-red-thunderbird"><%= format_price(@full_product_returns.total_amount) %></td>
+                            <td class="stock-num text-right bold font-red-thunderbird"></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Mã trả hàng</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Ngày trả hàng</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Sản phẩm</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Đơn giá</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Số lượng</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Tổng cộng</th>
+                            <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center"><%= t('.actions') %></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% @product_returns.each do |product_return| %>
+                            <tr>
+                                <td class="bg-grey bg-font-grey text-left text-nowrap bold"><%= qdelivery_link(product_return) %></td>
+                                <td class="bg-grey bg-font-grey text-center bold"><%= format_date(product_return.date) %></td>
+                                <td class="bg-grey bg-font-grey text-center bold" colspan="2">
+                                    <span title="
+                                        <%= t(".#{product_return.cache_payment_status}") %> <%= "(Còn lại: #{format_number(product_return.remain_amount)})" if product_return.remain_amount != 0 %>
+                                    ">
+                                        <%= status_label(product_return.cache_payment_status) %>
+                                    </span>
+                                </td>
+                                <td class="bg-grey bg-font-grey text-center bold"><%= format_number(product_return.total_delivery_quantity) %></td>
+                                <td class="bg-grey bg-font-grey text-right bold"><%= format_price(product_return.total_amount) %></td>
+                                <td class="bg-grey text-right">
+                                    <%= accounting_delivery_dropdown_actions(product_return) %>
+                                </td>
+                            </tr>
+                            <% product_return.delivery_details.each do |delivery_detail| %>
+                                <tr>
+                                    <td class="text-left" colspan="2"></td>
+                                    <td class="text-left"><%= delivery_detail.product_name %></td>
+                                    <td class=" text-right"><%= format_price(delivery_detail.price) %></td>
+                                    <td class=" text-center"><%= format_number(delivery_detail.quantity) %></td>
+                                    <td class=" text-right"><%= format_price(delivery_detail.cache_total) %></td>
+                                    <td class=" text-right"></td>
+                                </tr>
+                            <% end %>
+                        <% end %>
+                    </tbody>
+                </table>
+                <%= erp_datalist_pagination(@product_returns) %>
+            <% else %>
+                <div class="alert alert-warning alert-dismissable no-margin">
+                    Không tìm thấy chi tiết trả hàng kỳ này!
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div

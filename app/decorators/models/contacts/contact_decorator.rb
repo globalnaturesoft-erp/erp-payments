@@ -185,4 +185,84 @@ Erp::Contacts::Contact.class_eval do
   def customer_commission_debt_amount(params={})
     self.customer_commission_total_amount(params) - self.customer_commission_paid_amount(params)
   end
+  
+  
+  # ====== CONG NO PHONG KHAM ====== Orders Tracking
+  if Erp::Core.available?("ortho_k")
+    # Tong ban hang
+    def self.orders_tracking_sales_order_total_amount(params={})
+      query = self.sales_orders.payment_for_order_orders(params)
+        .where(customer_id: self.ids)
+  
+      return query.sum(:cache_total)
+    end
+    
+    # Tong hang ban bi tra lai
+    def self.orders_tracking_sales_return_total_amount(params={})
+      query = self.sales_product_returns.get_deliveries_with_payment_for_order(params)
+      return query.sum(:cache_total)
+    end
+  
+    # Tong ban hang sau khi da tru hang bi tra lai
+    def self.orders_tracking_sales_total_amount(params={})
+      total = self.orders_tracking_sales_order_total_amount(params)
+      
+      total -= self.orders_tracking_sales_return_total_amount(params)
+  
+      return total
+    end
+    
+    # Tong /Ban hang
+    def orders_tracking_sales_order_total_amount(params={})
+      query = self.sales_orders.payment_for_order_orders(params)
+      return query.sum(:cache_total)
+    end
+    
+    # Tong /Hang bi tra lai
+    def orders_tracking_sales_return_total_amount(params={})
+      query = self.sales_product_returns.get_deliveries_with_payment_for_order(params)
+      return query.sum(:cache_total)
+    end
+  
+    # Tong /Ban hang sau khi tru hang bi tra lai
+    def orders_tracking_sales_total_amount(params={})
+      total = self.orders_tracking_sales_order_total_amount(params)
+      
+      total -= self.orders_tracking_sales_return_total_amount(params)
+  
+      return total
+    end
+    
+    # Sales paid amount for contact
+    def self.orders_tracking_sales_paid_amount(params={})
+      query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
+        .includes(:payment_type)
+        .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SALES_ORDER})
+        .where(customer_id: self.ids)
+  
+      result = - query.all_paid(params).sum(:amount) + query.all_received(params).sum(:amount)
+  
+      return result
+    end
+  
+    def orders_tracking_sales_paid_amount(params={})
+      query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
+        .includes(:payment_type)
+        .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SALES_ORDER})
+        .where(customer_id: self.id)
+  
+      result = - query.all_paid(params).sum(:amount) + query.all_received(params).sum(:amount)
+  
+      return result
+    end
+  
+    # Sales debt amount for contact
+    def self.orders_tracking_sales_debt_amount(params={})
+      self.orders_tracking_sales_total_amount(params) - self.orders_tracking_sales_paid_amount(params)
+    end
+  
+    def orders_tracking_sales_debt_amount(params={})
+      self.orders_tracking_sales_total_amount(params) - self.orders_tracking_sales_paid_amount(params)
+    end
+  end
 end

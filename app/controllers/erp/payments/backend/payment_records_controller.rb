@@ -393,6 +393,81 @@ module Erp
             end
           render layout: false
         end
+        
+        # CUSTOMER / orders tracking table
+        def sales_orders_tracking_table
+          glb = params.to_unsafe_hash[:global_filter]
+          if glb[:period].present?
+            @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
+            @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
+          else
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+          end
+
+          @customers = Erp::Contacts::Contact#.search(params)
+            .where.not(id: Erp::Contacts::Contact.get_main_contact.id)
+          
+          if glb[:contact_group_id].present?
+            @customers = @customers.where(contact_group_id: glb[:contact_group_id])
+          end
+          
+          if glb[:customer].present?
+            @customers = @customers.where(id: glb[:customer])
+          else
+            @customers = @customers.where(is_customer: true)
+          end
+          
+          #filters
+          if params.to_unsafe_hash["filters"].present?
+            params.to_unsafe_hash["filters"].each do |ft|
+              ft[1].each do |cond|
+                if cond[1]["name"] == 'in_period_active'
+                  @customers = @customers.get_sales_orders_tracking_payment_chasing_contacts(
+                    from_date: @from,
+                    to_date: @to
+                  )
+                end
+              end
+            end
+          end
+          
+          @full_customers = @customers
+          
+          @customers = @customers.paginate(:page => params[:page], :per_page => 20)
+        end
+        
+        # CUSTOMER / orders tracking table details
+        def sales_orders_tracking_table_details
+          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders
+            .payment_for_order_orders(params.to_unsafe_hash)
+          @full_orders = @orders
+          @orders = @orders.paginate(:page => params[:page], :per_page => 10)
+
+          @product_returns = Erp::Contacts::Contact.find(params[:customer_id]).sales_product_returns
+            .get_deliveries_with_payment_for_order(params.to_unsafe_hash)
+          @full_product_returns = @product_returns
+          @product_returns = @product_returns.paginate(:page => params[:page], :per_page => 10)
+
+          @payment_records = Erp::Payments::PaymentRecord.all_done
+            .where(customer_id: params[:customer_id])
+            .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SALES_ORDER).id)
+
+          # from to date
+          if params[:from_date].present?
+            @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
+          end
+
+          if params[:to_date].present?
+            @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
+          end
+          @full_payment_records = @payment_records
+          @payment_records = @payment_records.paginate(:page => params[:page], :per_page => 10)
+        end
+        
+        # SUPPLIER / orders tracking table
+        def purchase_orders_tracking_table
+        end
 
         # CUSTOMER / liabilities tracking table
         def liabilities_tracking_table
@@ -405,7 +480,8 @@ module Erp
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
           end
 
-          @customers = Erp::Contacts::Contact
+          @customers = Erp::Contacts::Contact#.search(params)
+            .where.not(id: Erp::Contacts::Contact.get_main_contact.id)
           
           if glb[:contact_group_id].present?
             @customers = @customers.where(contact_group_id: glb[:contact_group_id])
@@ -414,8 +490,7 @@ module Erp
           if glb[:customer].present?
             @customers = @customers.where(id: glb[:customer])
           else
-            @customers = @customers.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
-              .where(is_customer: true)
+            @customers = @customers.where(is_customer: true)
           end
 
           #filters
@@ -423,7 +498,10 @@ module Erp
             params.to_unsafe_hash["filters"].each do |ft|
               ft[1].each do |cond|
                 if cond[1]["name"] == 'in_period_active'
-                  @customers = @customers.get_sales_payment_chasing_contacts(from_date: @from, to_date: @to)
+                  @customers = @customers.get_sales_payment_chasing_contacts(
+                    from_date: @from,
+                    to_date: @to
+                  )
                 end
               end
             end
@@ -466,15 +544,17 @@ module Erp
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
           end
           
+          @suppliers = Erp::Contacts::Contact#.search(params)
+            .where.not(id: Erp::Contacts::Contact.get_main_contact.id)
+          
           if glb[:contact_group_id].present?
             @suppliers = @suppliers.where(contact_group_id: glb[:contact_group_id])
           end
 
           if glb[:supplier].present?
-            @suppliers = Erp::Contacts::Contact.where(id: glb[:supplier])
+            @suppliers = @suppliers.where(id: glb[:supplier])
           else
-            @suppliers = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
-              .where(is_supplier: true)
+            @suppliers = @suppliers.where(is_supplier: true)
           end
 
           # only suppliers with records
@@ -483,7 +563,10 @@ module Erp
             params.to_unsafe_hash["filters"].each do |ft|
               ft[1].each do |cond|
                 if cond[1]["name"] == 'in_period_active'
-                  @suppliers = @suppliers.get_purchase_payment_chasing_contacts(from_date: @from, to_date: @to)
+                  @suppliers = @suppliers.get_purchase_payment_chasing_contacts(
+                    from_date: @from,
+                    to_date: @to
+                  )
                 end
               end
             end

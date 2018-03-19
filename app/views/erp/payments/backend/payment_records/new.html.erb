@@ -1,11 +1,11 @@
 <% content_for :title do %>
-    <%= params[:ptype] == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.create_pay') : t('.create_receive') %>
+    <%= params[:pay_receive] == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.create_pay') : t('.create_receive') %>
 <% end %>
 
 <% content_for :page_title do %>    
     <a href="<%= erp_payments.backend_payment_records_path %>">
     <i class="fa fa-usd"></i> <%= t('.payment_records') %>
-    </a> / <%= params[:ptype] == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.create_pay') : t('.create_receive') %>
+    </a> / <%= params[:pay_receive] == Erp::Payments::PaymentRecord::TYPE_PAY ? t('.create_pay') : t('.create_receive') %>
 <% end %>
 
 <% content_for :page_toolbar do %>
