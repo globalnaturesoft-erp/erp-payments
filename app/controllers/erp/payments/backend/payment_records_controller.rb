@@ -439,16 +439,9 @@ module Erp
         
         # CUSTOMER / orders tracking table details
         def sales_orders_tracking_table_details
-          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders
-            .payment_for_order_orders(params.to_unsafe_hash)
-          @full_orders = @orders
-          @orders = @orders.paginate(:page => params[:page], :per_page => 10)
-
-          @product_returns = Erp::Contacts::Contact.find(params[:customer_id]).sales_product_returns
-            .get_deliveries_with_payment_for_order(params.to_unsafe_hash)
-          @full_product_returns = @product_returns
-          @product_returns = @product_returns.paginate(:page => params[:page], :per_page => 10)
-
+        end
+        
+        def sales_orders_tracking_payment_records_list
           @payment_records = Erp::Payments::PaymentRecord.all_done
             .where(customer_id: params[:customer_id])
             .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SALES_ORDER).id)
@@ -463,6 +456,20 @@ module Erp
           end
           @full_payment_records = @payment_records
           @payment_records = @payment_records.paginate(:page => params[:page], :per_page => 10)
+        end
+        
+        def sales_orders_tracking_sales_export_list
+          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders
+            .payment_for_order_orders(params.to_unsafe_hash)
+          @full_orders = @orders
+          @orders = @orders.paginate(:page => params[:page], :per_page => 10)
+        end
+        
+        def sales_orders_tracking_sales_import_list
+          @product_returns = Erp::Contacts::Contact.find(params[:customer_id]).sales_product_returns
+            .get_deliveries_with_payment_for_order(params.to_unsafe_hash)
+          @full_product_returns = @product_returns
+          @product_returns = @product_returns.paginate(:page => params[:page], :per_page => 10)
         end
         
         # SUPPLIER / orders tracking table
