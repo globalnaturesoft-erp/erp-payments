@@ -92,6 +92,8 @@ Erp::Payments::Engine.routes.draw do
 					put 'unarchive_all'
 					put 'set_active'
 					put 'set_deleted'
+					get 'account_details'
+					post 'payment_records_by_account'
 				end
 			end
 			resources :payment_types do

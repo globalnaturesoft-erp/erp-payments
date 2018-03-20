@@ -1,0 +1,6 @@
+<%= erp_datalist(url: erp_payments.payment_records_by_account_backend_accounts_path(
+        id: params[:id],
+        from_date: params[:from_date],
+        to_date: params[:to_date]
+    )
+) %>

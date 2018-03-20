@@ -2,13 +2,45 @@ module Erp
   module Payments
     module Backend
       class AccountsController < Erp::Backend::BackendController
-        before_action :set_account, only: [:set_active, :set_deleted, :archive, :unarchive, :edit, :update, :destroy]
+        before_action :set_account, only: [:account_details, :payment_records_by_account, :set_active, :set_deleted, :archive, :unarchive, :edit, :update, :destroy]
         before_action :set_accounts, only: [:archive_all, :unarchive_all, :delete_all]
 
+        def index
+          # default from to date
+          @from_date = Time.now.beginning_of_month
+          @to_date = Time.now.end_of_day
+        end
+        
         # POST /debts/list
         def list
-          @accounts = Account.search(params).paginate(:page => params[:page], :per_page => 5)
+          @global_filters = params.to_unsafe_hash[:global_filter]
 
+          # if has period
+          @period_name = nil
+          if @global_filters[:period].present?
+            @period = Erp::Periods::Period.find(@global_filters[:period])
+            @global_filters[:from_date] = @period.from_date
+            @global_filters[:to_date] = @period.to_date
+            @period_name = @period.name
+          end
+
+          @from_date = @global_filters[:from_date].to_date
+          @to_date = @global_filters[:to_date].to_date
+          
+          @accounts = Account.search(params).paginate(:page => params[:page], :per_page => 10)
+
+          render layout: nil
+        end
+        
+        def account_details
+        end
+        
+        def payment_records_by_account
+          @from_date = params[:from_date].to_date
+          @to_date = params[:to_date].to_date
+          @payment_records = @account.payment_records(from_date: @from_date, to_date: @to_date)
+            .paginate(:page => params[:page], :per_page => 10)
+          
           render layout: nil
         end
 

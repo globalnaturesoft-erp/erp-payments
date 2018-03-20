@@ -1,3 +1,16 @@
+<div class="custom-show text-center">
+    <h4 class="font-blue-madison bold uppercase no-margin">
+        Thông tin tài khoản giao dịch / thanh toán<br>
+        <span class="font-sm">
+            <% if @period_name.nil? %>
+                (<%= 'Từ ' + @from_date.strftime('%d/%m/%Y') if !@from_date.nil? %><%= !@to_date.nil? ? ' Đến ' + @to_date.strftime('%d/%m/%Y') : ' đến nay' %>)
+            <% else %>
+                (<%= @period_name %>)
+            <% end %>
+        </span>
+    </h4>
+</div>
+
 <table class="table table-advance table-hover table-striped table-checkable order-column">
     <thead>
         <tr>
@@ -16,9 +29,24 @@
                     <%= t('.owner') %>
                 </th>
             <% end %>
-            <% if get_columns(params).include?("balance") %>
+            <% if get_columns(params).include?("beginning_balance") %>
                 <th class="text-center">
-                    <%= t('.balance') %>
+                    <%= t('.beginning_balance') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("received_amount_in_period") %>
+                <th class="text-center">
+                    <%= t('.received_amount_in_period') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("paid_amount_in_period") %>
+                <th class="text-center">
+                    <%= t('.paid_amount_in_period') %>
+                </th>
+            <% end %>
+            <% if get_columns(params).include?("ending_balance") %>
+                <th class="text-center">
+                    <%= t('.ending_balance') %>
                 </th>
             <% end %>
             <% if get_columns(params).include?("payment_method") %>
@@ -46,9 +74,17 @@
     </thead>
     <tbody>
         <% if @accounts.each do |account| %>
-            <tr class="<%= 'blurred' if account.is_deleted? %> odd gradeX">
+            <tr class="<%= 'blurred' if account.is_deleted? %> odd gradeX has-child-table"
+                data-url="<%= erp_payments.account_details_backend_accounts_path(
+                    id: account.id,
+                    from_date: @from_date,
+                    to_date: @to_date,
+                ) %>">
                 <% if get_columns(params).include?("name") %>
-                    <td class="text-left bold"><%= account.name %></td>
+                    <td class="text-left">
+                        <i class="fa fa-plus expand tr-expand-button"></i>
+                        <strong><%= account.name %></strong>
+                    </td>
                 <% end %>
                 <% if get_columns(params).include?("account_number") %>
                     <td><%= account.account_number %></td>
@@ -56,9 +92,24 @@
                 <% if get_columns(params).include?("owner") %>
                     <td><%= account.owner %></td>
                 <% end %>
-                <% if get_columns(params).include?("balance") %>
-                    <td class="font-yellow-gold text-center">
-                        <%= format_number(account.account_balance(to_date: Time.now)) %>
+                <% if get_columns(params).include?("beginning_balance") %>
+                    <td class="font-blue text-right">
+                        <%= format_number(account.account_balance(to_date: (@from_date - 1.day))) %>
+                    </td>
+                <% end %>
+                <% if get_columns(params).include?("received_amount_in_period") %>
+                    <td class="text-right">
+                        <%= format_number(account.received(from_date: @from_date, to_date: @to_date)) %>
+                    </td>
+                <% end %>
+                <% if get_columns(params).include?("paid_amount_in_period") %>
+                    <td class="font-red-flamingo text-right">
+                        <%= format_number(account.paid(from_date: @from_date, to_date: @to_date)) %>
+                    </td>
+                <% end %>
+                <% if get_columns(params).include?("ending_balance") %>
+                    <td class="font-blue text-right">
+                        <%= format_number(account.account_balance(to_date: @to_date)) %>
                     </td>
                 <% end %>
                 <% if get_columns(params).include?("payment_method") %>

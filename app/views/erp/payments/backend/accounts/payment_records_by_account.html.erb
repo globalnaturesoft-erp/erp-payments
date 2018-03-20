@@ -1,0 +1,53 @@
+<% if @payment_records.count > 0 %>
+    <table class="table table-bordered order-column">
+        <thead class="flip-content">
+            <tr>
+                <th width="15%" class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Mã thanh toán</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Ngày thanh toán</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Tên khách hàng</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Số tiền</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Hình thức</th>
+                <th width="20%" class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Ghi chú</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center"><%= 'Hành động' %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @payment_records.each do |payment_record| %>
+                <tr>
+                    <td class="text-left"><strong><%= payment_record.code %></strong></td>
+                    <td class="text-left"><%= format_date(payment_record.payment_date) %></td>
+                    <td class="text-left"><%= payment_record.customer_name %></td>
+                    <td class="text-right"><%= format_price(payment_record.amount) %></td>
+                    <td class="text-left"><%= t(".#{display_payment_record_type(payment_record)}") %></td>
+                    <td class="text-justify"><%= raw payment_record.description %></td>
+                    <td class="text-right">
+                        <%= erp_datalist_row_actions(
+                            [
+                                {
+                                    text: '<i class="fa fa-print"></i> '+t('view_print'),
+                                    url: erp_payments.show_modal_backend_payment_records_path(id: payment_record),
+                                    class: "modal-link"
+                                },
+                                {
+                                    text: '<i class="fa fa-edit"></i> '+t('edit'),
+                                    url: erp_payments.edit_backend_payment_record_path(payment_record),
+                                    class: "modal-link"
+                                },
+                                {
+                                    text: '<i class="fa fa-trash"></i> Hủy phiếu',
+                                    url: erp_payments.set_deleted_backend_payment_records_path(id: payment_record),
+                                    data_method: 'PUT',
+                                    class: 'ajax-link',
+                                    data_confirm: 'Bạn chắc chắn muốn hủy phiếu này?'
+                                }
+                            ]
+                        ) %>
+                    </td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+    <%= erp_datalist_pagination(@payment_records) %>
+<% else %>
+    <div class="alert alert-warning alert-dismissable no-margin">Không tìm thấy lịch sử giao dịch phát sinh trong kỳ.</div>
+<% end %>

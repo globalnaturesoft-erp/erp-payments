@@ -14,6 +14,35 @@
     }) %>
 <% end %>
 
+<% content_for :global_filter do %>
+    <div class="row top-datalist">
+        <div class="col-md-3">
+            <%= erp_form_control('date', {
+                label: t('.from_date'),
+                name: 'from_date',
+                value: @from_date,
+                placeholder: t('.select_from_date')
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control('date', {
+                label: t('.to_date'),
+                name: 'to_date',
+                value: @to_date,
+                placeholder: t('.select_to_date')
+            }) %>
+        </div>
+        <div class="col-md-3">
+            <%= erp_form_control("dataselect", {
+                name: 'period',
+                label: t('.filter_period'),
+                placeholder: t('.choose_period'),
+                url: erp_periods.dataselect_backend_periods_path(format: 'json'),
+            }) %>
+        </div>
+    </div>
+<% end %>
+
 <%= erp_datalist(
     url: erp_payments.list_backend_accounts_path,
     keywords: [
@@ -51,7 +80,16 @@
             text: t('.owner'), name: 'owner', value: true, checked: true
         },
         {
-            text: t('.balance'), name: 'balance', value: true, checked: true
+            text: t('.beginning_balance'), name: 'beginning_balance', value: true, checked: true
+        },
+        {
+            text: t('.received_amount_in_period'), name: 'received_amount_in_period', value: true, checked: true
+        },
+        {
+            text: t('.paid_amount_in_period'), name: 'paid_amount_in_period', value: true, checked: true
+        },
+        {
+            text: t('.ending_balance'), name: 'ending_balance', value: true, checked: true
         },
         {
             text: t('.payment_method'), name: 'payment_method', value: true, checked: false
@@ -63,7 +101,7 @@
             text: t('creator'), name: 'creator', value: true, checked: false
         },
         {
-            text: t('created_at'), name: 'created_at', value: true, checked: true
+            text: t('created_at'), name: 'created_at', value: true, checked: false
         }
     ],
     sort: { sort_by: 'erp_payments_accounts.created_at', sort_direction: 'desc' }
