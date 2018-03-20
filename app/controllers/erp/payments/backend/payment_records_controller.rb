@@ -7,6 +7,9 @@ module Erp
 
         # GET /payment_records
         def index
+          # default from to date
+          @from_date = Time.now.beginning_of_month
+          @to_date = Time.now.end_of_day
         end
 
         # POST /payment_records/list

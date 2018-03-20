@@ -147,6 +147,11 @@ module Erp::Payments
     def is_deleted?
       return self.status == Erp::Payments::Account::STATUS_DELETED
     end
+    
+    # get all active
+    def self.all_active
+      self.where(status: Erp::Payments::Account::STATUS_ACTIVE)
+    end
 
     # --------- Report Functions - Start ---------
     # Danh sach phieu thu/chi lien quan den Account

@@ -104,6 +104,7 @@
             <%= erp_form_control('date', {
                 label: t('.from_date'),
                 name: 'from_date',
+                value: @from_date,
                 placeholder: t('.select_from_date')
             }) %>
         </div>
@@ -111,6 +112,7 @@
             <%= erp_form_control('date', {
                 label: t('.to_date'),
                 name: 'to_date',
+                value: @to_date,
                 placeholder: t('.select_to_date')
             }) %>
         </div>
@@ -189,15 +191,15 @@
 <%
     filters = []
     filters << {
-        text: t('.receipt_voucher'), name: 'pay_receive', value: Erp::Payments::PaymentRecord::TYPE_RECEIVE, checked: false
+        text: t('.receipt_voucher'), name: 'pay_receive', value: Erp::Payments::PaymentRecord::TYPE_RECEIVE, checked: true
     }
     filters << {
-        text: t('.payment_voucher'), name: 'pay_receive', value: Erp::Payments::PaymentRecord::TYPE_PAY, checked: false
+        text: t('.payment_voucher'), name: 'pay_receive', value: Erp::Payments::PaymentRecord::TYPE_PAY, checked: true
     }
     filters << {
         divider: true
-    } if Erp::Payments::Account.where(archived: false).count > 0
-    Erp::Payments::Account.where(archived: false).each do |account|
+    } if Erp::Payments::Account.all_active.count > 0
+    Erp::Payments::Account.all_active.each do |account|
         filters << {
             text: account.name, name: 'account_id', value: account.id, checked: false
         }
