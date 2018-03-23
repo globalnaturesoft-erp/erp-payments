@@ -209,10 +209,9 @@ vi:
             pending: "Chưa xác nhận"
             done: "Đã xác nhận"
             deleted: "Đã bị hủy"
-            opening_funds: "Số dư đầu kỳ"
-            closing_funds: "Số dư cuối kỳ"
             total_received: "Tổng thu"
             total_paid: "Tổng chi"
+            differences: "Chênh lệch"
             no_matching_records_found: "Danh sách phiếu thanh toán không được tìm thấy"
             payment_method_cash: 'Tiền mặt'
             payment_method_account: 'Chuyển khoản'

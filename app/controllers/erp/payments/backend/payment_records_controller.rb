@@ -36,12 +36,8 @@ module Erp
 
           # Paid total
           @total_paid = records.paid_amount(from_date: @from, to_date: @to)
-
-          # Begin of period amount
-          @begin_period_amount = records.remain_amount(from_date: nil, to_date: (@from.nil? ? nil : (@from - 1.day)))
-
-          # End of period amount
-          @end_period_amount = records.remain_amount(from_date: nil, to_date: @to)
+          
+          @differences = records.remain_amount(from_date: @from, to_date: @to)
 
           @payment_records = records.paginate(:page => params[:page], :per_page => 20)
 
