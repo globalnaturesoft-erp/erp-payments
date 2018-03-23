@@ -423,7 +423,7 @@ vi:
             number_of_payments: "Số lần thanh toán"
             paid_amount: "Đã thanh toán"
             period_amount: "Nợ tăng trong kỳ"
-            salesperson: "Nhân viên KD"
+            salesperson: "N.viên k.doanh"
             create_receive_for_contact: "Tạo phiếu thu"
             create_pay_for_contact: "Trả lại tiền cho KH"
             total_begin_of_period_amount: "Tổng nợ đầu kỳ"

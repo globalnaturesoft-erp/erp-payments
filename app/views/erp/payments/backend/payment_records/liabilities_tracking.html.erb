@@ -54,6 +54,15 @@
                 multiple: true
             }) %>
         </div>
+        <div class="col-md-3">
+            <%= erp_form_control("dataselect", {
+                name: 'salesperson_id',
+                label: 'Nhân viên kinh doanh',
+                placeholder: 'Tìm theo n.viên k.doanh/phụ trách',
+                url: erp.dataselect_backend_users_path(format: 'json'),
+                multiple: true
+            }) %>
+        </div>
     </div>
 <% end %>
 
@@ -85,7 +94,7 @@
             text: t('.end_of_period_amount'), name: 'end_of_period_amount', value: true, checked: true
         },
         {
-            text: t('.salesperson'), name: 'salesperson', value: true, checked: false
+            text: t('.salesperson'), name: 'salesperson', value: true, checked: true
         }
     ],
     sort: {  }

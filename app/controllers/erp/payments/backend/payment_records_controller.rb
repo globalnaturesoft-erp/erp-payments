@@ -130,7 +130,7 @@ module Erp
                 page_size: 'A5',
                 orientation: 'Landscape',
                 margin: {
-                  top: 7,                     # default 10 (mm)
+                  top: 10,                     # default 10 (mm)
                   bottom: 7,
                   left: 7,
                   right: 7
@@ -495,6 +495,10 @@ module Erp
           
           if glb[:contact_group_id].present?
             @customers = @customers.where(contact_group_id: glb[:contact_group_id])
+          end
+          
+          if glb[:salesperson_id].present?
+            @customers = @customers.where(salesperson_id: glb[:salesperson_id])
           end
 
           if glb[:customer].present?
