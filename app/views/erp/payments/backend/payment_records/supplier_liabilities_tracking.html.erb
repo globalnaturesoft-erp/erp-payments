@@ -59,14 +59,13 @@
 
 <%= erp_datalist(
     url: erp_payments.supplier_liabilities_tracking_table_backend_payment_records_path,
-    keywords: [
-
-    ],
+    keyword: true,
     actions: [
 
     ],
     filters: [
-        {text: 'Còn nợ và có phát sinh trong kỳ', name: 'in_period_active', value: true, checked: true}
+        {text: 'Có phát sinh trong kỳ', name: 'in_period_active', value: true, checked: true},
+        {text: 'Còn tồn nợ cuối kỳ', name: '', value: true, checked: false},
     ],
     columns: [
         {

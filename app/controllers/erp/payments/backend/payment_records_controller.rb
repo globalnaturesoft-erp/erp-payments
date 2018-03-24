@@ -404,7 +404,7 @@ module Erp
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
           end
 
-          @customers = Erp::Contacts::Contact#.search(params)
+          @customers = Erp::Contacts::Contact.search(params)
             .where.not(id: Erp::Contacts::Contact.get_main_contact.id)
           
           if glb[:contact_group_id].present?
@@ -486,7 +486,7 @@ module Erp
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
           end
 
-          @customers = Erp::Contacts::Contact#.search(params)
+          @customers = Erp::Contacts::Contact.search(params)
             .where.not(id: Erp::Contacts::Contact.get_main_contact.id)
           
           if glb[:contact_group_id].present?
@@ -554,7 +554,7 @@ module Erp
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
           end
           
-          @suppliers = Erp::Contacts::Contact#.search(params)
+          @suppliers = Erp::Contacts::Contact.search(params)
             .where.not(id: Erp::Contacts::Contact.get_main_contact.id)
           
           if glb[:contact_group_id].present?
