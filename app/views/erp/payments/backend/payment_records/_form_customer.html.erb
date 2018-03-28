@@ -4,8 +4,17 @@
             <div class="col-md-12">
                 <div class="custom-show text-center">
                     <h4 class="font-yellow bold uppercase">
-                        <%= t("#{payment_record.pay_receive}") %>
-                        <%= t('.customer_liability') %>
+                        <% if Erp::Core.available?("ortho_k") %>
+                            <% if @payment_record.account == Erp::Payments::PaymentRecord.get_account_for_debt %>
+                                Cấu hình <%= t('.customer_liability') %>
+                            <% else %>
+                                <%= t("#{payment_record.pay_receive}") %>
+                                <%= t('.customer_liability') %>
+                            <% end %>
+                        <% else %>
+                            <%= t("#{payment_record.pay_receive}") %>
+                            <%= t('.customer_liability') %>
+                        <% end %>
                     </h4>
                 </div>
             </div>

@@ -113,16 +113,39 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <%= erp_form_control("dataselect", {
-                            name: 'payment_record[account_id]',
-                            value: payment_record.account_id,
-                            text: payment_record.account_name,
-                            placeholder: t(".choose_bank_account_#{payment_record.pay_receive}"),
-                            label: t('.bank_account'),
-                            url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
-                            required: true,
-                            errors: payment_record.errors.full_messages_for(:account_id)
-                        }) %>
+                        <% if Erp::Core.available?("ortho_k") %>
+                            <% if @payment_record.account == Erp::Payments::PaymentRecord.get_account_for_debt %>
+                                <div class="form-group">
+                                    <label>Tài khoản ghi nợ:</label>
+                                    <div class="form-control">
+                                        <input hidden name="payment_record[account_id]" value="<%= payment_record.account_id %>" />
+                                        <span><%= payment_record.account_name %></span>
+                                    </div>
+                                </div>
+                            <% else %>
+                                <%= erp_form_control("dataselect", {
+                                    name: 'payment_record[account_id]',
+                                    value: payment_record.account_id,
+                                    text: payment_record.account_name,
+                                    placeholder: t(".choose_bank_account_#{payment_record.pay_receive}"),
+                                    label: t('.bank_account'),
+                                    url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+                                    required: true,
+                                    errors: payment_record.errors.full_messages_for(:account_id)
+                                }) %>
+                            <% end %>
+                        <% else %>
+                            <%= erp_form_control("dataselect", {
+                                name: 'payment_record[account_id]',
+                                value: payment_record.account_id,
+                                text: payment_record.account_name,
+                                placeholder: t(".choose_bank_account_#{payment_record.pay_receive}"),
+                                label: t('.bank_account'),
+                                url: erp_payments.dataselect_backend_accounts_path(format: 'json'),
+                                required: true,
+                                errors: payment_record.errors.full_messages_for(:account_id)
+                            }) %>
+                        <% end %>
                     </div>
                     <div class="col-md-6">
                         <%= erp_form_control("dataselect", {

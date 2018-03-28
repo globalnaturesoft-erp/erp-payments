@@ -54,6 +54,7 @@ module Erp
         def new
           @payment_record = PaymentRecord.new
           @payment_record.payment_date = Time.now
+          @payment_record.payment_date = params[:payment_date] if params[:payment_date].present?
           @payment_record.accountant = current_user
 
           if params[:customer_id].present?
@@ -70,6 +71,10 @@ module Erp
 
           if params[:payment_type_id].present?
             @payment_record.payment_type = Erp::Payments::PaymentType.find(params[:payment_type_id])
+          end
+
+          if params[:account_id].present?
+            @payment_record.account = Erp::Payments::Account.find(params[:account_id])
           end
 
           if params[:pay_receive].present?
