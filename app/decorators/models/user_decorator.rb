@@ -129,7 +129,7 @@ Erp::User.class_eval do
   def payment_for_contact_sales_commission_amount(params={})
     total = 0.0
     self.payment_for_contact_sales_payment_records(params).each do |pr|
-      total += pr.for_contact_commission_amount.to_f
+      total += pr.for_contact_commission_amount(params).to_f
     end
     return total
   end

@@ -533,8 +533,8 @@ module Erp::Payments
       #
       #commission_result = ((amount/debt_amount) * (debt_amount - commission_amount)) * (percent/100.0)
 
-      debt_amount = customer.sales_total_amount(to_date: options[:to_date])
-      commission_amount = customer.customer_commission_total_amount(to_date: options[:to_date])
+      debt_amount = customer.sales_total_amount(from_date: options[:from_date], to_date: options[:to_date])
+      commission_amount = customer.customer_commission_total_amount(from_date: options[:from_date], to_date: options[:to_date])
       percent = customer_commission_percent.to_f
 
       commission_result = ((amount/debt_amount) * (debt_amount - commission_amount)) * (percent/100.0)
