@@ -533,13 +533,38 @@ module Erp::Payments
       #
       #commission_result = ((amount/debt_amount) * (debt_amount - commission_amount)) * (percent/100.0)
 
-      debt_amount = customer.sales_total_amount(from_date: options[:from_date], to_date: options[:to_date])
-      commission_amount = customer.customer_commission_total_amount(from_date: options[:from_date], to_date: options[:to_date])
+      #debt_amount = customer.sales_total_amount(from_date: options[:from_date], to_date: options[:to_date])
+      #commission_amount = customer.customer_commission_total_amount(from_date: options[:from_date], to_date: options[:to_date])
+      #percent = customer_commission_percent.to_f
+      #
+      #commission_result = ((amount/debt_amount) * (debt_amount - commission_amount)) * (percent/100.0)
+      #
+      #return debt_amount == 0.0 ? 0.0 : commission_result
+      
       percent = customer_commission_percent.to_f
-
-      commission_result = ((amount/debt_amount) * (debt_amount - commission_amount)) * (percent/100.0)
-
-      return debt_amount == 0.0 ? 0.0 : commission_result
+      commission_amount = self.calculate_commission_amount(options)
+      
+      return (amount - commission_amount) * (percent/100.0)
+    end
+    
+    # calculate commission amount for payment record
+    def calculate_commission_amount(options={})
+      commission_amount = customer.customer_commission_debt_amount(from_date: options[:from_date], to_date: options[:to_date])
+      
+      # all payment record in period
+      payments = employee.payment_for_contact_sales_payment_records(options)
+        .where('(payment_date < ?) OR (payment_date = ? AND created_at < ?)', self.payment_date, self.payment_date, self.created_at)
+        .where.not(id: self.id)
+        .order('payment_date, created_at')
+      payments.each do |pr|
+        if pr.amount > commission_amount
+          commission_amount = 0
+        else
+          commission_amount = commission_amount - pr.amount
+        end
+      end
+      
+      commission_amount
     end
 
     # check if new account

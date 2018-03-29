@@ -52,8 +52,7 @@ Erp::Contacts::Contact.class_eval do
 
   # Tong ban hang sau khi da tru hang bi tra lai
   def self.sales_total_amount(params={})
-    total = self.sales_order_total_amount(params)
-    
+    total = self.sales_order_total_amount(params)    
     total -= self.sales_return_total_amount(params)
 
     return total
