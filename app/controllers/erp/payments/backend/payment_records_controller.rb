@@ -352,12 +352,15 @@ module Erp
           if @customer.present?
             @address = view_context.display_contact_address(@customer)
           end
+          
           if @supplier.present?
             @address = view_context.display_contact_address(@supplier)
           end
+          
           if @employee.present?
             @address = (@employee.contact.nil? ? '' : view_context.display_contact_address(@employee.contact))
           end
+          
           if @order.present?
             if @order.sales?
               @address = view_context.display_contact_address(@order.customer)
@@ -365,6 +368,8 @@ module Erp
               @address = view_context.display_contact_address(@order.supplier)
             end
           end
+          
+          #@address = params[:address] if params[:address].present?
         end
 
         def ajax_employee_field

@@ -1,9 +1,9 @@
 <%= form_for([erp_payments, :backend, payment_record]) do |f| %>
     <div class="form-body">
-        <div class="row">
+        <div class="row mb-10">
             <div class="col-md-12">
                 <div class="custom-show text-center">
-                    <h4 class="font-yellow bold uppercase">
+                    <h4 class="font-green-meadow bold uppercase">
                         <%= t("#{payment_record.pay_receive}") %>
                         <%= t('.employee_commission') %>
                         <% if defined?(@period) %>
@@ -12,6 +12,8 @@
                     </h4>
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-md-12">
                 <div class="portlet light bordered">
                     <div class="portlet-body form">
