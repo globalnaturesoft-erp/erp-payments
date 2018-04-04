@@ -1,0 +1,65 @@
+<% if @product_returns.count > 0 %>
+    <h4 class="profile-desc-title bold"><i class="glyphicon glyphicon-hand-right"></i> Chi tiết hàng bán bị trả lại</h4>
+
+    <table class="table table-bordered table-advance order-column">
+        <thead class="flip-content">
+            <tr>
+                <td class="text-center bold" colspan="4">Tổng trả</td>
+                <td class="stock-num text-center bold font-red-thunderbird"><%= @full_product_returns.total_delivery_quantity %></td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_price(@full_product_returns.total_amount) %></td>
+                <td class="stock-num text-right bold font-red-thunderbird"></td>
+            </tr>
+            <tr>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Mã trả hàng</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Ngày trả hàng</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Sản phẩm</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Đơn giá</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Số lượng</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Tổng cộng</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center"><%= t('.actions') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @product_returns.each do |product_return| %>
+                <tr>
+                    <td class="bg-grey bg-font-grey text-left text-nowrap bold"><%= qdelivery_link(product_return) %></td>
+                    <td class="bg-grey bg-font-grey text-center bold"><%= format_date(product_return.date) %></td>
+                    <td class="bg-grey bg-font-grey text-left" colspan="2">
+                        <% if Erp::Core.available?("ortho_k") %>
+                            <% if !product_return.get_related_order.nil? %>
+                                <% if product_return.get_related_order.patient.present? or product_return.get_related_order.patient_state.present? %>
+                                    <strong>BN: </strong>
+                                    <% if product_return.get_related_order.patient.present? and product_return.get_related_order.patient_state.present? %>
+                                        <%= product_return.get_related_order.patient_name %> (<%= product_return.get_related_order.patient_state_name %>)
+                                    <% else %>
+                                        <%= product_return.get_related_order.patient_name %><%= product_return.get_related_order.patient_state_name %>
+                                    <% end %>
+                                <% end %>
+                            <% end %>
+                        <% end %>
+                    </td>
+                    <td class="bg-grey bg-font-grey text-center bold"><%= format_number(product_return.total_delivery_quantity) %></td>
+                    <td class="bg-grey bg-font-grey text-right bold"><%= format_price(product_return.total_amount) %></td>
+                    <td class="bg-grey text-right">
+                        <%= accounting_delivery_dropdown_actions(product_return) %>
+                    </td>
+                </tr>
+                <% product_return.delivery_details.each do |delivery_detail| %>
+                    <tr>
+                        <td class="text-left" colspan="2"></td>
+                        <td class="text-left"><%= delivery_detail.product_name %></td>
+                        <td class=" text-right"><%= format_price(delivery_detail.price) %></td>
+                        <td class=" text-center"><%= format_number(delivery_detail.quantity) %></td>
+                        <td class=" text-right"><%= format_price(delivery_detail.cache_total) %></td>
+                        <td class=" text-right"></td>
+                    </tr>
+                <% end %>
+            <% end %>
+        </tbody>
+    </table>
+    <%= erp_datalist_pagination(@product_returns) %>
+<% else %>
+    <div class="alert alert-warning alert-dismissable no-margin text-center">
+        Không tìm thấy chi tiết trả hàng kỳ này!
+    </div>
+<% end %>

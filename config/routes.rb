@@ -31,24 +31,36 @@ Erp::Payments::Engine.routes.draw do
 					put 'set_done_all'
 					put 'set_deleted_all'
 					post 'order_payment_record_list'
+					
 					get 'sales_orders_tracking'
 					post 'sales_orders_tracking_table'
 					get 'sales_orders_tracking_table_details'
 					post 'sales_orders_tracking_payment_records_list'
 					post 'sales_orders_tracking_sales_export_list'
 					post 'sales_orders_tracking_sales_import_list'
+					
 					get 'liabilities_tracking'
 					post 'liabilities_tracking_table'
 					get 'liabilities_tracking_table_details'
+					post 'liabilities_tracking_payment_records_list'
+					post 'liabilities_tracking_sales_export_list'
+					post 'liabilities_tracking_sales_import_list'
+					
 					get 'supplier_liabilities_tracking'
 					post 'supplier_liabilities_tracking_table'
 					get 'supplier_liabilities_tracking_table_details'
+					post 'supplier_liabilities_tracking_payment_records_list'
+					post 'supplier_liabilities_tracking_sales_export_list'
+					post 'supplier_liabilities_tracking_sales_import_list'
+					
 					get 'commission'
 					post 'commission_table'
 					get 'commission_details'
+					
 					get 'customer_commission'
 					post 'customer_commission_table'
 					get 'customer_commission_details'
+					
 					get 'ajax_info_form_for_order'
 					get 'ajax_info_form_for_customer'
 					get 'ajax_info_form_for_supplier'
@@ -59,9 +71,11 @@ Erp::Payments::Engine.routes.draw do
 					get 'ajax_employee_field'
 					get 'ajax_amount_field'
 					get 'ajax_address_field'
+					
 					get 'show_modal'
 					post 'show_list'
 					get 'pdf'
+					
 					get 'list_xlsx'
 					get 'pay_xlsx'
 					get 'receive_xlsx'

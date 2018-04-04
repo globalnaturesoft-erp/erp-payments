@@ -432,13 +432,23 @@ vi:
           liabilities_tracking_table_details:
             orders_list: "Hóa đơn bán hàng trong kỳ"
             payment_records_list: "Lịch sử thanh toán trong kỳ"
+            sales_export_list: "Chi tiết bán hàng trong kỳ"
+            sales_import_list: "Chi tiết trả hàng trong kỳ"
+          liabilities_tracking_payment_records_list:
             receive_customer: "Thu tiền công nợ"
             pay_customer: "Hoàn tiền công nợ"
             actions: "Hành động"
-            view: "Xem chi tiết"
-            edit: "Chỉnh sửa"
-            delete: "Hủy phiếu"
-            delete_confirm: "Bạn có chắc chắn muốn hủy phiếu này?"
+          liabilities_tracking_sales_export_list:
+            paid: "Đã thanh toán"
+            overdue: "Chưa thanh toán"
+            debt: "Đang ghi nợ"
+            overpaid: "Thanh toán dư"
+          liabilities_tracking_sales_import_list:
+            actions: "Hành động"
+            paid: "Đã thanh toán"
+            overdue: "Chưa thanh toán"
+            owing: "Đang ghi nợ"
+            overpaid: "Thanh toán dư"
           supplier_liabilities_tracking:
             supplier_liabilities_tracking: "Công nợ cho nhà cung cấp"
             from_date: "Từ ngày"
