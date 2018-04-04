@@ -98,7 +98,7 @@ wb.styles do |s|
     footer[:columns] << @total_paid
     footer[:styles] << (s.add_style border.deep_merge(number).deep_merge(bold))
     
-    header[:columns] << 'Diễn giải'
+    header[:columns] << 'Loại'
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
     subheader[:columns] << ''
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
@@ -138,7 +138,7 @@ wb.styles do |s|
     footer[:columns] << ''
     footer[:styles] << (s.add_style border)
     
-    header[:columns] << 'Ghi chú'
+    header[:columns] << 'Diễn giải'
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
     subheader[:columns] << ''
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
