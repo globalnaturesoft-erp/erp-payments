@@ -631,7 +631,7 @@ module Erp
           end
 
           # @todo change user 'admin@globalnaturesoft.com'
-          @employees = Erp::User.where('id != ?', Erp::User.first.id)
+          @employees = Erp::User.where('erp_users.id NOT IN (?)', Erp::User.first.id)
           @employees = Erp::User.where(id: @global_filters[:employee]) if @global_filters[:employee].present?
           
           @employees = @employees.paginate(:page => params[:page], :per_page => 10)
@@ -645,7 +645,7 @@ module Erp
             @period = Erp::Periods::Period.find(@global_filters[:period])
 
             @orders = Erp::Orders::Order.where(payment_for: Erp::Orders::Order::PAYMENT_FOR_ORDER)
-            @contacts = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
+            @contacts = Erp::Contacts::Contact.where('erp_contacts_contacts.id NOT IN (?)', Erp::Contacts::Contact.get_main_contact.id)
             @employee = Erp::User.find(params[:employee_id])
 
             @options = {
@@ -688,8 +688,24 @@ module Erp
           if glb[:customer].present?
             @customers = Erp::Contacts::Contact.where(id: glb[:customer])
           else
-            @customers = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
+            @customers = Erp::Contacts::Contact.where('erp_contacts_contacts.id NOT IN (?)', Erp::Contacts::Contact.get_main_contact.id)
               .where(is_customer: true)
+          end
+          
+          @customers = @customers.search(params)
+          
+          #filters // only customers with records
+          if params.to_unsafe_hash["filters"].present?
+            params.to_unsafe_hash["filters"].each do |ft|
+              ft[1].each do |cond|
+                if cond[1]["name"] == 'in_period_active'
+                  @customers = @customers.get_customer_commission_payment_chasing_contacts(
+                    from_date: @from,
+                    to_date: @to
+                  )
+                end
+              end
+            end
           end
           
           @customers = @customers.paginate(:page => params[:page], :per_page => 20)

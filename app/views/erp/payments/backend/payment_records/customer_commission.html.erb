@@ -47,14 +47,12 @@
 
 <%= erp_datalist(
     url: erp_payments.customer_commission_table_backend_payment_records_path,
-    keywords: [
-        
-    ],
+    keyword: true,
     actions: [
         
     ],
     filters: [
-        
+        {text: 'Có phát sinh trong kỳ', name: 'in_period_active', value: true, checked: true}
     ],
     columns: [
         {
