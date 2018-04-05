@@ -556,22 +556,31 @@ module Erp
           if params[:to_date].present?
             @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
           end
+          
           @full_payment_records = @payment_records
-          @payment_records = @payment_records.paginate(:page => params[:page], :per_page => 10)
+          
+          @payment_records = @payment_records.order('payment_date DESC, created_at DESC')
+            .paginate(:page => params[:page], :per_page => 10)
         end
         
         def liabilities_tracking_sales_export_list
           @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders
             .payment_for_contact_orders(params.to_unsafe_hash)
+          
           @full_orders = @orders
-          @orders = @orders.paginate(:page => params[:page], :per_page => 10)
+          
+          @orders = @orders.order('order_date DESC, created_at DESC')
+            .paginate(:page => params[:page], :per_page => 10)
         end
         
         def liabilities_tracking_sales_import_list
           @product_returns = Erp::Contacts::Contact.find(params[:customer_id]).sales_product_returns
             .get_deliveries_with_payment_for_contact(params.to_unsafe_hash)
+          
           @full_product_returns = @product_returns
-          @product_returns = @product_returns.paginate(:page => params[:page], :per_page => 10)
+          
+          @product_returns = @product_returns.order('date DESC, created_at DESC')
+            .paginate(:page => params[:page], :per_page => 10)
         end
 
         # SUPPLIER / liabilities tracking table

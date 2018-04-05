@@ -443,12 +443,13 @@ vi:
             overdue: "Chưa thanh toán"
             debt: "Đang ghi nợ"
             overpaid: "Thanh toán dư"
-          liabilities_tracking_sales_import_list:
             actions: "Hành động"
+          liabilities_tracking_sales_import_list:
             paid: "Đã thanh toán"
             overdue: "Chưa thanh toán"
             owing: "Đang ghi nợ"
             overpaid: "Thanh toán dư"
+            actions: "Hành động"
           supplier_liabilities_tracking:
             supplier_liabilities_tracking: "Công nợ cho nhà cung cấp"
             from_date: "Từ ngày"
