@@ -61,6 +61,10 @@
         </tbody>
     </table>
     <%= erp_datalist_pagination(@orders) %>
+    
+    <div>
+        <a target="_blank" href="<%= erp_accounting.update_discount_backend_sales_orders_path(params.to_unsafe_hash.merge(customer_id: params[:customer_id])) %>" class="btn btn-primary">Tính giảm giá</a>
+    </div>
 <% else %>
     <div class="alert alert-warning alert-dismissable no-margin text-center">
         Không tìm thấy chi tiết bán hàng kỳ này!
