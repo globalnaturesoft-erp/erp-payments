@@ -53,7 +53,7 @@
                         <td class=" text-right"><%= format_price(order_detail.price) %></td>
                         <td class=" text-center"><%= order_detail.quantity %></td>
                         <td class=" text-right"><%= format_price(order_detail.discount_amount) %></td>
-                        <td class=" text-right"><%= format_price(order_detail.subtotal) %></td>
+                        <td class=" text-right"><%= format_price(order_detail.total_without_tax) %></td>
                         <td class="text-left" colspan="2"></td>
                     </tr>
                 <% end %>
