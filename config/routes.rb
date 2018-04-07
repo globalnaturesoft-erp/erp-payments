@@ -81,6 +81,7 @@ Erp::Payments::Engine.routes.draw do
 					get 'receive_xlsx'
 
 					get 'xlsx_export_liabilities'
+					post 'xlsx_export_liabilities'
 				end
 			end
 			resources :debts do
