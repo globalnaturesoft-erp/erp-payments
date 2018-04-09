@@ -1,24 +1,26 @@
-<div class="alert alert-info no-margin">
-    <table class="table table-info-detail no-margin">
-        <tbody>
-            <tr>
-                <td> Tổng hoa hồng: </td>
-                <td>
-                    <strong><%= format_price(@employee.commission_amount(@options)) %></strong>
-                </td>
-            </tr>
-            <tr>
-                <td> Tổng hoa hồng đã chi: </td>
-                <td>
-                    <strong><%= format_price(@employee.commission_paid_amount(@options)) %></strong>
-                </td>
-            </tr>
-            <tr>
-                <td> Tổng chưa chi (còn lại): </td>
-                <td>
-                    <strong><%= format_price(@employee.commission_remain_amount(@options)) %></strong>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<% if @employee.present? %>
+    <div class="alert alert-info no-margin">
+        <table class="table table-info-detail no-margin">
+            <tbody>
+                <tr>
+                    <td> Tổng hoa hồng: </td>
+                    <td>
+                        <strong><%= format_price(@employee.commission_amount(@options)) %></strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td> Tổng hoa hồng đã chi: </td>
+                    <td>
+                        <strong><%= format_price(@employee.commission_paid_amount(@options)) %></strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td> Tổng chưa chi (còn lại): </td>
+                    <td>
+                        <strong><%= format_price(@employee.commission_remain_amount(@options)) %></strong>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+<% end %>

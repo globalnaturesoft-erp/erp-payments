@@ -1,30 +1,32 @@
-<div class="alert alert-info no-margin">
-    <table class="table table-info-detail no-margin">
-        <tbody>
-            <tr>
-                <td colspan="2">
-                    <strong><i class="fa fa-usd"></i> Chiết khấu của khách hàng  (tính đến <%= Time.now.strftime("%H:%M - %d/%m/%Y") %>)</strong>
-                    <hr class="mt-5 mb-5">
-                </td>
-            </tr>
-            <tr>
-                <td> Tổng chiết khấu: </td>
-                <td>
-                    <strong><%= format_price(@customer.customer_commission_total_amount) %></strong>
-                </td>
-            </tr>
-            <tr>
-                <td> Chiết khấu đã chi: </td>
-                <td>
-                    <strong><%= format_price(@customer.customer_commission_paid_amount) %></strong>
-                </td>
-            </tr>
-            <tr>
-                <td> Chiết khấu còn lại: </td>
-                <td>
-                    <strong><%= format_price(@customer.customer_commission_debt_amount) %></strong>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<% if @customer.present? %>
+    <div class="alert alert-info no-margin">
+        <table class="table table-info-detail no-margin">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <strong><i class="fa fa-usd"></i> Chiết khấu của khách hàng  (tính đến <%= Time.now.strftime("%H:%M - %d/%m/%Y") %>)</strong>
+                        <hr class="mt-5 mb-5">
+                    </td>
+                </tr>
+                <tr>
+                    <td> Tổng chiết khấu: </td>
+                    <td>
+                        <strong><%= format_price(@customer.customer_commission_total_amount) %></strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td> Chiết khấu đã chi: </td>
+                    <td>
+                        <strong><%= format_price(@customer.customer_commission_paid_amount) %></strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td> Chiết khấu còn lại: </td>
+                    <td>
+                        <strong><%= format_price(@customer.customer_commission_debt_amount) %></strong>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+<% end %>

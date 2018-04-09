@@ -245,8 +245,10 @@ module Erp
 
         def ajax_info_form_for_order
           @order = Erp::Orders::Order.where(id: params[:datas][0]).first
-          @contact = @order.customer if @order.sales?
-          @contact = @order.supplier if @order.purchase?
+          if @order.present?
+            @contact = @order.customer if @order.sales?
+            @contact = @order.supplier if @order.purchase?
+          end
           render layout: false
         end
 
@@ -282,7 +284,7 @@ module Erp
 
         def ajax_info_form_for_delivery
           @delivery = Erp::Qdeliveries::Delivery.where(id: params[:datas][0]).first
-          @contact = @delivery.customer
+          @contact = @delivery.customer if @delivery.present?
           render layout: false
         end
 
@@ -302,6 +304,7 @@ module Erp
           @supplier = Erp::Contacts::Contact.where(id: params[:datas][2]).first
           @delivery = Erp::Qdeliveries::Delivery.where(id: params[:datas][3]).first
           @employee = Erp::User.where(id: params[:datas][4]).first
+          
           if params[:amount].present?
             @amount = params[:amount]
           else
@@ -327,7 +330,7 @@ module Erp
               @amount = nil
             end
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_COMMISSION
-              @amount = @employee.commission_remain_amount
+              @amount = @employee.commission_remain_amount if @employee.present?
               if params[:period_id].present?
                 @period = Erp::Periods::Period.find(params[:period_id])
 
@@ -337,7 +340,7 @@ module Erp
                   target_period: @period,
                 }
 
-                @amount = @employee.commission_remain_amount(@options)
+                @amount = @employee.commission_remain_amount(@options) if @employee.present?
               end
             end
           end
@@ -348,7 +351,8 @@ module Erp
           @supplier = Erp::Contacts::Contact.where(id: params[:datas][1]).first
           @employee = Erp::User.where(id: params[:datas][2]).first
           @order = Erp::Orders::Order.where(id: params[:datas][3]).first
-
+          @delivery = Erp::Qdeliveries::Delivery.where(id: params[:datas][4]).first
+          
           if @customer.present?
             @address = view_context.display_contact_address(@customer)
           end
@@ -358,7 +362,7 @@ module Erp
           end
           
           if @employee.present?
-            @address = (@employee.contact.nil? ? '' : view_context.display_contact_address(@employee.contact))
+            @address = (@employee.contact.nil? ? @employee.address : view_context.display_contact_address(@employee.contact))
           end
           
           if @order.present?
@@ -369,7 +373,19 @@ module Erp
             end
           end
           
-          #@address = params[:address] if params[:address].present?
+          if @delivery.present?
+            @address = view_context.display_contact_address(@delivery.customer) if [
+              Erp::Qdeliveries::Delivery::TYPE_SALES_EXPORT,
+              Erp::Qdeliveries::Delivery::TYPE_SALES_IMPORT].include?(@delivery.delivery_type)
+            @address = view_context.display_contact_address(@delivery.supplier) if [
+              Erp::Qdeliveries::Delivery::TYPE_PURCHASE_EXPORT,
+              Erp::Qdeliveries::Delivery::TYPE_PURCHASE_IMPORT].include?(@delivery.delivery_type)
+            @address = @delivery.address if !@delivery.address.nil?
+          end
+          
+          @is_edit = params[:payment_record_id].present? ? true : false
+          @new_address = @address
+          @address = params[:address] if params[:address].present?
         end
 
         def ajax_employee_field

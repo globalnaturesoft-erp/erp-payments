@@ -1,37 +1,39 @@
-<div class="alert alert-info no-margin">
-    <table class="table table-info-detail no-margin">
-        <input type="hidden" name="payment_record[customer_id]" value="<%= @contact.id %>">
-        <tbody>
-            <tr>
-                <td colspan="2">
-                    <strong><i class="fa fa-usd"></i> Chi tiết thanh toán trả hàng  (tính đến <%= Time.now.strftime("%H:%M - %d/%m/%Y") %>)</strong>
-                    <hr class="mt-5 mb-5">
-                </td>
-            </tr>
-            <tr>
-                <td> Khách hàng: </td>
-                <td class="text-right">
-                    <strong><%= contact_link(@delivery.customer, (@delivery.customer_name + " (#{@delivery.customer_code})")) %></strong>
-                </td>
-            </tr>
-            <tr>
-                <td> Tổng cần chi trả: </td>
-                <td class="text-right">
-                    <strong><%= format_price(@delivery.total_amount) %></strong>
-                </td>
-            </tr>
-            <tr>
-                <td> Số tiền đã chi: </td>
-                <td class="text-right">
-                    <strong><%= format_price(@delivery.paid_amount) %></strong>
-                </td>
-            </tr>
-            <tr>
-                <td> Số tiền còn lại: </td>
-                <td class="text-right">
-                    <strong><%= format_price(@delivery.remain_amount) %></strong>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<% if @delivery.present? %>
+    <div class="alert alert-info no-margin">
+        <table class="table table-info-detail no-margin">
+            <input type="hidden" name="payment_record[customer_id]" value="<%= @contact.id %>">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <strong><i class="fa fa-usd"></i> Chi tiết thanh toán trả hàng  (tính đến <%= Time.now.strftime("%H:%M - %d/%m/%Y") %>)</strong>
+                        <hr class="mt-5 mb-5">
+                    </td>
+                </tr>
+                <tr>
+                    <td> Khách hàng: </td>
+                    <td class="text-right">
+                        <strong><%= contact_link(@delivery.customer, (@delivery.customer_name + " (#{@delivery.customer_code})")) %></strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td> Tổng cần chi trả: </td>
+                    <td class="text-right">
+                        <strong><%= format_price(@delivery.total_amount) %></strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td> Số tiền đã chi: </td>
+                    <td class="text-right">
+                        <strong><%= format_price(@delivery.paid_amount) %></strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td> Số tiền còn lại: </td>
+                    <td class="text-right">
+                        <strong><%= format_price(@delivery.remain_amount) %></strong>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+<% end %>
