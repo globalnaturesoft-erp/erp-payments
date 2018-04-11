@@ -33,7 +33,14 @@
 </div>
 
 <div class="text-right mb-20">
-    <a target="_blank" class="btn btn-primary global-filter-button" href="<%= erp_payments.export_xlsx_all_details_backend_payment_records_path(params.to_unsafe_hash) %>">
+    <a
+        target="_blank"
+        class="btn btn-primary with-checkboxes-link"
+        data-checkboxes="patient_col|Bệnh nhân,patient_state_col|Trạng thái bệnh nhân,sales_discount_col|Bán hàng: Giảm giá|checked,sales_total_without_tax_col|Bán hàng: Thành tiền (trước thuế)|checked,sales_tax_col|Bán hàng: Thuế|checked,sales_total_col|Bán hàng: Tổng cộng (sau thuế)|checked,return_amount_col|Trả hàng: Thành tiền|checked,return_discount_col|Trả hàng: Giảm giá|checked,return_total_col|Trả hàng: Tổng cộng|checked"
+        data-checkboxes-desc="Chọn cột thêm vào sổ chi tiết"
+        href="<%= erp_payments.export_xlsx_all_details_backend_payment_records_path(params.to_unsafe_hash) %>"
+        
+    >
         Xuất chi tiết công nợ
     </a>
 </div>
