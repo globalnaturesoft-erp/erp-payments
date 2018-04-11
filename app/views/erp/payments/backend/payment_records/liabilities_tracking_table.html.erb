@@ -142,9 +142,12 @@
                                     customer_id: customer.id,
                                     from_date: @from,
                                     to_date: @to,
-                                    format: 'xlsx',
+                                    format: 'xlsx',                                    
                                 ),
                                 target: '_blank',
+                                class: 'with-checkboxes-link',
+                                data_checkboxes: 'patient_col|Bệnh nhân,patient_state_col|Trạng thái bệnh nhân,sales_discount_col|Bán hàng: Giảm giá|checked,sales_total_without_tax_col|Bán hàng: Thành tiền (trước thuế)|checked,sales_tax_col|Bán hàng: Thuế|checked,sales_total_col|Bán hàng: Tổng cộng (sau thuế)|checked,return_amount_col|Trả hàng: Thành tiền|checked,return_discount_col|Trả hàng: Giảm giá|checked,return_total_col|Trả hàng: Tổng cộng|checked',
+                                data_checkboxes_desc: 'Chọn cột thêm vào sổ chi tiết',
                             },
                         ]
                     ) %>
