@@ -21,7 +21,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td> Tổng phải thu (còn lại): @period_id = <%= @period_id %></td>
+                    <td> Tổng phải thu (còn lại): </td>
                     <td>
                         <strong><%= format_price(@customer.sales_debt_amount(from_date: @from_date, to_date: @to_date, period_id: @period_id)) %></strong>
                     </td>

@@ -10,7 +10,7 @@ module Erp::Payments
     belongs_to :credit_account, class_name: "Erp::Payments::AccountingAccount"
 
     if Erp::Core.available?("periods")
-      belongs_to :period, class_name: "Erp::Periods::Period"
+      belongs_to :period, class_name: "Erp::Periods::Period", optional: true
       
       def period_name
         period.present? ? period.name : ''
