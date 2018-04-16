@@ -266,6 +266,8 @@ vi:
             customer: "Khách hàng"
             choose_customer: "Chọn khách hàng trong danh sách"
             help_customer: "Người trả/nhận tiền là ai?"
+            period: "Chu kỳ thời gian"
+            choose_period: "Chọn chu kỳ thời gian công nợ"
           form_supplier:
             supplier_liability: "Công nợ nhà cung cấp"
             supplier: "Nhà cung cấp"

@@ -254,6 +254,13 @@ module Erp
 
         def ajax_info_form_for_customer
           @customer = Erp::Contacts::Contact.where(id: params[:datas][0]).first
+          #@period = Erp::Periods::Period.where(id: params[:datas][1]).first
+          @period = Erp::Periods::Period.where(id: params[:form_data][:payment_record][:period_id]).first
+          
+          @period_id = @period.id if @period.present?
+          @from_date = @period.present? ? @period.from_date.beginning_of_day : nil
+          @to_date = @period.present? ? @period.to_date.end_of_day : Time.now
+            
           render layout: false
         end
 
@@ -305,6 +312,12 @@ module Erp
           @delivery = Erp::Qdeliveries::Delivery.where(id: params[:datas][3]).first
           @employee = Erp::User.where(id: params[:datas][4]).first
           
+          @period = Erp::Periods::Period.where(id: params[:form_data][:payment_record][:period_id]).first
+          @period_id = @period.id if @period.present?
+          
+          @from_date = @period.present? ? @period.from_date.beginning_of_day : nil
+          @to_date = @period.present? ? @period.to_date.end_of_day : Time.now
+          
           if params[:amount].present?
             @amount = params[:amount]
           else
@@ -315,10 +328,10 @@ module Erp
               @amount = @order.remain_amount if @order.present?
             end
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_CUSTOMER
-              @amount = @customer.sales_debt_amount(to_date: Time.now) if @customer.present?
+              @amount = @customer.sales_debt_amount(from_date: @from_date, to_date: @to_date, period_id: @period_id) if @customer.present?
             end
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_SUPPLIER
-              @amount = @supplier.purchase_debt_amount(to_date: Time.now) if @supplier.present?
+              @amount = @supplier.purchase_debt_amount(from_date: @from_date, to_date: @to_date) if @supplier.present?
             end
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION
               @amount = @customer.customer_commission_debt_amount(to_date: Time.now) if @customer.present?
@@ -863,7 +876,7 @@ module Erp
           # Only allow a trusted parameter "white list" through.
           def payment_record_params
             params.fetch(:payment_record, {}).permit(:address, :payment_method, :debit_account_id, :credit_account_id, :code, :amount, :payment_date, :pay_receive, :description, :status, :order_id, :delivery_id,
-                                                     :accountant_id, :customer_id, :supplier_id, :employee_id, :account_id, :payment_type_id, :origin_doc)
+                                                     :accountant_id, :customer_id, :supplier_id, :employee_id, :account_id, :payment_type_id, :origin_doc, :period_id)
           end
       end
     end

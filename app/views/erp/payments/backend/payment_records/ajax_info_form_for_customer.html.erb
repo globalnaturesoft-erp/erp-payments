@@ -1,32 +1,32 @@
 <% if @customer.present? %>
-    <div class="alert alert-info no-margin">
+    <div class="alert alert-info no-margin mt-25">
         <table class="table table-info-detail no-margin">
             <tbody>
                 <tr>
                     <td colspan="2">
-                        <strong><i class="fa fa-calendar"></i> Thông tin công nợ (tính đến <%= Time.now.strftime("%H:%M - %d/%m/%Y") %>)</strong>
-                        <hr class="mt-5 mb-5">
+                        <strong><i class="fa fa-calendar"></i> Thông tin công nợ (<%= @period.present? ? @period.name : "tính đến #{@to_date.strftime("%H:%M - %d/%m/%Y")}" %>)</strong>
+                        <hr class="mt-5 mb-15">
                     </td>
                 </tr>
                 <tr>
                     <td> Tổng tiền công nợ: </td>
                     <td>
-                        <strong><%= format_price(@customer.sales_total_amount) %></strong>
+                        <strong><%= format_price(@customer.sales_total_amount(from_date: @from_date, to_date: @to_date)) %></strong>
                     </td>
                 </tr>
                 <tr>
                     <td> Tổng đã thanh toán: </td>
                     <td>
-                        <strong><%= format_price(@customer.sales_paid_amount) %></strong>
+                        <strong><%= format_price(@customer.sales_paid_amount(period_id: @period_id)) %></strong>
                     </td>
                 </tr>
                 <tr>
-                    <td> Tổng phải thu (còn lại): </td>
+                    <td> Tổng phải thu (còn lại): @period_id = <%= @period_id %></td>
                     <td>
-                        <strong><%= format_price(@customer.sales_debt_amount) %></strong>
+                        <strong><%= format_price(@customer.sales_debt_amount(from_date: @from_date, to_date: @to_date, period_id: @period_id)) %></strong>
                     </td>
                 </tr>
-                <% customer_commission = @customer.customer_commission_debt_amount %>
+                <% customer_commission = @customer.customer_commission_debt_amount(from_date: @from_date, to_date: @to_date) %>
                 <% if customer_commission > 0 %>
                     <tr class="text-danger">
                         <td> Chiết khấu nợ khách hàng: </td>
