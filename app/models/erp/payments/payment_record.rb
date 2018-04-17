@@ -454,22 +454,18 @@ module Erp::Payments
     def self.all_received(params={})
       query = self.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE)
 
-      if params[:period_id].present?
-        query = query.where(period_id: params[:period_id])
-      else
-        if params[:from_date].present?
-          query = query.where("payment_date >= ?", params[:from_date].beginning_of_day)
-        end
-  
-        if params[:to_date].present?
-          query = query.where("payment_date <= ?", params[:to_date].end_of_day)
-        end
-  
-        if params[:period].present?
-          query = query.where("payment_date >= ? AND payment_date <= ?",
-                              Erp::Periods::Period.find(params[:period]).from_date.beginning_of_day,
-                              Erp::Periods::Period.find(params[:period]).to_date.end_of_day)
-        end
+      if params[:from_date].present?
+        query = query.where("payment_date >= ?", params[:from_date].beginning_of_day)
+      end
+
+      if params[:to_date].present?
+        query = query.where("payment_date <= ?", params[:to_date].end_of_day)
+      end
+
+      if params[:period].present?
+        query = query.where("payment_date >= ? AND payment_date <= ?",
+                            Erp::Periods::Period.find(params[:period]).from_date.beginning_of_day,
+                            Erp::Periods::Period.find(params[:period]).to_date.end_of_day)
       end
 
       return query
@@ -479,22 +475,18 @@ module Erp::Payments
     def self.all_paid(params={})
       query = self.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY)
 
-      if params[:period_id].present?
-        query = query.where(period_id: params[:period_id])
-      else
-        if params[:from_date].present?
-          query = query.where("payment_date >= ?", params[:from_date].beginning_of_day)
-        end
-  
-        if params[:to_date].present?
-          query = query.where("payment_date <= ?", params[:to_date].end_of_day)
-        end
-  
-        if params[:period].present?
-          query = query.where("payment_date >= ? AND payment_date <= ?",
-                              Erp::Periods::Period.find(params[:period]).from_date.beginning_of_day,
-                              Erp::Periods::Period.find(params[:period]).to_date.end_of_day)
-        end
+      if params[:from_date].present?
+        query = query.where("payment_date >= ?", params[:from_date].beginning_of_day)
+      end
+
+      if params[:to_date].present?
+        query = query.where("payment_date <= ?", params[:to_date].end_of_day)
+      end
+
+      if params[:period].present?
+        query = query.where("payment_date >= ? AND payment_date <= ?",
+                            Erp::Periods::Period.find(params[:period]).from_date.beginning_of_day,
+                            Erp::Periods::Period.find(params[:period]).to_date.end_of_day)
       end
 
       return query
