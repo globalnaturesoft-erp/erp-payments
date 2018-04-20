@@ -168,11 +168,21 @@ module Erp::Payments
 
       if params[:period].present?
         query = query.where("payment_date >= ? AND payment_date <= ?",
-                            Erp::Periods::Period.find(params[:period]).from_date.beginning_of_day,
-                            Erp::Periods::Period.find(params[:period]).to_date.end_of_day)
+          Erp::Periods::Period.find(params[:period]).from_date.beginning_of_day,
+          Erp::Periods::Period.find(params[:period]).to_date.end_of_day)
       end
 
       return query
+    end
+
+    # Tong tien thu vao
+    def self.received(params={})
+      return Erp::Payments::PaymentRecord.all_done.all_received(params).where(account_id: self.ids).sum(:amount)
+    end
+
+    # Tong tien chi ra
+    def self.paid(params={})
+      return Erp::Payments::PaymentRecord.all_done.all_paid(params).where(account_id: self.ids).sum(:amount)
     end
     
     # So tien thu vao tai khoan
@@ -183,16 +193,6 @@ module Erp::Payments
     # So tien chi ra tu tai khoan
     def paid(params={})
       return Erp::Payments::PaymentRecord.all_done.all_paid(params).where(account_id: self.id).sum(:amount)
-    end
-
-    # Tong tien thu vao
-    def self.received(params={})
-      return Erp::Payments::PaymentRecord.all_done.received_amount(params)
-    end
-
-    # Tong tien chi ra
-    def self.paid(params={})
-      return Erp::Payments::PaymentRecord.all_done.paid_amount(params)
     end
 
     # So du tai khoan dau ky / cuoi ky
