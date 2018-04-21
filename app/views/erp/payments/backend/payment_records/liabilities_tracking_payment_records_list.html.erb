@@ -5,10 +5,10 @@
             <tr>
                 <td class="text-center bold" colspan="3">Tổng cộng</td>
                 <td class="stock-num text-center bold font-red-thunderbird"><%= format_price(@full_payment_records.sum(&:amount)) %></td>
-                <td class="stock-num text-right bold font-red-thunderbird" colspan="3"></td>
+                <td class="stock-num text-right bold font-red-thunderbird" colspan="4"></td>
             </tr>
             <tr>
-                <th width="15%" class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Mã thanh toán</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Mã thanh toán</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Ngày thanh toán</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Tên khách hàng</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Số tiền</th>
