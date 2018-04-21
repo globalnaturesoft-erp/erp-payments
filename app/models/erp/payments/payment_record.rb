@@ -258,6 +258,8 @@ module Erp::Payments
     after_save :update_cache_search
 		def update_cache_search
 			str = []
+			str << code.to_s.downcase.strip
+			str << amount.to_f.to_s
 			str << customer_name.to_s.downcase.strip if customer_name.to_s.downcase.strip.present?
 			str << supplier_name.to_s.downcase.strip if supplier_name.to_s.downcase.strip.present?
 			str << employee_name.to_s.downcase.strip if employee_name.to_s.downcase.strip.present?
