@@ -151,6 +151,40 @@ Erp::Contacts::Contact.class_eval do
 
     return result
   end
+  
+  # Sales paid amount by period //customers
+  def self.sales_paid_by_period_amount(options={})
+    query = Erp::Payments::PaymentRecord.all_done
+      .includes(:payment_type)
+      .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
+      .where(customer_id: self.ids)
+
+    result = - query.all_paid_by_period(options).sum(:amount) + query.all_received_by_period(options).sum(:amount)
+
+    return result
+  end
+  
+  # Sales paid amount by period //customer
+  def sales_paid_by_period_amount(options={})
+    query = Erp::Payments::PaymentRecord.all_done
+      .includes(:payment_type)
+      .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
+      .where(customer_id: self.id)
+
+    result = - query.all_paid_by_period(options).sum(:amount) + query.all_received_by_period(options).sum(:amount)
+
+    return result
+  end
+  
+  # Sales debt amount by period
+  def self.sales_debt_by_period_amount(options={})
+    self.sales_total_amount(options) - self.sales_paid_by_period_amount(options)
+  end
+  
+  # Sales debt amount by period
+  def sales_debt_by_period_amount(options={})
+    self.sales_total_amount(options) - self.sales_paid_by_period_amount(options)
+  end
 
   # Purchase debt amount for contact
   def self.purchase_debt_amount(params={})

@@ -506,6 +506,51 @@ module Erp::Payments
     def self.remain_amount(params={})
       self.received_amount(params) - self.paid_amount(params)
     end
+    
+    # Get all received by period
+    def self.all_received_by_period(options={})
+      query = self.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE)
+      query = query.joins(:period)
+      
+      if options[:period].present?
+        period = Erp::Periods::Period.find(options[:period])
+        options[:from_date] = period.from_date
+        options[:to_date] = period.to_date
+      end
+      
+      if options[:from_date].present?
+        query = query.where("erp_periods_periods.from_date >= ?", options[:from_date].beginning_of_month)
+      end
+
+      if options[:to_date].present?
+        query = query.where("erp_periods_periods.to_date <= ?", options[:to_date].end_of_month)
+      end
+
+      return query
+    end
+
+    # Get all paid by period
+    def self.all_paid_by_period(options={})
+      query = self.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY)
+      query = query.joins(:period)
+      
+      if options[:period].present?
+        period = Erp::Periods::Period.find(options[:period])
+        options[:from_date] = period.from_date
+        options[:to_date] = period.to_date
+      end
+      
+      if options[:from_date].present?
+        query = query.where("erp_periods_periods.from_date >= ?", options[:from_date].beginning_of_month)
+      end
+
+      if options[:to_date].present?
+        query = query.where("erp_periods_periods.to_date <= ?", options[:to_date].end_of_month)
+      end
+
+      return query
+    end
+    
     # ############################# END - REVIEWING ################################
 
     # revenue by period

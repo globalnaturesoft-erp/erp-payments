@@ -521,8 +521,8 @@ module Erp
             @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
             @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
           else
-            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
-            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date.beginning_of_day : Time.now.beginning_of_month
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date.end_of_day : Time.now.end_of_month
           end
 
           @customers = Erp::Contacts::Contact.search(params)
@@ -563,27 +563,27 @@ module Erp
 
         # CUSTOMER / liabilities tracking table details
         def liabilities_tracking_table_details
-          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders
-            .payment_for_contact_orders(params.to_unsafe_hash)
-
-          @product_returns = Erp::Contacts::Contact.find(params[:customer_id]).sales_product_returns
-            .get_deliveries_with_payment_for_contact(params.to_unsafe_hash)
-
-          
         end
         
         def liabilities_tracking_payment_records_list          
           @payment_records = Erp::Payments::PaymentRecord.all_done
             .where(customer_id: params[:customer_id])
             .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER).id)
-
+            .joins(:period)
+            
+          if params[:period].present?
+            period = Erp::Periods::Period.find(params[:period])
+            params[:from_date] = period.from_date
+            params[:to_date] = period.to_date
+          end
+          
           # from to date
           if params[:from_date].present?
-            @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
+            @payment_records = @payment_records.where("erp_periods_periods.from_date >= ?", params[:from_date].to_date.beginning_of_month.beginning_of_day)
           end
-
+    
           if params[:to_date].present?
-            @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
+            @payment_records = @payment_records.where("erp_periods_periods.to_date <= ?", params[:to_date].to_date.end_of_month.end_of_day)
           end
           
           @full_payment_records = @payment_records
