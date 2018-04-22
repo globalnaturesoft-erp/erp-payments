@@ -79,7 +79,6 @@ module Erp::Payments
       end
     end
 
-    validates :code, uniqueness: true
     validates :payment_date, :amount, :accountant_id, :presence => true
 
     after_save :order_update_cache_payment_status
@@ -317,9 +316,9 @@ module Erp::Payments
     end
 
     # Generate code
-    before_validation :generate_code
+    after_create :generate_code
     def generate_code
-			if !code.present?
+			#if !code.present?
 				if is_receipt_voucher?
 					query = Erp::Payments::PaymentRecord.where(pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE)
 				elsif is_payment_voucher?
@@ -327,10 +326,11 @@ module Erp::Payments
 				end
 
 				str = (is_receipt_voucher? ? 'PT' : 'PC')
-				num = query.where('payment_date >= ? AND payment_date <= ?', self.payment_date.beginning_of_month, self.payment_date.end_of_month).count + 1
+				num = query.where('payment_date >= ? AND payment_date <= ?', self.payment_date.beginning_of_month, self.payment_date.end_of_month)
+        num = num.where('created_at <= ?', self.created_at).count
 
-				self.code = str + payment_date.strftime("%m") + payment_date.strftime("%Y").last(2) + "-" + num.to_s.rjust(3, '0')
-			end
+				self.update_column(:code, str + payment_date.strftime("%m") + payment_date.strftime("%Y").last(2) + "-" + num.to_s.rjust(3, '0'))
+			#end
 		end
 
     # DISPLAY ORDER INFORMATION
