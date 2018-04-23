@@ -87,6 +87,7 @@ module Erp
 
           if params[:period_id].present?
             @period = Erp::Periods::Period.find(params[:period_id])
+            @payment_record.period_id = params[:period_id]
           end
 
           if Erp::Core.available?("orders")
@@ -861,6 +862,41 @@ module Erp
               response.headers['Content-Disposition'] = "attachment; filename='Nhat ky thu tien.xlsx'"
             }
           end
+        end
+        
+        def liabilities_tracking_periods_list
+          @customer = Erp::Contacts::Contact.where(id: params[:customer_id]).first
+          
+          if params[:period].present?
+            period = Erp::Periods::Period.find(params[:period])
+            params[:from_date] = period.from_date
+            params[:to_date] = period.to_date
+          end
+          
+          # periods
+          current_month = Time.now.month
+          current_year = Time.now.year
+          @times = []
+          @times << {
+            name: "Tháng #{current_month}/#{current_year}",
+            from_date: Time.now.beginning_of_month.beginning_of_day,
+            to_date: Time.now.end_of_month.end_of_day,
+            period: Erp::Periods::Period.find_month_by_times(from_date: Time.now.beginning_of_month.beginning_of_day, to_date: Time.now.end_of_month.end_of_day)
+          }
+          
+          month = current_month - 1
+          while month > 0 do
+            @times << {
+              name: "Tháng #{month}/#{current_year}",
+              from_date: "#{current_year}-#{month}-01".to_date.beginning_of_month.beginning_of_day,
+              to_date: "#{current_year}-#{month}-01".to_date.end_of_month.end_of_day,
+              period: Erp::Periods::Period.find_month_by_times(from_date: "#{current_year}-#{month}-01".to_date.beginning_of_month.beginning_of_day, to_date: "#{current_year}-#{month}-01".to_date.end_of_month.end_of_day)
+            }
+            month -= 1
+          end
+          
+          @times << {name: "Năm #{current_year-1}", from_date: (Time.now - 1.year).beginning_of_year.beginning_of_day, to_date: (Time.now - 1.year).end_of_year.end_of_day}
+          @times = @times.reverse!
         end
 
         private
