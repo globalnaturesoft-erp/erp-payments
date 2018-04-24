@@ -34,9 +34,7 @@ wb.styles do |s|
     header = {columns: [], styles: []}
     subheader = {columns: [], styles: []}
     footer = {columns: [], styles: []}
-    header[:columns] = []
     
-    #if get_columns(params).include?("ordinal_number") or get_columns(params).empty?
     header[:columns] << 'Ngày ghi sổ'
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
     subheader[:columns] << ''
@@ -82,7 +80,7 @@ wb.styles do |s|
     subheader[:columns] << 'Thu'
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
     col += 1
-    t = col
+    received_amount_col = col
     
     footer[:columns] << @total_received
     footer[:styles] << (s.add_style border.deep_merge(number).deep_merge(bold))
@@ -92,18 +90,29 @@ wb.styles do |s|
     subheader[:columns] << 'Chi'
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
     col += 1
-    c = col
-    sheet.merge_cells("#{('A'.codepoints.first + t).chr}5:#{('A'.codepoints.first + c).chr}5")
+    paid_amount_col = col
+    sheet.merge_cells("#{('A'.codepoints.first + received_amount_col).chr}5:#{('A'.codepoints.first + paid_amount_col).chr}5")
     
     footer[:columns] << @total_paid
     footer[:styles] << (s.add_style border.deep_merge(number).deep_merge(bold))
     
     header[:columns] << 'Loại'
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
-    subheader[:columns] << ''
+    subheader[:columns] << 'Thu'
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
     col += 1
-    sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    received_type_col = col
+    
+    header[:columns] << ''
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << 'Chi'
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    paid_type_col = col
+    sheet.merge_cells("#{('A'.codepoints.first + received_type_col).chr}5:#{('A'.codepoints.first + paid_type_col).chr}5")
+    
+    footer[:columns] << ''
+    footer[:styles] << (s.add_style border)
     
     footer[:columns] << ''
     footer[:styles] << (s.add_style border)
@@ -154,7 +163,6 @@ wb.styles do |s|
     # rows
     @payment_records.each_with_index do |payment_record,index|
       row = {columns: [], styles: []}
-      row[:columns] = []
     
       row[:columns] << payment_record.created_at.strftime('%d/%m/%Y')
       row[:styles] << (s.add_style text_center.deep_merge(border))
@@ -174,7 +182,10 @@ wb.styles do |s|
       row[:columns] << (payment_record.is_payment_voucher? ? payment_record.amount : '')
       row[:styles] << (s.add_style text_right.deep_merge(number).deep_merge(border))
     
-      row[:columns] << t(".#{display_payment_record_type(payment_record)}")
+      row[:columns] << (payment_record.is_receipt_voucher? ? t(".#{display_payment_record_type(payment_record)}") : nil)
+      row[:styles] << (s.add_style text_left.deep_merge(border))
+      
+      row[:columns] << (payment_record.is_payment_voucher? ? t(".#{display_payment_record_type(payment_record)}") : nil)
       row[:styles] << (s.add_style text_left.deep_merge(border))
     
       row[:columns] << payment_record.account_name
