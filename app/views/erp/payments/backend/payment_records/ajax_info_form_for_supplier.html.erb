@@ -4,26 +4,26 @@
             <tbody>
                 <tr>
                     <td colspan="2">
-                        <strong><i class="fa fa-calendar"></i> Thông tin công nợ (tính đến <%= Time.now.strftime("%H:%M - %d/%m/%Y") %>)</strong>
+                        <strong><i class="fa fa-calendar"></i> Thông tin công nợ (<%= @period.present? ? @period.name : "tính đến #{@to_date.strftime("%H:%M - %d/%m/%Y")}" %>)</strong>
                         <hr class="mt-5 mb-5">
                     </td>
                 </tr>
                 <tr>
                     <td> Tổng nợ NCC: </td>
                     <td>
-                        <strong><%= format_price(@supplier.purchase_total_amount) %></strong>
+                        <strong><%= format_price(@supplier.purchase_total_amount(period: @period_id)) %></strong>
                     </td>
                 </tr>
                 <tr>
                     <td> Tổng đã thanh toán: </td>
                     <td>
-                        <strong><%= format_price(@supplier.purchase_paid_amount) %></strong>
+                        <strong><%= format_price(@supplier.purchase_paid_by_period_amount(period: @period_id)) %></strong>
                     </td>
                 </tr>
                 <tr>
                     <td> Tổng phải trả (còn lại): </td>
                     <td>
-                        <strong><%= format_price(@supplier.purchase_debt_amount) %></strong>
+                        <strong><%= format_price(@supplier.purchase_debt_by_period_amount(period: @period_id)) %></strong>
                     </td>
                 </tr>
             </tbody>

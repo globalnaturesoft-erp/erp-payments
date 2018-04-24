@@ -273,6 +273,8 @@ vi:
             supplier: "Nhà cung cấp"
             choose_supplier: "Chọn nhà cung cấp trong danh sách"
             help_supplier: "Người trả/nhận tiền"
+            period: "Chu kỳ thời gian"
+            choose_period: "Chọn chu kỳ thời gian công nợ"
           form_sales_order:
             sales_order: "Hóa đơn bán hàng"
             order: "Hóa đơn bán hàng"

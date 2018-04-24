@@ -267,6 +267,12 @@ module Erp
 
         def ajax_info_form_for_supplier
           @supplier = Erp::Contacts::Contact.where(id: params[:datas][0]).first
+          @period = Erp::Periods::Period.where(id: params[:form_data][:payment_record][:period_id]).first
+          
+          @period_id = @period.id if @period.present?
+          @from_date = @period.present? ? @period.from_date.beginning_of_day : nil
+          @to_date = @period.present? ? @period.to_date.end_of_day : Time.now
+          
           render layout: false
         end
 

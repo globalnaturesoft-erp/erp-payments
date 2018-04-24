@@ -151,6 +151,15 @@ Erp::Contacts::Contact.class_eval do
 
     return result
   end
+
+  # Purchase debt amount for contact
+  def self.purchase_debt_amount(params={})
+    self.purchase_total_amount(params) - self.purchase_paid_amount(params)
+  end
+
+  def purchase_debt_amount(params={})
+    self.purchase_total_amount(params) - self.purchase_paid_amount(params)
+  end
   
   # Sales paid amount by period //customers
   def self.sales_paid_by_period_amount(options={})
@@ -185,14 +194,39 @@ Erp::Contacts::Contact.class_eval do
   def sales_debt_by_period_amount(options={})
     self.sales_total_amount(options) - self.sales_paid_by_period_amount(options)
   end
+  
+  # Purchase paid amount by period //customers
+  def self.purchase_paid_by_period_amount(options={})
+    query = Erp::Payments::PaymentRecord.all_done
+      .includes(:payment_type)
+      .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
+      .where(supplier_id: self.ids)
 
-  # Purchase debt amount for contact
-  def self.purchase_debt_amount(params={})
-    self.purchase_total_amount(params) - self.purchase_paid_amount(params)
+    result = - query.all_paid_by_period(options).sum(:amount) + query.all_received_by_period(options).sum(:amount)
+
+    return result
   end
+  
+  # Purchase paid amount by period //customer
+  def purchase_paid_by_period_amount(options={})
+    query = Erp::Payments::PaymentRecord.all_done
+      .includes(:payment_type)
+      .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
+      .where(supplier_id: self.id)
 
-  def purchase_debt_amount(params={})
-    self.purchase_total_amount(params) - self.purchase_paid_amount(params)
+    result = - query.all_paid_by_period(options).sum(:amount) + query.all_received_by_period(options).sum(:amount)
+
+    return result
+  end
+  
+  # Purchase debt amount by period
+  def self.purchase_debt_by_period_amount(options={})
+    self.purchase_total_amount(options) - self.purchase_paid_by_period_amount(options)
+  end
+  
+  # Purchase debt amount by period
+  def purchase_debt_by_period_amount(options={})
+    self.purchase_total_amount(options) - self.purchase_paid_by_period_amount(options)
   end
 
   # Customer commission total amount
