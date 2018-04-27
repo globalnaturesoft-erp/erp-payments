@@ -3,7 +3,7 @@ Erp::Contacts::Contact.class_eval do
   # Get sales orders for contact (is ordered)
   def self.sales_orders
     query = Erp::Orders::Order.all_confirmed.sales_orders
-      .where(customer_id: self.ids)
+      .where(customer_id: self.select(:id))
     return query
   end
 
@@ -15,7 +15,7 @@ Erp::Contacts::Contact.class_eval do
   # Get purchase orders for contact (is ordered)
   def self.purchase_orders
     query = Erp::Orders::Order.all_confirmed.purchase_orders
-      .where(supplier_id: self.ids)
+      .where(supplier_id: self.select(:id))
     return query
   end
 
@@ -27,7 +27,7 @@ Erp::Contacts::Contact.class_eval do
   # Get sales product returns
   def self.sales_product_returns
     query = Erp::Qdeliveries::Delivery.all_delivered.sales_import_deliveries
-      .where(customer_id: self.ids)
+      .where(customer_id: self.select(:id))
     return query
   end
   
@@ -39,7 +39,7 @@ Erp::Contacts::Contact.class_eval do
   # Tong ban hang
   def self.sales_order_total_amount(params={})
     query = self.sales_orders.payment_for_contact_orders(params)
-      .where(customer_id: self.ids)
+      .where(customer_id: self.select(:id))
 
     total = query.sum(:cache_total)
     
@@ -58,7 +58,7 @@ Erp::Contacts::Contact.class_eval do
     total -= self.sales_return_total_amount(params)
     
     # init debt amount
-    query = self.where.not(init_debt_date: nil).where(id: self.ids)
+    query = self.where.not(init_debt_date: nil).where(id: self.select(:id))
     if params[:from_date].present?
       query = query.where("init_debt_date >= ?", params[:from_date].to_date.beginning_of_day)
     end
@@ -107,7 +107,7 @@ Erp::Contacts::Contact.class_eval do
     query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
       .includes(:payment_type)
       .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
-      .where(customer_id: self.ids)
+      .where(customer_id: self.select(:id))
 
     result = - query.all_paid(params).sum(:amount) + query.all_received(params).sum(:amount)
 
@@ -152,7 +152,7 @@ Erp::Contacts::Contact.class_eval do
     query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
       .includes(:payment_type)
       .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
-      .where(supplier_id: self.ids)
+      .where(supplier_id: self.select(:id))
 
     result = query.all_paid(params).sum(:amount) - query.all_received(params).sum(:amount)
 
@@ -184,7 +184,7 @@ Erp::Contacts::Contact.class_eval do
     #query = Erp::Payments::PaymentRecord.all_done
     #  .includes(:payment_type)
     #  .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
-    #  .where(customer_id: self.ids)
+    #  .where(customer_id: self.select(:id))
     #
     #paid_total = - query.all_paid.sum(:amount) + query.all_received.sum(:amount)
     #
@@ -307,7 +307,7 @@ Erp::Contacts::Contact.class_eval do
     query = Erp::Payments::PaymentRecord.all_done
       .includes(:payment_type)
       .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
-      .where(supplier_id: self.ids)
+      .where(supplier_id: self.select(:id))
 
     result = - query.all_paid_by_period(options).sum(:amount) + query.all_received_by_period(options).sum(:amount)
 
@@ -366,7 +366,7 @@ Erp::Contacts::Contact.class_eval do
     # Tong ban hang
     def self.orders_tracking_sales_order_total_amount(params={})
       query = self.sales_orders.payment_for_order_orders(params)
-        .where(customer_id: self.ids)
+        .where(customer_id: self.select(:id))
   
       return query.sum(:cache_total)
     end
@@ -412,7 +412,7 @@ Erp::Contacts::Contact.class_eval do
       query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
         .includes(:payment_type)
         .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SALES_ORDER})
-        .where(customer_id: self.ids)
+        .where(customer_id: self.select(:id))
   
       result = - query.all_paid(params).sum(:amount) + query.all_received(params).sum(:amount)
   
