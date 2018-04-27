@@ -41,7 +41,12 @@ Erp::Contacts::Contact.class_eval do
     query = self.sales_orders.payment_for_contact_orders(params)
       .where(customer_id: self.ids)
 
-    return query.sum(:cache_total)
+    total = query.sum(:cache_total)
+    
+    #if 
+    #end
+    
+    return total
   end
   
   # Tong hang ban bi tra lai
@@ -205,7 +210,7 @@ Erp::Contacts::Contact.class_eval do
     elsif !from_date.present? and to_date.present?
       return to_amount
     else from_date.present? and to_date.present?      
-      from_amount = self.sales_paid_by_period_amount(to_date: from_date)      
+      from_amount = self.sales_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)      
       return to_amount - from_amount
     end
   end
@@ -248,7 +253,7 @@ Erp::Contacts::Contact.class_eval do
     elsif !from_date.present? and to_date.present?
       return to_amount
     else from_date.present? and to_date.present?      
-      from_amount = self.sales_paid_by_period_amount(to_date: from_date)      
+      from_amount = self.sales_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)      
       return to_amount - from_amount
     end
   end
