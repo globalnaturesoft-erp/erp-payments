@@ -3,10 +3,10 @@
     <ul class="nav nav-tabs ">
         <li class="active">
             <a href="#tab_<%= uid %>_1" data-toggle="tab">
-                <i class="icon-clock"></i>
-                <%= t('.payment_records_list') %>
+                <i class="fa fa-bar-chart"></i>
+                Thống kê công nợ
             </a>
-        </li>
+        </li>        
         <li>
             <a href="#tab_<%= uid %>_2" data-toggle="tab">
                 <i class="icon-basket"></i>
@@ -19,22 +19,22 @@
                 <%= t('.sales_import_list') %>
             </a>
         </li>
-        <li>
+        <li class="">
             <a href="#tab_<%= uid %>_4" data-toggle="tab">
                 <i class="icon-clock"></i>
-                Công nợ theo kỳ
+                <%= t('.payment_records_list') %>
             </a>
         </li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="tab_<%= uid %>_1">
-            <%= erp_datalist(url: erp_payments.liabilities_tracking_payment_records_list_backend_payment_records_path(
+            <%= erp_datalist(url: erp_payments.liabilities_tracking_periods_list_backend_payment_records_path(
                     customer_id: params[:customer_id],
                     from_date: params[:from_date],
                     to_date: params[:to_date]
                 )
             ) %>
-        </div>
+        </div>        
         <div class="tab-pane" id="tab_<%= uid %>_2">
             <%= erp_datalist(url: erp_payments.liabilities_tracking_sales_export_list_backend_payment_records_path(
                     customer_id: params[:customer_id],
@@ -52,7 +52,7 @@
             ) %>
         </div>
         <div class="tab-pane" id="tab_<%= uid %>_4">
-            <%= erp_datalist(url: erp_payments.liabilities_tracking_periods_list_backend_payment_records_path(
+            <%= erp_datalist(url: erp_payments.liabilities_tracking_payment_records_list_backend_payment_records_path(
                     customer_id: params[:customer_id],
                     from_date: params[:from_date],
                     to_date: params[:to_date]

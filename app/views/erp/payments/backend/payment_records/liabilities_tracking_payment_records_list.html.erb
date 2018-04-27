@@ -13,7 +13,6 @@
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Tên khách hàng</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Số tiền</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Hình thức</th>
-                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Chu kỳ công nợ</th>
                 <th width="20%" class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Ghi chú</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center"><%= t('.actions') %></th>
             </tr>
@@ -26,7 +25,6 @@
                     <td class="text-left"><%= payment_record.customer_name %></td>
                     <td class="text-right"><%= format_price(payment_record.amount) %></td>
                     <td class="text-left"><%= t(".#{display_payment_record_type(payment_record)}") %></td>
-                    <td class="text-left"><%= payment_record.period_name %></td>
                     <td class="text-justify"><%= raw payment_record.description %></td>
                     <td class="text-right">
                         <%= erp_datalist_row_actions(

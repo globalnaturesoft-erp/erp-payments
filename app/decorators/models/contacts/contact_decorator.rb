@@ -174,9 +174,40 @@ Erp::Contacts::Contact.class_eval do
       .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
       .where(customer_id: self.ids)
 
-    result = - query.all_paid_by_period(options).sum(:amount) + query.all_received_by_period(options).sum(:amount)
-
-    return result
+    paid_total = - query.all_paid.sum(:amount) + query.all_received.sum(:amount)
+    
+    from_date = options[:from_date].present? ? options[:from_date].to_date.beginning_of_day : nil
+    to_date = options[:to_date].present? ? options[:to_date].to_date.end_of_day : (Time.now + 1.year)
+    from_amount = 0
+    to_amount = 0
+    
+    if from_date.present?
+      sales_total = self.sales_total_amount(to_date: from_date)
+      if paid_total >= sales_total
+        from_amount = paid_total - sales_total
+      elsif paid_total <= sales_total
+        from_amount = 0
+      end
+    end
+    
+    if to_date.present?
+      sales_total = self.sales_total_amount(to_date: to_date)
+      if paid_total >= sales_total
+        to_amount = sales_total
+      end
+      if paid_total <= sales_total
+        to_amount = paid_total
+      end
+    end
+    
+    if from_date.present? and !to_date.present?
+      return from_amount
+    elsif !from_date.present? and to_date.present?
+      return to_amount
+    else from_date.present? and to_date.present?      
+      from_amount = self.sales_paid_by_period_amount(to_date: from_date)      
+      return to_amount - from_amount
+    end
   end
   
   # Sales paid amount by period //customer
@@ -185,10 +216,41 @@ Erp::Contacts::Contact.class_eval do
       .includes(:payment_type)
       .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
       .where(customer_id: self.id)
-
-    result = - query.all_paid_by_period(options).sum(:amount) + query.all_received_by_period(options).sum(:amount)
-
-    return result
+      
+    paid_total = - query.all_paid.sum(:amount) + query.all_received.sum(:amount)
+    
+    from_date = options[:from_date].present? ? options[:from_date].to_date.beginning_of_day : nil
+    to_date = options[:to_date].present? ? options[:to_date].to_date.end_of_day : (Time.now + 1.year)
+    from_amount = 0
+    to_amount = 0
+    
+    if from_date.present?
+      sales_total = self.sales_total_amount(to_date: from_date)
+      if paid_total >= sales_total
+        from_amount = paid_total - sales_total
+      elsif paid_total <= sales_total
+        from_amount = 0
+      end
+    end
+    
+    if to_date.present?
+      sales_total = self.sales_total_amount(to_date: to_date)
+      if paid_total >= sales_total
+        to_amount = sales_total
+      end
+      if paid_total <= sales_total
+        to_amount = paid_total
+      end
+    end
+    
+    if from_date.present? and !to_date.present?
+      return from_amount
+    elsif !from_date.present? and to_date.present?
+      return to_amount
+    else from_date.present? and to_date.present?      
+      from_amount = self.sales_paid_by_period_amount(to_date: from_date)      
+      return to_amount - from_amount
+    end
   end
   
   # Sales debt amount by period

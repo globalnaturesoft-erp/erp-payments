@@ -435,7 +435,7 @@ vi:
             total_end_of_period_amount: "Tổng nợ cuối kỳ"
           liabilities_tracking_table_details:
             orders_list: "Hóa đơn bán hàng trong kỳ"
-            payment_records_list: "Lịch sử thanh toán trong kỳ"
+            payment_records_list: "Lịch sử thanh toán"
             sales_export_list: "Chi tiết bán hàng trong kỳ"
             sales_import_list: "Chi tiết trả hàng trong kỳ"
           liabilities_tracking_payment_records_list:

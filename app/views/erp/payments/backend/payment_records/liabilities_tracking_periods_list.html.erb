@@ -16,7 +16,6 @@
             <th class="text-right">
               Cuối kỳ
             </th>
-            <th width="7%"><%= t('actions') %></th>
         </tr>
     </thead>
     <tbody>
@@ -33,44 +32,6 @@
           <td class="text-right"><%= format_price(@customer.sales_paid_by_period_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
           <td class="text-right">
             <%= format_price(@customer.sales_debt_by_period_amount(to_date: time[:to_date])) %>
-          </td>
-          <td>
-            <%= erp_datalist_row_actions(
-                [
-                    {
-                        text: '<i class="fa fa-angle-double-left"></i> Tạo phiếu thu',
-                        url: erp_payments.new_backend_payment_record_path(
-                            pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
-                            payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER),
-                            period_id: (time[:period].present? ? time[:period].id : nil),
-                            customer_id: @customer.id
-                        )
-                    },
-                    {
-                        text: '<i class="fa fa-angle-double-right"></i> Trả lại tiền (dư)',
-                        url: erp_payments.new_backend_payment_record_path(
-                            pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                            payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER),
-                            period_id: (time[:period].present? ? time[:period].id : nil),
-                            customer_id: @customer.id
-                        )
-                    },
-                    {divider: true},
-                    {
-                        text: '<i class="fa fa-file-excel-o"></i> Xuất bảng công nợ',
-                        url: erp_payments.xlsx_export_liabilities_backend_payment_records_path(
-                            customer_id: @customer.id,
-                            from_date: time[:from_date],
-                            to_date: time[:to_date],
-                            format: 'xlsx',                                    
-                        ),
-                        target: '_blank',
-                        class: 'with-checkboxes-link',
-                        data_checkboxes: 'patient_col|Bệnh nhân|checked,patient_state_col|Trạng thái bệnh nhân|checked,sales_discount_col|Bán hàng: Giảm giá|checked,sales_total_without_tax_col|Bán hàng: Thành tiền (trước thuế)|checked,sales_tax_col|Bán hàng: Thuế,sales_total_col|Bán hàng: Tổng cộng (sau thuế),return_amount_col|Trả hàng: Thành tiền (Số lượng x Đơn giá),return_discount_col|Trả hàng: Giảm giá|checked,return_total_col|Trả hàng: Tổng cộng|checked',
-                        data_checkboxes_desc: 'Chọn cột thêm vào sổ chi tiết',
-                    },
-                ]
-            ) %>
           </td>
         </tr>
       <% end %>

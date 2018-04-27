@@ -554,10 +554,11 @@ module Erp
             params.to_unsafe_hash["filters"].each do |ft|
               ft[1].each do |cond|
                 if cond[1]["name"] == 'in_period_active'
-                  @customers = @customers.get_sales_payment_chasing_contacts(
-                    from_date: @from,
-                    to_date: @to
-                  )
+                  @customers = @customers.get_sales_payment_chasing_contacts
+                  #(
+                  #  from_date: @from,
+                  #  to_date: @to
+                  #)
                 end
               end
             end
@@ -572,28 +573,14 @@ module Erp
         def liabilities_tracking_table_details
         end
         
-        def liabilities_tracking_payment_records_list          
+        def liabilities_tracking_payment_records_list
+          filters = params.to_unsafe_hash[:more_filter]
+          
           @payment_records = Erp::Payments::PaymentRecord.all_done
             .where(customer_id: params[:customer_id])
             .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER).id)
-            .joins(:period)
-            
-          if params[:period].present?
-            period = Erp::Periods::Period.find(params[:period])
-            params[:from_date] = period.from_date
-            params[:to_date] = period.to_date
-          end
           
-          # from to date
-          if params[:from_date].present?
-            @payment_records = @payment_records.where("erp_periods_periods.from_date >= ?", params[:from_date].to_date.beginning_of_month.beginning_of_day)
-          end
-    
-          if params[:to_date].present?
-            @payment_records = @payment_records.where("erp_periods_periods.to_date <= ?", params[:to_date].to_date.end_of_month.end_of_day)
-          end
-          
-          @full_payment_records = @payment_records
+          @full_payment_records = @payment_records#.search(filters)
           
           @payment_records = @payment_records.order('payment_date DESC, created_at DESC')
             .paginate(:page => params[:page], :per_page => 10)
