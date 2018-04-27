@@ -75,6 +75,12 @@ Erp::Contacts::Contact.class_eval do
     total = self.sales_order_total_amount(params)
     
     total -= self.sales_return_total_amount(params)
+    
+    if self.init_debt_date.present? and
+      (!params[:from_date].present? or params[:from_date].to_date.beginning_of_day <= self.init_debt_date) and
+      (!params[:to_date].present? or params[:to_date].to_date.end_of_day >= self.init_debt_date)
+        total += self.init_debt_amount
+    end
 
     return total
   end
