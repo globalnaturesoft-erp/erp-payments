@@ -271,12 +271,31 @@ Erp::Contacts::Contact.class_eval do
         else
           to_amount = paid_total
         end
+        
+        # Truong hop thanh toan dư
+        if to_date.month == Time.now.month
+          res = paid_total - sales_total
+          if res > 0
+            to_amount += res
+          end
+        end
+        
+        
       elsif sales_total <= 0 and  paid_total <= 0
         if paid_total >= sales_total
           to_amount = paid_total
         else
           to_amount = sales_total
         end
+        
+        # Truong hop thanh toan dư
+        if to_date.month == Time.now.month
+          res = - paid_total + sales_total
+          if res > 0
+            to_amount += res
+          end
+        end
+        
       else
         to_amount = 0
       end
