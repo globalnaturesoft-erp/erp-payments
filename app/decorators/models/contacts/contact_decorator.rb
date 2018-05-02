@@ -323,14 +323,21 @@ Erp::Contacts::Contact.class_eval do
   
   # Purchase paid amount by period //customers
   def self.purchase_paid_by_period_amount(options={})
-    query = Erp::Payments::PaymentRecord.all_done
-      .includes(:payment_type)
-      .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
-      .where(supplier_id: self.select(:id))
-
-    result = - query.all_paid_by_period(options).sum(:amount) + query.all_received_by_period(options).sum(:amount)
-
-    return result
+    #query = Erp::Payments::PaymentRecord.all_done
+    #  .includes(:payment_type)
+    #  .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
+    #  .where(supplier_id: self.select(:id))
+    #
+    #result = - query.all_paid_by_period(options).sum(:amount) + query.all_received_by_period(options).sum(:amount)
+    #
+    #return result
+    
+    total = 0.0
+    self.all.each do |c|
+      total += c.purchase_paid_by_period_amount(options)
+    end
+    
+    return total
   end
   
   # Purchase paid amount by period //customer
@@ -340,9 +347,69 @@ Erp::Contacts::Contact.class_eval do
       .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SUPPLIER})
       .where(supplier_id: self.id)
 
-    result = - query.all_paid_by_period(options).sum(:amount) + query.all_received_by_period(options).sum(:amount)
-
-    return result
+    paid_total = query.all_paid.sum(:amount) - query.all_received.sum(:amount)
+    
+    from_date = options[:from_date].present? ? options[:from_date].to_date.beginning_of_day : nil
+    to_date = options[:to_date].present? ? options[:to_date].to_date.end_of_day : (Time.now + 1.year)
+    from_amount = 0
+    to_amount = 0
+    
+    if from_date.present?
+      purchase_total = self.purchase_total_amount(to_date: from_date)
+      if paid_total >= purchase_total
+        from_amount = paid_total - purchase_total
+      elsif paid_total <= purchase_total
+        from_amount = 0
+      end
+    end
+    
+    if to_date.present?
+      purchase_total = self.purchase_total_amount(to_date: to_date)
+      
+      if purchase_total >= 0 and paid_total >= 0
+        if paid_total >= purchase_total
+          to_amount = purchase_total
+        else
+          to_amount = paid_total
+        end
+        
+        # Truong hop thanh toan dư
+        if to_date.month == Time.now.month
+          res = paid_total - purchase_total
+          if res > 0
+            to_amount += res
+          end
+        end
+        
+        
+      elsif purchase_total <= 0 and  paid_total <= 0
+        if paid_total >= purchase_total
+          to_amount = paid_total
+        else
+          to_amount = purchase_total
+        end
+        
+        # Truong hop thanh toan dư
+        if to_date.month == Time.now.month
+          res = - paid_total + purchase_total
+          if res > 0
+            to_amount += res
+          end
+        end
+        
+      else
+        to_amount = 0
+      end
+    end
+    
+    if from_date.present? and !to_date.present?
+      return from_amount
+    elsif !from_date.present? and to_date.present?
+      return to_amount
+    else from_date.present? and to_date.present?      
+      from_amount = self.purchase_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)      
+      return to_amount - from_amount
+    end
   end
   
   # Purchase debt amount by period
@@ -377,6 +444,83 @@ Erp::Contacts::Contact.class_eval do
   # Customer commission debt amount
   def customer_commission_debt_amount(params={})
     self.customer_commission_total_amount(params) - self.customer_commission_paid_amount(params)
+  end
+  
+  # Customer commission paid amount
+  def customer_commission_paid_by_period_amount(options={})
+    query = Erp::Payments::PaymentRecord.all_done
+      .includes(:payment_type)
+      .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION})
+      .where(customer_id: self.id)
+
+    paid_total = query.all_paid.sum(:amount) - query.all_received.sum(:amount)
+    
+    from_date = options[:from_date].present? ? options[:from_date].to_date.beginning_of_day : nil
+    to_date = options[:to_date].present? ? options[:to_date].to_date.end_of_day : (Time.now + 1.year)
+    from_amount = 0
+    to_amount = 0
+    
+    if from_date.present?
+      customer_commission_total = self.customer_commission_total_amount(to_date: from_date)
+      if paid_total >= customer_commission_total
+        from_amount = paid_total - customer_commission_total
+      elsif paid_total <= customer_commission_total
+        from_amount = 0
+      end
+    end
+    
+    if to_date.present?
+      customer_commission_total = self.customer_commission_total_amount(to_date: to_date)
+      
+      if customer_commission_total >= 0 and paid_total >= 0
+        if paid_total >= customer_commission_total
+          to_amount = customer_commission_total
+        else
+          to_amount = paid_total
+        end
+        
+        # Truong hop thanh toan dư
+        if to_date.month == Time.now.month
+          res = paid_total - customer_commission_total
+          if res > 0
+            to_amount += res
+          end
+        end
+        
+        
+      elsif customer_commission_total <= 0 and  paid_total <= 0
+        if paid_total >= customer_commission_total
+          to_amount = paid_total
+        else
+          to_amount = customer_commission_total
+        end
+        
+        # Truong hop thanh toan dư
+        if to_date.month == Time.now.month
+          res = - paid_total + customer_commission_total
+          if res > 0
+            to_amount += res
+          end
+        end
+        
+      else
+        to_amount = 0
+      end
+    end
+    
+    if from_date.present? and !to_date.present?
+      return from_amount
+    elsif !from_date.present? and to_date.present?
+      return to_amount
+    else from_date.present? and to_date.present?      
+      from_amount = self.customer_commission_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)      
+      return to_amount - from_amount
+    end
+  end
+
+  # Customer commission debt amount
+  def customer_commission_debt_by_period_amount(options={})
+    self.customer_commission_total_amount(options) - self.customer_commission_paid_by_period_amount(options)
   end
   
   

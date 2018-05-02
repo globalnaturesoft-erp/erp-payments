@@ -622,14 +622,14 @@ module Erp
         end
 
         # SUPPLIER / liabilities tracking table
-        def supplier_liabilities_tracking_table
+        def supplier_liabilities_tracking_table          
           glb = params.to_unsafe_hash[:global_filter]
           if glb[:period].present?
             @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
             @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
           else
-            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
-            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date.beginning_of_day : Time.now.beginning_of_month
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date.end_of_day : Time.now.end_of_month
           end
           
           @suppliers = Erp::Contacts::Contact.search(params)
@@ -668,17 +668,24 @@ module Erp
         # SUPPLIER / liabilities tracking table details
         def supplier_liabilities_tracking_table_details
           @orders = Erp::Contacts::Contact.find(params[:supplier_id]).purchase_orders.payment_for_contact_orders(params.to_unsafe_hash)
-          @payment_records = Erp::Payments::PaymentRecord.where(supplier_id: params[:supplier_id])
+          
+          @payment_records = Erp::Payments::PaymentRecord.all_done
+            .where(supplier_id: params[:supplier_id])
             .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER).id)
 
           # from to date
-          if params[:from_date].present?
-            @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
-          end
-
-          if params[:to_date].present?
-            @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
-          end
+          #if params[:from_date].present?
+          #  @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
+          #end
+          #
+          #if params[:to_date].present?
+          #  @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
+          #end
+          
+          @full_payment_records = @payment_records
+          
+          @payment_records = @payment_records.order('payment_date DESC, created_at DESC')
+            #.paginate(:page => params[:page], :per_page => 10)
         end
 
         # commission / SALESPERSON
@@ -748,8 +755,8 @@ module Erp
             @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
             @period_name = Erp::Periods::Period.find(glb[:period]).name
           else
-            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : Time.now.beginning_of_month
-            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date.beginning_of_day : Time.now.beginning_of_month
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date.end_of_day : Time.now.end_of_month
             @period_name = nil
           end
 
@@ -767,10 +774,11 @@ module Erp
             params.to_unsafe_hash["filters"].each do |ft|
               ft[1].each do |cond|
                 if cond[1]["name"] == 'in_period_active'
-                  @customers = @customers.get_customer_commission_payment_chasing_contacts(
-                    from_date: @from,
-                    to_date: @to
-                  )
+                  @customers = @customers.get_customer_commission_payment_chasing_contacts
+                  #(
+                  #  from_date: @from,
+                  #  to_date: @to
+                  #)
                 end
               end
             end
