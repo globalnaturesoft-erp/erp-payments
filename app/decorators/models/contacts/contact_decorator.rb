@@ -35,6 +35,18 @@ Erp::Contacts::Contact.class_eval do
     query = Erp::Contacts::Contact.sales_product_returns.where(customer_id: self.id)
     return query
   end
+  
+  # Get purchase product returns
+  def self.purchase_product_returns
+    query = Erp::Qdeliveries::Delivery.all_delivered.purchase_export_deliveries
+      .where(supplier_id: self.select(:id))
+    return query
+  end
+  
+  def purchase_product_returns
+    query = Erp::Contacts::Contact.purchase_product_returns.where(supplier_id: self.id)
+    return query
+  end
 
   # Tong ban hang
   def self.sales_order_total_amount(params={})
@@ -133,18 +145,74 @@ Erp::Contacts::Contact.class_eval do
   def sales_debt_amount(params={})
     self.sales_total_amount(params) - self.sales_paid_amount(params)
   end
+  
+  
+  #==============================================================
+  #==============================================================
+  #==============================================================
+  #==============================================================
+  
 
-  # Purchase total amount for contact
-  def self.purchase_total_amount(params={})
+  
+  # Tong tien nhap hang
+  def self.purchase_order_total_amount(params={})
     query = self.purchase_orders.payment_for_contact_orders(params)
+      .where(supplier_id: self.select(:id))
 
+    total = query.sum(:cache_total)
+    
+    return total
+  end
+  
+  # Tong hang nhap tra lai cho ncc
+  def self.purchase_return_total_amount(params={})
+    query = self.purchase_product_returns.get_deliveries_with_payment_for_contact(params)
     return query.sum(:cache_total)
   end
 
-  def purchase_total_amount(params={})
-    query = self.purchase_orders.payment_for_contact_orders(params)
+  # Purchase total amount for contact // đã trừ cho hàng trả lại
+  def self.purchase_total_amount(params={})    
+    total = self.purchase_order_total_amount(params)    
+    total -= self.purchase_return_total_amount(params)
+    
+    # init debt amount
+    query = self.where.not(init_debt_date: nil).where(id: self.select(:id))
+    if params[:from_date].present?
+      query = query.where("init_debt_date >= ?", params[:from_date].to_date.beginning_of_day)
+    end
+    if params[:to_date].present?
+      query = query.where("init_debt_date <= ?", params[:to_date].to_date.end_of_day)
+    end    
+    total += query.sum(:init_debt_amount)
 
+    return total
+  end
+
+  # Tong tien hoa don mua/nhap hang
+  def purchase_order_total_amount(params={})
+    query = self.purchase_orders.payment_for_contact_orders(params)
     return query.sum(:cache_total)
+  end
+  
+  # Tong tien hang mua/nhap tra lai cho ncc
+  def purchase_return_total_amount(params={})
+    query = self.purchase_product_returns.get_deliveries_with_payment_for_contact(params)
+    return query.sum(:cache_total)
+  end
+
+  # Tong tien mua/nhap hang (sau khi da tru hang tra lai cho ncc)
+  def purchase_total_amount(params={})
+    total = self.purchase_order_total_amount(params)
+    
+    total -= self.purchase_return_total_amount(params)
+    
+    if self.init_debt_date.present? and
+      (!params[:from_date].present? or params[:from_date].to_date.beginning_of_day <= self.init_debt_date) and
+      (!params[:to_date].present? or params[:to_date].to_date.end_of_day >= self.init_debt_date)
+        total += self.init_debt_amount
+    end
+
+    return total
   end
 
   # Purchase paid amount for contact

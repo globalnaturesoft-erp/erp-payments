@@ -490,6 +490,7 @@ vi:
           supplier_liabilities_tracking_table_details:
             payment_records_list: "Lịch sử thanh toán trong kỳ"
             orders_list: "Hóa đơn nhập hàng trong kỳ"
+          supplier_liabilities_tracking_payment_records_list:
             pay_supplier: "Chi tiền công nợ"
             receive_supplier: "Thu hoàn công nợ"
             actions: "Hành động"
@@ -497,6 +498,10 @@ vi:
             edit: "Chỉnh sửa"
             delete: "Hủy phiếu"
             delete_confirm: "Bạn có chắc chắn muốn hủy phiếu này?"
+          supplier_liabilities_tracking_purchase_import_list:
+            actions: "Hành động"
+            pay_ncc: "Chi tiền nhập hàng"
+            receive_ncc: "Thu hoàn tiền hàng"
           commission:
             commission: "Bảng kê hoa hồng"
             from_date: "Từ ngày"

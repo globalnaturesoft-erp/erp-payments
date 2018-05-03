@@ -51,8 +51,9 @@ Erp::Payments::Engine.routes.draw do
 					post 'supplier_liabilities_tracking_table'
 					get 'supplier_liabilities_tracking_table_details'
 					post 'supplier_liabilities_tracking_payment_records_list'
-					post 'supplier_liabilities_tracking_sales_export_list'
-					post 'supplier_liabilities_tracking_sales_import_list'
+					post 'supplier_liabilities_tracking_purchase_export_list'
+					post 'supplier_liabilities_tracking_purchase_import_list'
+					post 'supplier_liabilities_tracking_periods_list'
 					
 					get 'commission'
 					post 'commission_table'
