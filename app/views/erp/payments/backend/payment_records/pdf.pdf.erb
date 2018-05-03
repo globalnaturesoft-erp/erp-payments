@@ -27,6 +27,10 @@
     .header .right .line-1 .acc-info {
       font-size: 12.5px;
     }
+    p {
+      margin: 0;
+      margin-bottom: 5px;
+    }
 <% end %>
 
 <% content_for :format_info do %>
@@ -56,31 +60,31 @@
     <div>Số: <%= @payment_record.code %></div>
 <% end %>
 
-<% content_for :main_info_col_1 do %>
+
   <p style="margin-top: 10px;">
     <label><%= @payment_record.is_receipt_voucher? ? 'Người nộp tiền' : 'Người nhận tiền' %>:</label>
     <span><strong><%= @payment_record.get_contact_name %> </strong></span>
   </p>
-  <p style="margin-top: 5px;">
+  <p style="">
     <label>Địa chỉ:</label>
     <span><%= @payment_record.address %></span>
   </p>
-  <p style="margin-top: 5px;">
+  <p style="">
     <label>Lý do <%= @payment_record.is_receipt_voucher? ? 'thu' : 'chi' %>:</label>
     <span><%= @payment_record.description %></span>
   </p>
-  <p style="margin-top: 5px;">
+  <p style="">
     <label>Số tiền:</label>
     <span class="mr-30"><strong><%= format_number(@payment_record.amount) %> VNĐ</strong></span>
 
     <label>Viết bằng chữ:</label>
     <span><strong><i><%= docso(@payment_record.amount) %>.</i></strong></span>
   </p>
-  <p style="margin-top: 15px;">
+  <p style="margin-bottom: 30px">
     <label>Kèm theo:</label>
     <span><%= @payment_record.origin_doc.present? ? @payment_record.origin_doc : '...............................' %></span>
   </p>
-<% end %>
+
 
 <% content_for :footer do %>
     <div class="col text-center" style="width: 20%">
@@ -117,7 +121,7 @@
 <% end %>
 
 <% content_for :bottom do %>
-    <div class="bottom left" style="bottom: -140px;">
+    <div class="bottom left" style="bottom: -135px;">
         Thời điểm in: <%= Time.now.strftime('%d/%m/%Y, %I:%M %p') %>
     </div>
 <% end %>
