@@ -449,7 +449,6 @@ Erp::Contacts::Contact.class_eval do
           end
         end
         
-        
       elsif purchase_total <= 0 and  paid_total <= 0
         if paid_total >= purchase_total
           to_amount = paid_total
@@ -548,13 +547,12 @@ Erp::Contacts::Contact.class_eval do
         end
         
         # Truong hop thanh toan dư
-        if to_date.month == Time.now.month
+        if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = paid_total - customer_commission_total
           if res > 0
             to_amount += res
           end
         end
-        
         
       elsif customer_commission_total <= 0 and  paid_total <= 0
         if paid_total >= customer_commission_total
@@ -564,7 +562,7 @@ Erp::Contacts::Contact.class_eval do
         end
         
         # Truong hop thanh toan dư
-        if to_date.month == Time.now.month
+        if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = - paid_total + customer_commission_total
           if res > 0
             to_amount += res

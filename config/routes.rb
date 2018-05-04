@@ -62,6 +62,9 @@ Erp::Payments::Engine.routes.draw do
 					get 'customer_commission'
 					post 'customer_commission_table'
 					get 'customer_commission_details'
+					post 'customer_commission_payment_records_list'
+					post 'customer_commission_sales_orders_list'
+					post 'customer_commission_periods_list'
 					
 					get 'ajax_info_form_for_order'
 					get 'ajax_info_form_for_customer'

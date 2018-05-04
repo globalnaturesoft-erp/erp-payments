@@ -555,7 +555,7 @@ vi:
             period_amount: "Phát sinh"
             paid_amount: "Đã chi"
             end_of_period_amount: "Cuối kỳ"
-            salesperson: "Nhân viên KD"
+            salesperson: "NV phụ trách"
           customer_commission_table:
             create_pay_customer_commission: "Tạo phiếu chi hoa hồng"
             customer: "Khách hàng"
@@ -563,17 +563,20 @@ vi:
             period_amount: "Phát sinh"
             paid_amount: "Đã chi"
             end_of_period_amount: "Cuối kỳ"
-            salesperson: "Nhân viên KD"
+            salesperson: "NV phụ trách"
           customer_commission_details:
             orders_list: "Hóa đơn bán hàng trong kỳ"
             payment_records_list: "Lịch sử thanh toán hoa hồng trong kỳ"
-            pay_customer_commission: "Chi hoa hồng KH"
-            receive_customer_commission: "Thu hoàn hoa hồng KH"
+          customer_commission_payment_records_list:
+            pay_customer_commission: "Chi tiền chiết khấu"
+            receive_customer_commission: "Hoàn tiền chiết khấu"
             actions: "Hành động"
             view: "Xem chi tiết"
             edit: "Chỉnh sửa"
             delete: "Xóa phiếu"
             delete_confirm: "Bạn có chắc chắn muốn xóa phiếu này?"
+          customer_commission_sales_orders_list:
+            actions: "Hành động"
           list_xlsx:
             receive_sales_order: "Thu tiền đơn bán hàng"
             receive_purchase_order: "Thu tiền đơn đặt hàng"

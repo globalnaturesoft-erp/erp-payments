@@ -819,18 +819,45 @@ module Erp
         end
 
         def customer_commission_details
-          @orders = Erp::Contacts::Contact.find(params[:customer_id]).sales_orders.payment_for_contact_orders(params.to_unsafe_hash)
-          @payment_records = Erp::Payments::PaymentRecord.where(customer_id: params[:customer_id])
+        end
+        
+        def customer_commission_sales_orders_list
+          @orders = Erp::Contacts::Contact.find(params[:customer_id])
+            .sales_orders
+            .payment_for_contact_orders(params.to_unsafe_hash)
+          
+          @full_orders = @orders
+          
+          @orders = @orders.order('erp_orders_orders.order_date DESC, erp_orders_orders.created_at DESC')
+            .paginate(:page => params[:page], :per_page => 10)
+        end
+        
+        def customer_commission_payment_records_list
+          more_filter = params.to_unsafe_hash[:more_filter]
+          if more_filter[:period].present?
+            @from_date = Erp::Periods::Period.find(more_filter[:period]).from_date.beginning_of_day
+            @to_date = Erp::Periods::Period.find(more_filter[:period]).to_date.end_of_day
+          else
+            @from_date = (more_filter.present? and more_filter[:from_date].present?) ? more_filter[:from_date].to_date : nil
+            @to_date = (more_filter.present? and more_filter[:to_date].present?) ? more_filter[:to_date].to_date : nil
+          end
+          
+          @payment_records = Erp::Payments::PaymentRecord.all_done
+            .where(customer_id: params[:customer_id])
             .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION).id)
-
-          # from to date
-          if params[:from_date].present?
-            @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
+            
+          if @from_date.present?
+            @payment_records = @payment_records.where('payment_date >= ?', @from_date.beginning_of_day)
           end
-
-          if params[:to_date].present?
-            @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
+    
+          if @to_date.present?
+            @payment_records = @payment_records.where('payment_date <= ?', @to_date.end_of_day)
           end
+            
+          @full_payment_records = @payment_records
+          
+          @payment_records = @payment_records.order('payment_date DESC, created_at DESC')
+            .paginate(:page => params[:page], :per_page => 10)
         end
 
         # Export excel file
@@ -948,6 +975,41 @@ module Erp
         
         def supplier_liabilities_tracking_periods_list
           @supplier = Erp::Contacts::Contact.where(id: params[:supplier_id]).first
+          
+          if params[:period].present?
+            period = Erp::Periods::Period.find(params[:period])
+            params[:from_date] = period.from_date
+            params[:to_date] = period.to_date
+          end
+          
+          # periods
+          current_month = Time.now.month
+          current_year = Time.now.year
+          @times = []
+          @times << {
+            name: "Tháng #{current_month}/#{current_year}",
+            from_date: Time.now.beginning_of_month.beginning_of_day,
+            to_date: Time.now.end_of_month.end_of_day,
+            period: Erp::Periods::Period.find_month_by_times(from_date: Time.now.beginning_of_month.beginning_of_day, to_date: Time.now.end_of_month.end_of_day)
+          }
+          
+          month = current_month - 1
+          while month > 0 do
+            @times << {
+              name: "Tháng #{month}/#{current_year}",
+              from_date: "#{current_year}-#{month}-01".to_date.beginning_of_month.beginning_of_day,
+              to_date: "#{current_year}-#{month}-01".to_date.end_of_month.end_of_day,
+              period: Erp::Periods::Period.find_month_by_times(from_date: "#{current_year}-#{month}-01".to_date.beginning_of_month.beginning_of_day, to_date: "#{current_year}-#{month}-01".to_date.end_of_month.end_of_day)
+            }
+            month -= 1
+          end
+          
+          @times << {name: "Năm #{current_year-1}", from_date: (Time.now - 1.year).beginning_of_year.beginning_of_day, to_date: (Time.now - 1.year).end_of_year.end_of_day}
+          @times = @times.reverse!
+        end
+        
+        def customer_commission_periods_list
+          @customer = Erp::Contacts::Contact.where(id: params[:customer_id]).first
           
           if params[:period].present?
             period = Erp::Periods::Period.find(params[:period])

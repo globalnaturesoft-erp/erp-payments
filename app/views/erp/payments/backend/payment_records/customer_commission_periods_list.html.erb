@@ -1,0 +1,39 @@
+<table class="table table-advance table-hover table-striped order-column">
+    <thead>
+        <tr>
+            <th>
+              Kỳ chiết khấu
+            </th>
+            <th class="text-right">
+              Đầu kỳ
+            </th>
+            <th class="text-right">
+              Phát sinh
+            </th>
+            <th class="text-right">
+              Đã thanh toán
+            </th>
+            <th class="text-right">
+              Cuối kỳ
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+      <% @times.each do |time| %>
+        <tr>
+          <td>
+            <strong>
+              <%= "#{time[:name]}" %>
+            </strong>
+          </td>
+          <td class="text-right">
+            <%= format_price(@customer.customer_commission_debt_by_period_amount(to_date: (time[:from_date] - 1.day))) %></td>
+          <td class="text-right"><%= format_price(@customer.customer_commission_total_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
+          <td class="text-right"><%= format_price(@customer.customer_commission_paid_by_period_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
+          <td class="text-right">
+            <%= format_price(@customer.customer_commission_debt_by_period_amount(to_date: time[:to_date])) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+</table>

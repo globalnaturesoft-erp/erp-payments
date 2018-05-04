@@ -1,0 +1,67 @@
+<% if @orders.count > 0 %>
+    <h4 class="profile-desc-title bold"><i class="glyphicon glyphicon-hand-right"></i> Chi tiết hóa đơn và lịch sử mua hàng</h4>
+    <table class="table table-bordered table-advance order-column">
+        <thead class="flip-content">
+            <tr>
+                <td class="text-center bold" colspan="3">Tổng cộng</td>
+                <td class="stock-num text-center bold font-red-thunderbird"><%= @full_orders.sum(&:items_count) %></td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:discount_amount)) %></td>
+                <td class="stock-num text-center bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:total_without_tax)) %></td>
+                <td class="stock-num text-center bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:tax_amount)) %></td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:cache_total)) %></td>
+                <td class="stock-num text-right bold font-green-seagreen bg-grey-cararra"><%= format_number(@full_orders.sum(&:customer_commission_amount)) %></td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Mã hóa đơn</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Ngày đặt hàng</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Đơn giá</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Số lượng</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Giảm giá</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Thành tiền</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Thuế</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Tổng cộng</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Chiết khấu</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">N.viên k.doanh</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center"><%= t('.actions') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @orders.each do |order| %>
+                <tr>
+                    <td class="bg-grey bg-font-grey text-left text-nowrap bold"><%= order_link(order) %></td>
+                    <td class="bg-grey bg-font-grey text-center bold"><%= format_date(order.order_date) %></td>
+                    <td class="bg-grey bg-font-grey text-left text-nowrap"></td>
+                    <td class="bg-grey bg-font-grey text-center bold"><%= order.items_count %></td>
+                    <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.discount_amount) %></td>
+                    <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.total_without_tax) %></td>
+                    <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.tax_amount) %></td>
+                    <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.cache_total) %></td>
+                    <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.cache_customer_commission_amount) %></td>
+                    <td class="bg-grey text-left text-nowrap"><%= order.employee_name %></td>
+                    <td class="bg-grey text-right">
+                        <%= accounting_order_dropdown_actions(order) %>
+                    </td>
+                </tr>
+                <% order.order_details.each do |order_detail| %>
+                    <tr>
+                        <td class="text-left" colspan="2"><%= order_detail.product_name %></td>
+                        <td class="text-right"><%= format_number(order_detail.price) %></td>
+                        <td class="text-center"><%= order_detail.quantity %></td>
+                        <td class="text-right"><%= format_number(order_detail.discount_amount) %></td>
+                        <td class="text-right"><%= format_number(order_detail.total_without_tax) %></td>
+                        <td class="text-right"><%= format_number(order_detail.tax_amount) %></td>
+                        <td class="text-right"><%= format_number(order_detail.total) %></td>
+                        <td class="text-right bg-grey-cararra"><%= format_number(order_detail.customer_commission_amount) %></td>
+                        <td class="text-left" colspan="2"></td>
+                    </tr>
+                <% end %>
+            <% end %>
+        </tbody>
+    </table>
+    <%= erp_datalist_pagination(@orders) %>
+<% else %>
+    <div class="alert alert-warning alert-dismissable no-margin text-center">
+        Không tìm thấy chi tiết mua hàng kỳ này.
+    </div>
+<% end %>
