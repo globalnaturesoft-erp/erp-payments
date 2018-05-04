@@ -341,7 +341,7 @@ Erp::Contacts::Contact.class_eval do
         end
         
         # Truong hop thanh toan dư
-        if to_date.month == Time.now.month
+        if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = paid_total - sales_total
           if res > 0
             to_amount += res
@@ -357,7 +357,7 @@ Erp::Contacts::Contact.class_eval do
         end
         
         # Truong hop thanh toan dư
-        if to_date.month == Time.now.month
+        if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = - paid_total + sales_total
           if res > 0
             to_amount += res
@@ -442,7 +442,7 @@ Erp::Contacts::Contact.class_eval do
         end
         
         # Truong hop thanh toan dư
-        if to_date.month == Time.now.month
+        if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = paid_total - purchase_total
           if res > 0
             to_amount += res
@@ -458,7 +458,7 @@ Erp::Contacts::Contact.class_eval do
         end
         
         # Truong hop thanh toan dư
-        if to_date.month == Time.now.month
+        if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = - paid_total + purchase_total
           if res > 0
             to_amount += res
