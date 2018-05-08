@@ -573,26 +573,17 @@ module Erp
         def liabilities_tracking_table_details
         end
         
-        def liabilities_tracking_payment_records_list
-          more_filter = params.to_unsafe_hash[:more_filter]
-          if more_filter[:period].present?
-            @from_date = Erp::Periods::Period.find(more_filter[:period]).from_date.beginning_of_day
-            @to_date = Erp::Periods::Period.find(more_filter[:period]).to_date.end_of_day
-          else
-            @from_date = (more_filter.present? and more_filter[:from_date].present?) ? more_filter[:from_date].to_date : nil
-            @to_date = (more_filter.present? and more_filter[:to_date].present?) ? more_filter[:to_date].to_date : nil
-          end
-          
+        def liabilities_tracking_payment_records_list          
           @payment_records = Erp::Payments::PaymentRecord.all_done
             .where(customer_id: params[:customer_id])
             .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER).id)
-            
-          if @from_date.present?
-            @payment_records = @payment_records.where('payment_date >= ?', @from_date.beginning_of_day)
+          
+          if params[:from_date].present?
+            @payment_records = @payment_records.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
           end
-    
-          if @to_date.present?
-            @payment_records = @payment_records.where('payment_date <= ?', @to_date.end_of_day)
+          
+          if params[:to_date].present?
+            @payment_records = @payment_records.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
           end
             
           @full_payment_records = @payment_records
