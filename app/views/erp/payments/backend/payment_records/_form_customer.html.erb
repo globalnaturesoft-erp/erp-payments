@@ -42,18 +42,6 @@
                                     data-url="<%= erp_payments.ajax_employee_field_backend_payment_records_path(employee_id: payment_record.employee_id, type: 'contact') %>"
                                     data-control="[name='payment_record[customer_id]']">
                                 </div>
-                                <% if Erp::Core.available?("periods") %>
-                                    <%= erp_form_control("dataselect", {
-                                        name: 'payment_record[period_id]',
-                                        value: payment_record.period_id,
-                                        text: payment_record.period_name,
-                                        placeholder: t('.choose_period'),
-                                        label: t('.period'),
-                                        url: erp_periods.dataselect_backend_periods_path(format: 'json'),
-                                        required: true,
-                                        errors: payment_record.errors.full_messages_for(:period_id)
-                                    }) %>
-                                <% end %>
                             </div>
                             <div class="col-md-6">
                                 <div class="ajax-box"
