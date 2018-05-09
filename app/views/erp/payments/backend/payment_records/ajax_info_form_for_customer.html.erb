@@ -11,19 +11,19 @@
                 <tr>
                     <td> Tổng tiền công nợ: </td>
                     <td>
-                        <strong><%= format_price(@customer.sales_total_amount(period: @period_id)) %></strong>
+                        <strong><%= format_price(@customer.sales_total_amount) %></strong>
                     </td>
                 </tr>
                 <tr>
                     <td> Tổng đã thanh toán: </td>
                     <td>
-                        <strong><%= format_price(@customer.sales_paid_by_period_amount(period: @period_id)) %></strong>
+                        <strong><%= format_price(@customer.sales_paid_amount) %></strong>
                     </td>
                 </tr>
                 <tr>
                     <td> Tổng phải thu (còn lại): </td>
                     <td>
-                        <strong><%= format_price(@customer.sales_debt_by_period_amount(period: @period_id)) %></strong>
+                        <strong><%= format_price(@customer.sales_debt_amount) %></strong>
                     </td>
                 </tr>
                 <% customer_commission = @customer.customer_commission_debt_amount(from_date: @from_date, to_date: @to_date) %>

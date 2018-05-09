@@ -11,19 +11,19 @@
                 <tr>
                     <td> Tổng nợ NCC: </td>
                     <td>
-                        <strong><%= format_price(@supplier.purchase_total_amount(period: @period_id)) %></strong>
+                        <strong><%= format_price(@supplier.purchase_total_amount) %></strong>
                     </td>
                 </tr>
                 <tr>
                     <td> Tổng đã thanh toán: </td>
                     <td>
-                        <strong><%= format_price(@supplier.purchase_paid_by_period_amount(period: @period_id)) %></strong>
+                        <strong><%= format_price(@supplier.purchase_paid_amount) %></strong>
                     </td>
                 </tr>
                 <tr>
                     <td> Tổng phải trả (còn lại): </td>
                     <td>
-                        <strong><%= format_price(@supplier.purchase_debt_by_period_amount(period: @period_id)) %></strong>
+                        <strong><%= format_price(@supplier.purchase_debt_amount) %></strong>
                     </td>
                 </tr>
             </tbody>
