@@ -853,7 +853,8 @@ module Erp
 
         # Export excel file
         def list_xlsx
-          records = PaymentRecord.search(params)
+          @payment_records = PaymentRecord.order(:payment_date).search(params)
+          @accounts = Account.where(id: @payment_records.select(:account_id))
 
           glb = params.to_unsafe_hash[:global_filter]
           if glb[:period].present?
@@ -867,18 +868,18 @@ module Erp
           end
 
           # Recieved total
-          @total_received = records.received_amount(from_date: @from, to_date: @to)
+          @total_received = @accounts.received(from_date: @from, to_date: @to)
 
           # Paid total
-          @total_paid = records.paid_amount(from_date: @from, to_date: @to)
+          @total_paid = @accounts.paid(from_date: @from, to_date: @to)
 
           # Begin of period amount
-          @begin_period_amount = records.remain_amount(from_date: nil, to_date: (@from.nil? ? nil : (@from - 1.day)))
+          @begin_period_amount = @accounts.account_balance(to_date: (@from - 1.day))
 
           # End of period amount
-          @end_period_amount = records.remain_amount(from_date: nil, to_date: @to)
+          @end_period_amount = @accounts.account_balance(to_date: @to)
 
-          @payment_records = records
+          @payment_records = @payment_records
 
           respond_to do |format|
             format.xlsx {
