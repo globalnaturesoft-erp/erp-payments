@@ -38,7 +38,10 @@ module Erp
         def payment_records_by_account
           @from_date = params[:from_date].to_date
           @to_date = params[:to_date].to_date
+          
           @payment_records = @account.payment_records(from_date: @from_date, to_date: @to_date)
+          
+          @payment_records = @payment_records.order('erp_payments_payment_records.payment_date DESC')
             .paginate(:page => params[:page], :per_page => 10)
           
           render layout: nil
