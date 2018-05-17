@@ -1034,6 +1034,11 @@ module Erp
           @times << {name: "Năm #{current_year-1}", from_date: (Time.now - 1.year).beginning_of_year.beginning_of_day, to_date: (Time.now - 1.year).end_of_year.end_of_day}
           @times = @times.reverse!
         end
+        
+        # download zip files
+        def export_xlsx_files
+          
+        end
 
         private
           # Use callbacks to share common setup or constraints between actions.
