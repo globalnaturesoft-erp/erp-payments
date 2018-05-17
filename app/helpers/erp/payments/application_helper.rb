@@ -9,6 +9,12 @@ module Erp
         return str.join("_")
       end
       
+      # order link helper
+      def payment_record_link(payment_record, text=nil)
+        text = text.nil? ? payment_record.code : text
+        raw "<a href='#{erp_payments.backend_payment_record_path(payment_record)}' class='modal-link'>#{text}</a>"
+      end
+      
     end
   end
 end
