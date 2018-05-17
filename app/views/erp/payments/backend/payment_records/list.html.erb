@@ -26,8 +26,8 @@
             data_checkboxes_desc: 'Chọn cột muốn thêm vào danh sách',
         }
         actions << {
-            text: 'Xuất tất cả phiếu',
-            url: erp_payments.export_xlsx_files_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'xlsx'})),
+            text: 'Xuất tất cả (PDF)',
+            url: erp_payments.export_pdf_files_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'pdf'})),
             target: "_blank",
         }
         actions << {

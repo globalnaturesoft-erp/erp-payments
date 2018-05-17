@@ -1036,8 +1036,63 @@ module Erp
         end
         
         # download zip files
-        def export_xlsx_files
+        def export_pdf_files
+          records = PaymentRecord.search(params)
+
+          glb = params.to_unsafe_hash[:global_filter]
+          if glb[:period].present?
+            @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
+            @to = Erp::Periods::Period.find(glb[:period]).to_date.end_of_day
+            @period_name = Erp::Periods::Period.find(glb[:period]).name
+          else
+            @from = (glb.present? and glb[:from_date].present?) ? glb[:from_date].to_date : nil
+            @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
+            @period_name = nil
+          end
+
+          @payment_records = records
           
+          # create files
+          tmp_path = "tmp/#{Time.now.to_i}/"
+          @payment_records.each do |pr|
+            create_pdf_file(pr, tmp_path)
+          end
+          
+          # zip files
+          temp = Tempfile.new 'phieu_thu_chi.zip'
+          Zip::File.open(temp.path, Zip::File::CREATE) do |zipfile|
+            Dir.foreach(tmp_path) do |file|
+              next if file == '.' or file == '..'
+              # do work on real items
+              zipfile.add file, tmp_path + file
+            end
+          end
+          
+          send_file temp.path, type: "application/zip", x_sendfile: true,
+            disposition: "attachment", filename: "phieu_thu_chi.zip"
+        end
+        
+        def create_pdf_file(payment_record, tmp_path)
+          tmp_file_name = "#{payment_record.code}-#{current_user.id}.pdf"
+          tmp_file = "#{tmp_path}#{tmp_file_name}"
+          Dir.mkdir(tmp_path) unless File.exists?(tmp_path)
+          
+          @payment_record = payment_record
+          
+          pdf = render_to_string pdf: "#{payment_record.code}",
+            title: "#{payment_record.code}",
+            layout: 'erp/backend/pdf',
+            page_size: 'A5',
+            orientation: 'Landscape',
+            template: 'erp/payments/backend/payment_records/pdf',
+            margin: {
+              top: 10,
+              bottom: 7,
+              left: 7,
+              right: 7
+            }
+            
+          File.open(tmp_file, "wb") { |file| file.write pdf }
         end
 
         private
