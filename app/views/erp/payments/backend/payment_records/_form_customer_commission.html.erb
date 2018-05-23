@@ -26,7 +26,17 @@
                                         label: t('.customer'),
                                         url: erp_contacts.dataselect_backend_contacts_path(format: 'json', is_customer: true),
                                         required: true,
-                                        errors: payment_record.errors.full_messages_for(:customer_id)
+                                        errors: payment_record.errors.full_messages_for(:customer_id),
+                                        create: {
+                                            url: erp_contacts.new_backend_contact_path(
+                                                contact_type: Erp::Contacts::Contact::TYPE_PERSON,
+                                                is_customer: true
+                                            ),
+                                            title: t('.create_contact'),
+                                            container_selector: '.new_contact',
+                                            input_selector: 'input[name="contact[name]"]',
+                                            modal_size: "full"
+                                        }
                                     }) %>
                                 <% end %>
                             </div>
