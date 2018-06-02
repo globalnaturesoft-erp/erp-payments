@@ -15,7 +15,7 @@
     <div class="m-grid-row">
         <div class="m-grid-col m-grid-col-middle m-grid-col-center">
             <%= t('.total_begin_of_period_amount') %><br>
-            <strong><%= format_price(@full_suppliers.purchase_debt_by_period_amount(to_date: (@from - 1.day))) %></strong>
+            <strong><%= format_price(@full_suppliers.purchase_debt_amount(to_date: (@from - 1.day))) %></strong>
         </div>
         <div class="m-grid-col m-grid-col-middle m-grid-col-center">
             <%= t('.total_period_amount') %><br>
@@ -23,11 +23,11 @@
         </div>
         <div class="m-grid-col m-grid-col-middle m-grid-col-center">
             <%= t('.total_paid_amount') %><br>
-            <strong><%= format_price(@full_suppliers.purchase_paid_by_period_amount(from_date: @from, to_date: @to)) %></strong>
+            <strong><%= format_price(@full_suppliers.purchase_paid_amount(from_date: @from, to_date: @to)) %></strong>
         </div>
         <div class="m-grid-col m-grid-col-middle m-grid-col-center">
             <%= t('.total_end_of_period_amount') %><br>
-            <strong><%= format_price(@full_suppliers.purchase_debt_by_period_amount(to_date: @to)) %></strong>
+            <strong><%= format_price(@full_suppliers.purchase_debt_amount(to_date: @to)) %></strong>
         </div>
     </div>
 </div>
@@ -78,8 +78,7 @@
                     supplier_id: supplier.id,
                     from_date: @from,
                     to_date: @to,
-                ) %>"
-            >
+                ) %>">
                 <td>
                     <%= erp_datalist_check_row(id: supplier.id) %>
                 </td>
@@ -90,16 +89,16 @@
                     </td>
                 <% end %>
                 <% if get_columns(params).include?("begin_of_period_amount") %>
-                    <td><%= format_price(supplier.purchase_debt_by_period_amount(to_date: (@from - 1.day))) %></td>
+                    <td class="text-right"><%= format_price(supplier.purchase_debt_amount(to_date: (@from - 1.day))) %></td>
                 <% end %>
                 <% if get_columns(params).include?("period_amount") %>
-                    <td><%= format_price(supplier.purchase_total_amount(from_date: @from, to_date: @to)) %></td>
+                    <td class="text-right"><%= format_price(supplier.purchase_total_amount(from_date: @from, to_date: @to)) %></td>
                 <% end %>
                 <% if get_columns(params).include?("paid_amount") %>
-                    <td><%= format_price(supplier.purchase_paid_by_period_amount(from_date: @from, to_date: @to)) %></td>
+                    <td class="text-right"><%= format_price(supplier.purchase_paid_amount(from_date: @from, to_date: @to)) %></td>
                 <% end %>
                 <% if get_columns(params).include?("end_of_period_amount") %>
-                    <td><%= format_price(supplier.purchase_debt_by_period_amount(to_date: @to)) %></td>
+                    <td class="text-right"><%= format_price(supplier.purchase_debt_amount(to_date: @to)) %></td>
                 <% end %>
                 <td>
                     <%= erp_datalist_row_actions(

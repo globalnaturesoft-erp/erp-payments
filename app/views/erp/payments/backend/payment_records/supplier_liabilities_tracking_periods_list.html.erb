@@ -27,11 +27,11 @@
             </strong>
           </td>
           <td class="text-right">
-            <%= format_price(@supplier.purchase_debt_by_period_amount(to_date: (time[:from_date] - 1.day))) %></td>
+            <%= format_price(@supplier.purchase_debt_amount(to_date: (time[:from_date] - 1.day))) %></td>
           <td class="text-right"><%= format_price(@supplier.purchase_total_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
-          <td class="text-right"><%= format_price(@supplier.purchase_paid_by_period_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
+          <td class="text-right"><%= format_price(@supplier.purchase_paid_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
           <td class="text-right">
-            <%= format_price(@supplier.purchase_debt_by_period_amount(to_date: time[:to_date])) %>
+            <%= format_price(@supplier.purchase_debt_amount(to_date: time[:to_date])) %>
           </td>
         </tr>
       <% end %>
