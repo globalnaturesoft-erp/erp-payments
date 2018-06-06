@@ -556,6 +556,8 @@ module Erp
             end
           end
           
+          @customers = @customers.order(:name)
+          
           @full_customers = @customers
           
           @customers = @customers.paginate(:page => params[:page], :per_page => 20)
