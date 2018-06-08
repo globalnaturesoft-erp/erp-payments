@@ -38,33 +38,38 @@
             <th width='1%'>
                 <%= erp_datalist_check_all %>
             </th>
+            <% if get_columns(params).include?("supplier_code") %>
+                <th>
+                    <%= t('.supplier_code') %>
+                </th>
+            <% end %>
             <% if get_columns(params).include?("supplier") %>
                 <th>
                     <%= t('.supplier') %>
                 </th>
             <% end %>
             <% if get_columns(params).include?("begin_of_period_amount") %>
-                <th>
+                <th class="text-right">
                     <%= t('.begin_of_period_amount') %>
                 </th>
             <% end %>
             <% if get_columns(params).include?("period_amount") %>
-                <th>
+                <th class="text-right">
                     <%= t('.period_amount') %>
                 </th>
             <% end %>
             <% if get_columns(params).include?("paid_amount") %>
-                <th>
+                <th class="text-right">
                     <%= t('.paid_amount') %>
                 </th>
             <% end %>
             <% if get_columns(params).include?("end_of_period_amount") %>
-                <th>
+                <th class="text-right">
                     <%= t('.end_of_period_amount') %>
                 </th>
             <% end %>
             <% if get_columns(params).include?("salesperson") %>
-                <th>
+                <th class="text-left">
                     <%= t('.salesperson') %>
                 </th>
             <% end %>
@@ -82,9 +87,14 @@
                 <td>
                     <%= erp_datalist_check_row(id: supplier.id) %>
                 </td>
-                <% if get_columns(params).include?("supplier") %>
+                <% if get_columns(params).include?("supplier_code") %>
                     <td>
                         <i class="fa fa-plus expand tr-expand-button"></i>
+                        <strong><%= supplier.code %></strong>
+                    </td>
+                <% end %>
+                <% if get_columns(params).include?("supplier") %>
+                    <td>
                         <strong><%= supplier.name %></strong>
                     </td>
                 <% end %>

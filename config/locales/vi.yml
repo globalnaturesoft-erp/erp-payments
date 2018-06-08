@@ -401,6 +401,7 @@ vi:
             pay_product_return: "Chi tiền hàng trả lại"
           liabilities_tracking:
             liabilities_tracking: "Theo dõi công nợ"
+            customer_code: "Mã KH"
             customer: "Khách hàng"
             begin_of_period_amount: "Nợ đầu kỳ"
             end_of_period_amount: "Nợ cuối kỳ"
@@ -419,6 +420,7 @@ vi:
             choose_period: "Chọn lọc theo chu kỳ thời gian"
           liabilities_tracking_table:
             liabilities_tracking: "Theo dõi công nợ"
+            customer_code: "Mã KH"
             customer: "Khách hàng"
             begin_of_period_amount: "Nợ đầu kỳ"
             end_of_period_amount: "Nợ cuối kỳ"
@@ -465,6 +467,7 @@ vi:
             filter_period: "Chu kỳ thời gian"
             choose_period: "Chọn lọc theo chu kỳ thời gian"
             supplier: "Nhà cung cấp"
+            supplier_code: "Mã NCC"
             begin_of_period_amount: "Nợ đầu kỳ"
             filter_period: "Chu kỳ thời gian"
             choose_period: "Chọn lọc theo chu kỳ thời gian"
@@ -475,6 +478,7 @@ vi:
             end_of_period_amount: "Nợ cuối kỳ"
           supplier_liabilities_tracking_table:
             supplier: "Nhà cung cấp"
+            supplier_code: "Mã NCC"
             create_pay_for_contact: "Chi tiền công nợ"
             create_receive_for_contact: "Thu lại tiền NCC"
             begin_of_period_amount: "Nợ đầu kỳ"
