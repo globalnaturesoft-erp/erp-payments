@@ -81,7 +81,7 @@ wb.styles do |s|
       column_widths << 15
     
       footer[:columns] << "Tổng cộng"
-      footer[:styles] << (s.add_style bg_info.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
+      footer[:styles] << (s.add_style bg_footer.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
       ft_merge_col += 1
     end
     
@@ -284,7 +284,7 @@ wb.styles do |s|
       column_widths << 20
       
       footer[:columns] << nil
-      footer[:styles] << (s.add_style bg_info.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
+      footer[:styles] << (s.add_style bg_footer.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
     end
     
     if params[:debit_account_col].present?
