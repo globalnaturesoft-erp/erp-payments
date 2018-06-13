@@ -6,6 +6,7 @@ wb.styles do |s|
     # style
     bg_info = {:bg_color => "305496", :fg_color => "FF"}
     bg_sum = {:bg_color => "ffff00", :fg_color => "00"}
+    bg_footer = {:bg_color => "ffff00", :fg_color => "c52f24"}
     text_center = {alignment: { horizontal: :center }}
     text_left = {alignment: { horizontal: :left }}
     text_right = {alignment: { horizontal: :right }}
@@ -15,7 +16,7 @@ wb.styles do |s|
     bold = {b: true}
     
     # add empty row
-    sheet.add_row ['']
+    sheet.add_row [nil]
     
     # Title
     if @period_name.nil?
@@ -28,23 +29,24 @@ wb.styles do |s|
     sheet.add_row ['(' + date + ')'], sz: 14, b: true, style: (s.add_style text_center)
     
     # add empty row
-    sheet.add_row ['']
+    sheet.add_row [nil]
     
     # header
     header = {columns: [], styles: []}
     subheader = {columns: [], styles: []}
     footer = {columns: [], styles: []}
-    header[:columns] = []
+    column_widths = []
     
     header[:columns] << 'Ngày ghi sổ'
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
-    subheader[:columns] << ''
+    subheader[:columns] << nil
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
     col = 0
     sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    column_widths << 15
     
     footer[:columns] << "Tổng cộng"
-    footer[:styles] << (s.add_style bold.deep_merge(border).deep_merge(text_center))
+    footer[:styles] << (s.add_style bold.deep_merge(border).deep_merge(text_center).deep_merge(bg_footer))
     
     header[:columns] << 'Chứng từ'
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
@@ -52,71 +54,89 @@ wb.styles do |s|
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
     col += 1
     s1 = col
+    column_widths << 15
     
-    footer[:columns] << ''
-    footer[:styles] << (s.add_style border.deep_merge(number).deep_merge(bold))
+    footer[:columns] << nil
+    footer[:styles] << (s.add_style border.deep_merge(number).deep_merge(bold).deep_merge(bg_footer))
     
-    header[:columns] << ''
+    header[:columns] << nil
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
     subheader[:columns] << 'Số'
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
     col += 1
     s2 = col
     sheet.merge_cells("#{('A'.codepoints.first + s1).chr}5:#{('A'.codepoints.first + s2).chr}5")
+    column_widths << 15
     
-    footer[:columns] << ''
-    footer[:styles] << (s.add_style border.deep_merge(number).deep_merge(bold))
+    footer[:columns] << nil
+    footer[:styles] << (s.add_style border.deep_merge(number).deep_merge(bold).deep_merge(bg_footer))
+    
+    header[:columns] << 'Đối tượng'
+    header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
+    subheader[:columns] << nil
+    subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
+    col += 1
+    sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    column_widths << 25
+    
+    footer[:columns] << nil
+    footer[:styles] << (s.add_style border.deep_merge(bg_footer))
     
     header[:columns] << 'Diễn giải'
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
-    subheader[:columns] << ''
+    subheader[:columns] << nil
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
     col += 1
     f = col
     sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    column_widths << 25
     
-    footer[:columns] << ''
-    footer[:styles] << (s.add_style border)
+    footer[:columns] << nil
+    footer[:styles] << (s.add_style border.deep_merge(bg_footer))
     
     header[:columns] << 'Số tiền'
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
-    subheader[:columns] << ''
+    subheader[:columns] << nil
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
     col += 1
     sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    column_widths << 15
     
     footer[:columns] << @receipts.received_amount
-    footer[:styles] << (s.add_style border.deep_merge(text_right).deep_merge(number).merge(bold))
+    footer[:styles] << (s.add_style border.deep_merge(text_right).deep_merge(number).merge(bold).deep_merge(bg_footer))
     
     header[:columns] << 'TK thanh toán'
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
-    subheader[:columns] << ''
+    subheader[:columns] << nil
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
     col += 1
     sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    column_widths << 20
     
-    footer[:columns] << ''
-    footer[:styles] << (s.add_style border)
+    footer[:columns] << nil
+    footer[:styles] << (s.add_style border.deep_merge(bg_footer))
     
     header[:columns] << 'TK nợ'
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
-    subheader[:columns] << ''
+    subheader[:columns] << nil
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
     col += 1
     sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    column_widths << 10
     
-    footer[:columns] << ''
-    footer[:styles] << (s.add_style border)
+    footer[:columns] << nil
+    footer[:styles] << (s.add_style border.deep_merge(bg_footer))
     
     header[:columns] << 'TK có'
     header[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(middle_align).deep_merge(border).merge(bold))
-    subheader[:columns] << ''
+    subheader[:columns] << nil
     subheader[:styles] << (s.add_style bg_info.deep_merge(text_center).deep_merge(border).merge(bold))
     col += 1
     sheet.merge_cells("#{('A'.codepoints.first + col).chr}5:#{('A'.codepoints.first + col).chr}6")
+    column_widths << 10
     
-    footer[:columns] << ''
-    footer[:styles] << (s.add_style border)
+    footer[:columns] << nil
+    footer[:styles] << (s.add_style border.deep_merge(bg_footer))
     
     sheet.add_row header[:columns], style: header[:styles]
     sheet.add_row subheader[:columns], style: subheader[:styles]
@@ -135,6 +155,9 @@ wb.styles do |s|
     
       row[:columns] << payment_record.code
       row[:styles] << (s.add_style text_center.deep_merge(number).deep_merge(border))
+    
+      row[:columns] << payment_record.get_contact_name
+      row[:styles] << (s.add_style text_left.deep_merge(border))
     
       row[:columns] << payment_record.get_report_note
       row[:styles] << (s.add_style text_left.deep_merge(border))
@@ -161,7 +184,7 @@ wb.styles do |s|
     sheet.merge_cells("#{('A'.codepoints.first).chr}#{r}:#{('A'.codepoints.first + f).chr}#{r}")
     
     # Setup
-    sheet.column_widths 15, 15, 15, 22
+    sheet.column_widths *column_widths
     sheet.merge_cells("A2:#{('A'.codepoints.first + col).chr}2")
     sheet.merge_cells("A3:#{('A'.codepoints.first + col).chr}3")
   end

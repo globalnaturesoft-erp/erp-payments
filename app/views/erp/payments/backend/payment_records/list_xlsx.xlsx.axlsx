@@ -5,7 +5,8 @@ wb.styles do |s|
   wb.add_worksheet(name: 'Nhật ký thu chi') do |sheet|
     # style
     bg_info = {:bg_color => "305496", :fg_color => "FF"}
-    bg_sum = {:bg_color => "ffff00", :fg_color => "00"}
+    bg_sum = {:bg_color => "b4c6e7", :fg_color => "00"}
+    bg_footer = {:bg_color => "ffff00", :fg_color => "c52f24"}
     blue_fade = {:bg_color => "bdd7ee", :fg_color => "203764"}
     yellow_fade = {:bg_color => "ffe699", :fg_color => "c00000"}
     text_center = {alignment: { horizontal: :center }}
@@ -105,7 +106,7 @@ wb.styles do |s|
     else
       footer[:columns] << "Tổng cộng"
     end
-    footer[:styles] << (s.add_style bg_info.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
+    footer[:styles] << (s.add_style bg_footer.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
     ft_merge_col += 1
     
     # -----
@@ -126,7 +127,7 @@ wb.styles do |s|
     column_widths << 15
     
     footer[:columns] << nil
-    footer[:styles] << (s.add_style bg_info.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
+    footer[:styles] << (s.add_style bg_footer.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
     ft_merge_col += 1
     
     # -----
@@ -146,7 +147,7 @@ wb.styles do |s|
     column_widths << 25
     
     footer[:columns] << nil
-    footer[:styles] << (s.add_style bg_info.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
+    footer[:styles] << (s.add_style bg_footer.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
     ft_merge_col += 1
     
     # -----
@@ -166,7 +167,7 @@ wb.styles do |s|
     column_widths << 35
     
     footer[:columns] << nil
-    footer[:styles] << (s.add_style bg_info.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
+    footer[:styles] << (s.add_style bg_footer.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
     ft_merge_col += 1
     
     # -----
@@ -186,7 +187,7 @@ wb.styles do |s|
     column_widths << 18
     
     footer[:columns] << ''
-    footer[:styles] << (s.add_style bg_info.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
+    footer[:styles] << (s.add_style bg_footer.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
     ft_merge_col += 1
 
     # -----
@@ -207,7 +208,7 @@ wb.styles do |s|
     column_widths << 18
     
     footer[:columns] << ''
-    footer[:styles] << (s.add_style bg_info.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
+    footer[:styles] << (s.add_style bg_footer.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
     ft_merge_col += 1
     
     # -----
@@ -227,7 +228,7 @@ wb.styles do |s|
     column_widths << 15
     
     footer[:columns] << @total_received
-    footer[:styles] << (s.add_style bg_info.deep_merge(text_center_top_bottom).deep_merge(text_right).deep_merge(border).deep_merge(bold).deep_merge(number))
+    footer[:styles] << (s.add_style bg_footer.deep_merge(text_center_top_bottom).deep_merge(text_right).deep_merge(border).deep_merge(bold).deep_merge(number))
     
     # -----
     topheader_1[:columns] << nil
@@ -250,7 +251,7 @@ wb.styles do |s|
     end
     
     footer[:columns] << @total_paid
-    footer[:styles] << (s.add_style bg_info.deep_merge(text_center_top_bottom).deep_merge(text_right).deep_merge(border).deep_merge(bold).deep_merge(number))
+    footer[:styles] << (s.add_style bg_footer.deep_merge(text_center_top_bottom).deep_merge(text_right).deep_merge(border).deep_merge(bold).deep_merge(number))
     
     # -----
     topheader_1[:columns] << @begin_period_amount # Số dư đầu kỳ
@@ -270,7 +271,7 @@ wb.styles do |s|
       column_widths << 18
       
       footer[:columns] << @end_period_amount
-      footer[:styles] << (s.add_style bg_info.deep_merge(text_center_top_bottom).deep_merge(text_right).deep_merge(border).deep_merge(bold).deep_merge(number))
+      footer[:styles] << (s.add_style bg_footer.deep_merge(text_center_top_bottom).deep_merge(text_right).deep_merge(border).deep_merge(bold).deep_merge(number))
     end
     
     if params[:account_col].present?
@@ -296,7 +297,7 @@ wb.styles do |s|
       column_widths << 7
       
       footer[:columns] << nil
-      footer[:styles] << (s.add_style bg_info.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
+      footer[:styles] << (s.add_style bg_footer.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
     end
     
     if params[:credit_account_col].present?
@@ -309,7 +310,7 @@ wb.styles do |s|
       column_widths << 7
       
       footer[:columns] << nil
-      footer[:styles] << (s.add_style bg_info.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
+      footer[:styles] << (s.add_style bg_footer.deep_merge(text_middle).deep_merge(border).deep_merge(bold))
     end
     
     if params[:account_balance_col].present?
@@ -343,11 +344,11 @@ wb.styles do |s|
     
       row[:columns] << payment_record.description
       row[:styles] << (s.add_style text_left.deep_merge(border))
-    
-      row[:columns] << (payment_record.is_receipt_voucher? ? t(".#{display_payment_record_type(payment_record)}") : '')
+      
+      row[:columns] << (payment_record.is_receipt_voucher? ? payment_record.payment_type_name : '')
       row[:styles] << (s.add_style text_left.deep_merge(border))
       
-      row[:columns] << (payment_record.is_payment_voucher? ? t(".#{display_payment_record_type(payment_record)}") : '')
+      row[:columns] << (payment_record.is_payment_voucher? ? payment_record.payment_type_name : '')
       row[:styles] << (s.add_style text_left.deep_merge(border))
       
       rec = (payment_record.is_receipt_voucher? ? payment_record.amount : '')
