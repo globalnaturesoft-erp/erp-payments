@@ -2,7 +2,7 @@ module Erp
   module Payments
     module Backend
       class PaymentRecordsController < Erp::Backend::BackendController
-        before_action :set_payment_record, only: [:pdf, :show, :show_list, :show_modal, :edit, :update, :set_done, :set_deleted]
+        before_action :set_payment_record, only: [:pdf, :show, :show_list, :show_modal, :edit, :update, :set_done, :set_deleted, :change_payment_type]
         before_action :set_payment_records, only: [:set_done_all, :set_deleted_all]
 
         # GET /payment_records
@@ -241,6 +241,16 @@ module Erp
                 'type': 'success'
               }
             }
+          end
+        end
+        
+        def change_payment_type
+          authorize! :change_payment_type, @payment_record
+          if params.has_key? :payment_record
+            if params[:payment_record][:payment_type_id].present?
+              @payment_record.update_attributes(payment_type_id: params[:payment_record][:payment_type_id])
+              redirect_to erp_payments.edit_backend_payment_record_path(@payment_record), notice: t('.success')
+            end
           end
         end
 

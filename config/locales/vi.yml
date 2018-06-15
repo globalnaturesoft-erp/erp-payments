@@ -126,6 +126,8 @@ vi:
             success: "Hủy phiếu thành công"
           set_done:
             success: "Xác nhận phiếu thành công"
+          change_payment_type:
+            success: "Thực hiện thành công thao tác chuyển loại phiếu thanh toán."
           index:
             delete: "Xóa phiếu đã chọn"
             confirm: "Xác nhận phiếu"
@@ -595,6 +597,9 @@ vi:
             pay_customer_commission: "Chiết khấu khách hàng"
             pay_product_return: "Hàng bị trả lại"
             pay_custom: "Chi khác/tùy chỉnh"
+          change_payment_type:
+            payment_records: "Quản lý thu - chi"
+            change_payment_type: "Chuyển loại thanh toán"
         debts:
           create:
             success: "Gia hạn công nợ được tạo thành công."

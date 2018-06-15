@@ -1,0 +1,93 @@
+<%= form_tag(erp_payments.change_payment_type_backend_payment_records_path(id: payment_record.id), method: "post") do %>
+    <div class="form-body">
+        <div class="row mb-10">
+            <div class="col-md-12">
+                <div class="custom-show text-center">
+                    <h4 class="font-yellow bold uppercase">
+                        <%= 'Chuyển đổi loại phiếu thanh toán' %>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-body form">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4 class="font-dark">
+                                    <% if payment_record.is_payment_voucher? %>
+                                        <%= 'Mã phiếu chi: ' %>
+                                    <% else %>
+                                        <%= 'Mã phiếu thu: ' %>
+                                    <% end %>
+                                    <span class="bold font-green">
+                                        <%= payment_record.code %>
+                                    </span>
+                                </h4>
+                            </div>
+                            <div class="col-md-4">
+                                <h4 class="font-dark">
+                                    <%= 'Đối tượng: ' %>
+                                    <span class="bold">
+                                        <%= payment_record.get_contact_name %>
+                                    </span>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4 class="font-dark">
+                                    <%= 'Loại thanh toán: ' %>
+                                    <span class="font-green">
+                                        <%= payment_record.payment_type_name %>
+                                    </span>
+                                </h4>
+                            </div>
+                            <div class="col-md-4">
+                                <h4 class="font-dark">
+                                    <%= 'Ngày chứng từ: ' %>
+                                    <span class="bold">
+                                        <%= format_date(payment_record.payment_date) %>
+                                    </span>
+                                </h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <%  @is_payable = false
+                                    @is_receivable = false
+                                    if payment_record.is_payment_voucher?
+                                        @is_payable = true
+                                    end
+                                    if payment_record.is_receipt_voucher?
+                                        @is_receivable = true
+                                    end
+                                %>
+                                
+                                <%= erp_form_control("dataselect", {
+                                    name: 'payment_record[payment_type_id]',
+                                    value: payment_record.payment_type_id,
+                                    text: payment_record.payment_type_name,
+                                    placeholder: 'Tìm và chọn loại thanh toán muốn chuyển',
+                                    label: 'Loại thanh toán muốn chuyển',
+                                    url: erp_payments.dataselect_backend_payment_types_path(format: 'json',
+                                        payment_type_code: Erp::Payments::PaymentType::CODE_CUSTOM,
+                                        is_payable: @is_payable, is_receivable: @is_receivable),
+                                    required: true
+                                }) %>
+                            </div>
+                            <div class="col-md-6 text-right mt-25">
+                                <%= erp_component('button/save', {
+                                    text: 'Xác nhận chuyển loại phiếu'
+                                }) %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<% end %>
+    

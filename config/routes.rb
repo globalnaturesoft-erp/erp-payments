@@ -32,6 +32,9 @@ Erp::Payments::Engine.routes.draw do
 					put 'set_deleted_all'
 					post 'order_payment_record_list'
 					
+					get 'change_payment_type'
+					post 'change_payment_type'
+					
 					get 'sales_orders_tracking'
 					post 'sales_orders_tracking_table'
 					get 'sales_orders_tracking_table_details'

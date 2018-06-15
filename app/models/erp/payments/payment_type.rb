@@ -82,8 +82,20 @@ module Erp::Payments
     end
     
     # data for dataselect ajax
-    def self.dataselect(keyword='')
-      query = self.all
+    def self.dataselect(keyword='', params='')
+      query = self.all_active
+      
+      if params[:payment_type_code].present?
+        query = query.where(code: params[:payment_type_code])
+      end
+      
+      if params[:is_payable].present? and params[:is_payable] == 'true'
+        query = query.where(is_payable: true)
+      end
+      
+      if params[:is_receivable].present? and params[:is_receivable] == 'true'
+        query = query.where(is_receivable: true)
+      end
       
       if keyword.present?
         keyword = keyword.strip.downcase
