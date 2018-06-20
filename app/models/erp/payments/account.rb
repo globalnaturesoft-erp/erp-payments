@@ -14,24 +14,7 @@ module Erp::Payments
     def self.filter(query, params)
       params = params.to_unsafe_hash
       and_conds = []
-      show_archived = false
-
-      #filters
-      if params["filters"].present?
-        params["filters"].each do |ft|
-          or_conds = []
-          ft[1].each do |cond|
-            # in case filter is show archived
-            if cond[1]["name"] == 'show_archived'
-              show_archived = true
-            else
-              or_conds << "#{cond[1]["name"]} = '#{cond[1]["value"]}'"
-            end
-          end
-          and_conds << '('+or_conds.join(' OR ')+')' if !or_conds.empty?
-        end
-      end
-
+      
       # show archived items condition - default: false
       show_archived = false
 
