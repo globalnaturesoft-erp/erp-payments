@@ -1,21 +1,27 @@
 <% if @product_returns.count > 0 %>
     <h4 class="profile-desc-title bold"><i class="glyphicon glyphicon-hand-right"></i> Chi tiết hàng bán bị trả lại</h4>
-
     <table class="table table-bordered table-advance order-column">
         <thead class="flip-content">
             <tr>
                 <td class="text-center bold" colspan="4">Tổng trả</td>
                 <td class="stock-num text-center bold font-red-thunderbird"><%= @full_product_returns.total_delivery_quantity %></td>
-                <td class="stock-num text-right bold font-red-thunderbird"><%= format_price(@full_product_returns.total_amount) %></td>
-                <td class="stock-num text-right bold font-red-thunderbird"></td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:discount)) %></td>
+                <td class="stock-num text-center bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:total_without_tax)) %></td>
+                <td class="stock-num text-center bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:tax_amount)) %></td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:total)) %></td> <!-- @todo sum total for orders -->
+                <td colspan="2"></td>
             </tr>
             <tr>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Mã trả hàng</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Ngày trả hàng</th>
-                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Sản phẩm</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left"></th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Đơn giá</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Số lượng</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Giảm giá</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Thành tiền</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Thuế</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Tổng cộng</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">NV phụ trách</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center"><%= t('.actions') %></th>
             </tr>
         </thead>
@@ -39,19 +45,26 @@
                         <% end %>
                     </td>
                     <td class="bg-grey bg-font-grey text-center bold"><%= format_number(product_return.total_delivery_quantity) %></td>
-                    <td class="bg-grey bg-font-grey text-right bold"><%= format_price(product_return.total_amount) %></td>
+                    <td class="bg-grey bg-font-grey text-right bold"><%= format_number(product_return.discount) %></td>
+                    <td class="bg-grey bg-font-grey text-right bold"><%= format_number(product_return.total_without_tax) %></td>
+                    <td class="bg-grey bg-font-grey text-right bold"><%= format_number(product_return.tax_amount) %></td>
+                    <td class="bg-grey bg-font-grey text-right bold"><%= format_number(product_return.total) %></td>
+                    <td class="bg-grey bg-font-grey text-left"><%= product_return.employee_name %></td>
                     <td class="bg-grey text-right">
                         <%= accounting_delivery_dropdown_actions(product_return) %>
                     </td>
                 </tr>
                 <% product_return.delivery_details.each do |delivery_detail| %>
                     <tr>
-                        <td class="text-left" colspan="2"></td>
-                        <td class="text-left"><%= delivery_detail.product_name %></td>
-                        <td class=" text-right"><%= format_price(delivery_detail.price) %></td>
+                        <!--<td class="text-left" colspan="2"></td>-->
+                        <td class="text-left" colspan="3"><%= delivery_detail.product_name %></td>
+                        <td class=" text-right"><%= format_number(delivery_detail.price) %></td>
                         <td class=" text-center"><%= format_number(delivery_detail.quantity) %></td>
-                        <td class=" text-right"><%= format_price(delivery_detail.cache_total) %></td>
-                        <td class=" text-right"></td>
+                        <td class=" text-right"><%= format_number(delivery_detail.discount) %></td>
+                        <td class=" text-right"><%= format_number(delivery_detail.total_without_tax) %></td>
+                        <td class=" text-right"><%= format_number(delivery_detail.tax_amount) %></td>
+                        <td class=" text-right"><%= format_number(delivery_detail.total) %></td>
+                        <td class="text-left" colspan="2"></td>
                     </tr>
                 <% end %>
             <% end %>

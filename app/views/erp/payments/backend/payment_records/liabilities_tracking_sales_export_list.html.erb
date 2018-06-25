@@ -6,8 +6,8 @@
                 <td class="text-center bold" colspan="4">Tổng cộng</td>
                 <td class="stock-num text-center bold font-red-thunderbird"><%= @full_orders.sum(&:items_count) %></td>
                 <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:discount_amount)) %></td>
-                <td class="stock-num text-center bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:total_without_tax)) %></td>
-                <td class="stock-num text-center bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:tax_amount)) %></td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:total_without_tax)) %></td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:tax_amount)) %></td>
                 <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:cache_total)) %></td> <!-- @todo sum total for orders -->
                 <td colspan="2"></td>
             </tr>
@@ -21,7 +21,7 @@
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Thành tiền</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Thuế</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Tổng cộng</th>
-                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">N.viên k.doanh</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">NV kinh doanh</th>
                 <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center"><%= t('.actions') %></th>
             </tr>
         </thead>
@@ -47,7 +47,7 @@
                     <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.total_without_tax) %></td>
                     <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.tax_amount) %></td>
                     <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.cache_total) %></td>
-                    <td class="bg-grey text-left text-nowrap"><%= order.employee_name %></td>
+                    <td class="bg-grey bg-font-grey text-left"><%= order.employee_name %></td>
                     <td class="bg-grey text-right">
                         <%= accounting_order_dropdown_actions(order) %>
                     </td>

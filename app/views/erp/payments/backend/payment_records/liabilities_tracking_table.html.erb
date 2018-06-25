@@ -141,7 +141,8 @@
                                     pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
                                     payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER),
                                     customer_id: customer.id
-                                )
+                                ),
+                                class: 'modal-link has-form'
                             },
                             {
                                 text: '<i class="fa fa-angle-double-right"></i> '+t('.create_pay_for_contact'),
@@ -149,7 +150,8 @@
                                     pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
                                     payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER),
                                     customer_id: customer.id
-                                )
+                                ),
+                                class: 'modal-link has-form'
                             },
                             {divider: true},
                             {

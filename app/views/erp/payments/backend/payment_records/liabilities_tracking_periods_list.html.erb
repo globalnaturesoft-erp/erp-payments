@@ -2,38 +2,38 @@
     <thead>
         <tr>
             <th>
-              Kỳ công nợ
+                Kỳ công nợ
             </th>
             <th class="text-right">
-              Đầu kỳ
+                Đầu kỳ
             </th>
             <th class="text-right">
-              Phát sinh trong kỳ
+                Phát sinh trong kỳ
             </th>
             <th class="text-right">
-              Thanh toán trong kỳ
+                Thanh toán trong kỳ
             </th>
             <th class="text-right">
-              Cuối kỳ
+                Cuối kỳ
             </th>
         </tr>
     </thead>
     <tbody>
-      <% @times.each do |time| %>
-        <tr>
-          <td>
-            <strong>
-              <%= "#{time[:name]}" %>
-            </strong>
-          </td>
-          <td class="text-right">
-            <%= format_price(@customer.sales_debt_amount(to_date: (time[:from_date] - 1.day))) %></td>
-          <td class="text-right"><%= format_price(@customer.sales_total_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
-          <td class="text-right"><%= format_price(@customer.sales_paid_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
-          <td class="text-right">
-            <%= format_price(@customer.sales_debt_amount(to_date: time[:to_date])) %>
-          </td>
-        </tr>
-      <% end %>
+        <% @times.each do |time| %>
+            <tr>
+                <td>
+                    <strong>
+                        <%= "#{time[:name]}" %>
+                    </strong>
+                </td>
+                <td class="text-right">
+                    <%= format_price(@customer.sales_debt_amount(to_date: (time[:from_date] - 1.day))) %></td>
+                <td class="text-right"><%= format_price(@customer.sales_total_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
+                <td class="text-right"><%= format_price(@customer.sales_paid_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
+                <td class="text-right">
+                    <%= format_price(@customer.sales_debt_amount(to_date: time[:to_date])) %>
+                </td>
+            </tr>
+        <% end %>
     </tbody>
 </table>
