@@ -8,7 +8,7 @@
                 <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:discount)) %></td>
                 <td class="stock-num text-center bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:total_without_tax)) %></td>
                 <td class="stock-num text-center bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:tax_amount)) %></td>
-                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:total)) %></td> <!-- @todo sum total for orders -->
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:cache_total)) %></td> <!-- @todo sum total for orders -->
                 <td colspan="2"></td>
             </tr>
             <tr>

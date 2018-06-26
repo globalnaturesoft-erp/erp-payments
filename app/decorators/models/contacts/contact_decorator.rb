@@ -103,7 +103,7 @@ Erp::Contacts::Contact.class_eval do
     if self.init_debt_date.present? and
       (!params[:from_date].present? or params[:from_date].to_date.beginning_of_day <= self.init_debt_date) and
       (!params[:to_date].present? or params[:to_date].to_date.end_of_day >= self.init_debt_date)
-        total += self.init_debt_amount
+        total += self.init_debt_amount.to_f
     end
 
     return total
@@ -209,7 +209,7 @@ Erp::Contacts::Contact.class_eval do
     if self.init_debt_date.present? and
       (!params[:from_date].present? or params[:from_date].to_date.beginning_of_day <= self.init_debt_date) and
       (!params[:to_date].present? or params[:to_date].to_date.end_of_day >= self.init_debt_date)
-        total += self.init_debt_amount
+        total += self.init_debt_amount.to_f
     end
 
     return total
