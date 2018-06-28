@@ -552,17 +552,28 @@ module Erp
           end
 
           #filters
+          in_period_active = false
+          is_debt_active = false
           if params.to_unsafe_hash["filters"].present?
             params.to_unsafe_hash["filters"].each do |ft|
               ft[1].each do |cond|
-                if cond[1]["name"] == 'in_period_active'
-                  @customers = @customers.get_sales_payment_chasing_contacts
-                  #(
-                  #  from_date: @from,
-                  #  to_date: @to
-                  #)
+                if (cond[1]["name"] == 'in_period_active')
+                  in_period_active = true
+                end
+                if (cond[1]["name"] == 'is_debt_active')
+                  is_debt_active = true
                 end
               end
+            end
+          end
+          
+          if (in_period_active == true) && (is_debt_active == true)
+            @customers = @customers.get_sales_liabilities_contacts(from_date: @from, to_date: @to)
+          else
+            if in_period_active == true
+              @customers = @customers.get_sales_payment_chasing_contacts(from_date: @from, to_date: @to)
+            elsif is_debt_active == true
+              @customers = @customers.get_sales_debt_amount_residual_contacts
             end
           end
           
