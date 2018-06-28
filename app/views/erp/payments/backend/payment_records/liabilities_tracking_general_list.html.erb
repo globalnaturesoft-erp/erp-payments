@@ -1,0 +1,43 @@
+<% if !@datas.empty? %>
+    <h4 class="profile-desc-title bold"><i class="glyphicon glyphicon-hand-right"></i> Tổng hợp công nợ</h4>
+    <table class="table table-bordered table-advance order-column">
+        <thead class="flip-content">
+            <tr>
+                <td class="text-center bold" colspan="4">Tổng cộng</td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@customer.sales_debt_amount(to_date: (@from_date.to_date - 1.day))) %></td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@totals[:sales_total_amount]) %></td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@totals[:return_total_amount]) %></td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@totals[:payment_total_amount]) %></td>
+                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@customer.sales_debt_amount(to_date: @to_date.to_date)) %></td>
+            </tr>
+            <tr>
+                <th width="5%" class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">STT</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Ngày chứng từ</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-center">Số chứng từ</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-left">Ghi chú</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Tồn đầu kỳ</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Xuất bán</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Hoàn trả</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Thanh toán</th>
+                <th class="bg-blue-madison bg-font-blue-madison border-blue-madison text-nowrap text-right">Còn lại</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @datas.each_with_index do |data,index| %>
+                <tr>
+                    <td class="text-center"><%= index + 1 %></td>
+                    <td class="text-center text-nowrap"><%= format_date(data[:voucher_date]) %></td>
+                    <td class="text-center text-nowrap"><%= data[:voucher_code] %></td>
+                    <td class="text-left"><%= raw data[:description] %></td>
+                    <td class="text-center"><%= '--' %></td>
+                    <td class="text-right"><%= format_number(data[:sales_total_amount]) %></td>
+                    <td class="text-right"><%= format_number(data[:return_total_amount]) %></td>
+                    <td class="text-right"><%= format_number(data[:payment_total_amount]) %></td>
+                    <td class="text-center"><%= '--' %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+<% else %>
+    <div class="alert alert-warning alert-dismissable no-margin text-center">Không có giao dịch phát sinh trong kỳ!</div>
+<% end %>

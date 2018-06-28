@@ -666,6 +666,121 @@ Erp::Contacts::Contact.class_eval do
   
     def orders_tracking_sales_debt_amount(params={})
       self.orders_tracking_sales_total_amount(params) - self.orders_tracking_sales_paid_amount(params)
+    end    
+  end
+  
+  # Get liabilities tracking general list
+  def self.general_liabilities_sales_details(params={}, limit=nil)
+    totals = {}
+    datas = []
+    
+    # --- sales export ---
+    query = Erp::Orders::Order.where(supplier_id: Erp::Contacts::Contact.get_main_contact.id)
+      .where(status: Erp::Orders::Order::STATUS_CONFIRMED)
+
+    if params[:from_date].present?
+      query = query.where('erp_orders_orders.order_date >= ?', params[:from_date].to_date.beginning_of_day)
     end
+
+    if params[:to_date].present?
+      query = query.where('erp_orders_orders.order_date <= ?', params[:to_date].to_date.end_of_day)
+    end
+    
+    if params[:customer_id].present?
+      query = query.where(customer_id: params[:customer_id])
+    end
+    
+    query.each do |order|
+      datas << {
+        record_type: 'sales_order',
+        record_date: order.created_at,
+        voucher_date: order.order_date,
+        voucher_code: order.code,
+        customer_code: order.customer_code,
+        customer_name: order.customer_name,
+        description: order.note,
+        sales_total_amount: order.total
+      }      
+    end
+    
+    # count sales_total_amount
+    totals[:sales_total_amount] = query.sum(&:total)
+    
+    # --- sales import ---
+    query = Erp::Qdeliveries::Delivery.where(delivery_type: Erp::Qdeliveries::Delivery::TYPE_SALES_IMPORT)
+      .where(status: Erp::Qdeliveries::Delivery::STATUS_DELIVERED)
+
+    if params[:from_date].present?
+      query = query.where('erp_qdeliveries_deliveries.date >= ?', params[:from_date].to_date.beginning_of_day)
+    end
+
+    if params[:to_date].present?
+      query = query.where('erp_qdeliveries_deliveries.date <= ?', params[:to_date].to_date.end_of_day)
+    end
+    
+    if params[:customer_id].present?
+      query = query.where(customer_id: params[:customer_id])
+    end
+    
+    query.each do |delivery|
+      datas << {
+        record_type: delivery.delivery_type,
+        record_date: delivery.created_at,
+        voucher_date: delivery.date,
+        voucher_code: delivery.code,
+        customer_code: delivery.customer.code,
+        customer_name: delivery.customer_name,
+        description: delivery.note,
+        return_total_amount: delivery.total
+      }
+    end
+    
+    # count return_total_amount
+    totals[:return_total_amount] = query.sum(&:total)
+    
+    # --- payment record ---
+    query = Erp::Payments::PaymentRecord.all_done
+      .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER).id)
+    
+    if params[:from_date].present?
+      query = query.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
+    end
+    
+    if params[:to_date].present?
+      query = query.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
+    end
+    
+    if params[:customer_id].present?
+      query = query.where(customer_id: params[:customer_id])
+    end
+    
+    totals[:payment_total_amount] = 0
+    query.each do |payment_record|
+      if [Erp::Payments::PaymentRecord::TYPE_RECEIVE].include?(payment_record.pay_receive)
+        payment_total_amount = payment_record.amount
+      else
+        payment_total_amount = -payment_record.amount
+      end
+      datas << {
+        record_type: 'payment_record',
+        record_date: payment_record.created_at,
+        voucher_date: payment_record.payment_date,
+        voucher_code: payment_record.code,
+        customer_code: payment_record.customer.code,
+        customer_name: payment_record.customer_name,
+        description: payment_record.description,
+        payment_total_amount: payment_record.amount
+      }
+    
+      # count return_total_amount
+      totals[:payment_total_amount] += payment_total_amount
+    end
+    
+    result = {
+      datas: datas,
+      totals: totals,
+    }
+    
+    return result
   end
 end

@@ -588,6 +588,20 @@ module Erp
         def liabilities_tracking_table_details
         end
         
+        def liabilities_tracking_general_list
+          @from_date = params[:from_date]
+          @to_date = params[:to_date]
+          
+          @options = {
+            customer_id: params[:customer_id],
+            from_date: @from_date,
+            to_date: @to_date
+          }
+          
+          @customer = Erp::Contacts::Contact.find(params[:customer_id])
+          @datas = Erp::Contacts::Contact.general_liabilities_sales_details(@options)[:datas].sort_by { |n| n[:voucher_date] }#.reverse!
+          @totals = Erp::Contacts::Contact.general_liabilities_sales_details(@options)[:totals]
+        end
         def liabilities_tracking_payment_records_list          
           @payment_records = Erp::Payments::PaymentRecord.all_done
             .where(customer_id: params[:customer_id])
