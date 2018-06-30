@@ -51,6 +51,10 @@
     <div class="portlet m-grid m-grid-demo">
         <div class="m-grid-row">
             <div class="m-grid-col m-grid-col-middle m-grid-col-center text-uppercase">
+                <%= t('.begin_period_amount') %><br>
+                <strong class="font-red"><%= format_price(@begin_period_amount) %></strong>
+            </div>
+            <div class="m-grid-col m-grid-col-middle m-grid-col-center text-uppercase">
                 <%= t('.total_received') %><br>
                 <strong class="font-red"><%= format_price(@total_received) %></strong>
             </div>
@@ -59,8 +63,8 @@
                 <strong class="font-red"><%= format_price(@total_paid) %></strong>
             </div>
             <div class="m-grid-col m-grid-col-middle m-grid-col-center text-uppercase">
-                <%= t('.differences') %><br>
-                <strong class="font-red"><%= format_price(@differences) %></strong>
+                <%= t('.end_period_amount') %><br>
+                <strong class="font-red"><%= format_price(@end_period_amount) %></strong>
             </div>
         </div>
     </div>

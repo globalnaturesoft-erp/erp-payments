@@ -14,8 +14,6 @@ module Erp
 
         # POST /payment_records/list
         def list
-          records = PaymentRecord.search(params)
-
           glb = params.to_unsafe_hash[:global_filter]
           if glb[:period].present?
             @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
@@ -26,20 +24,31 @@ module Erp
             @to = (glb.present? and glb[:to_date].present?) ? glb[:to_date].to_date : nil
             @period_name = nil
           end
-
-          #todo get dates from params
-          #from_date = Time.now.beginning_of_month.beginning_of_day
-          #to_date = Time.now.end_of_month.end_of_day
+          
+          @payment_records = PaymentRecord.search(params)
+          @accounts = Account.where(id: @payment_records.select(:account_id))
+          
+          ## Recieved total
+          #@total_received = records.received_amount(from_date: @from, to_date: @to)
+          #
+          ## Paid total
+          #@total_paid = records.paid_amount(from_date: @from, to_date: @to)
+          #
+          #@differences = records.remain_amount(from_date: @from, to_date: @to)
 
           # Recieved total
-          @total_received = records.received_amount(from_date: @from, to_date: @to)
+          @total_received = @accounts.received(from_date: @from, to_date: @to)
 
           # Paid total
-          @total_paid = records.paid_amount(from_date: @from, to_date: @to)
-          
-          @differences = records.remain_amount(from_date: @from, to_date: @to)
+          @total_paid = @accounts.paid(from_date: @from, to_date: @to)
 
-          @payment_records = records.paginate(:page => params[:page], :per_page => 20)
+          # Begin of period amount
+          @begin_period_amount = @accounts.account_balance(to_date: (@from - 1.day))
+
+          # End of period amount
+          @end_period_amount = @accounts.account_balance(to_date: @to)
+
+          @payment_records = @payment_records.paginate(:page => params[:page], :per_page => 20)
 
           render layout: nil
         end
