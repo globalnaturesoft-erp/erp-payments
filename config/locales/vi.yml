@@ -460,6 +460,20 @@ vi:
             owing: "Đang ghi nợ"
             overpaid: "Thanh toán dư"
             actions: "Hành động"
+          liabilities_tracking_general_list:
+            for_contact: "Ghi vào công nợ"
+            for_order: "Trả theo chứng từ"
+            pay_customer: "Chi công nợ"
+            receive_customer: "Thu công nợ"
+          liabilities_tracking_table_xlsx:
+            ordinal_number: "STT"
+            customer_code: "MS KH"
+            customer_name: "Tên khách hàng"
+            begin_debt_amount: "Nợ đầu kỳ"
+            total_debt_amount: "Nợ tăng trong kỳ"
+            total_paid_amount: "Thanh toán trong kỳ"
+            end_debt_amount: "Nợ cuối kỳ"
+            salesperson: "N.viên k.doanh"
           supplier_liabilities_tracking:
             supplier_liabilities_tracking: "Công nợ cho nhà cung cấp"
             from_date: "Từ ngày"

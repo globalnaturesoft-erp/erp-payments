@@ -588,6 +588,15 @@ module Erp
           
           @customers = @customers.order(:name)
           
+          File.open("tmp/liabilities_tracking_table_xlsx_#{current_user.id}.yml", "w+") do |f|
+            f.write({
+              global_filters: glb,
+              from_date: @from,
+              to_date: @to,
+              customers: @customers
+            }.to_yaml)
+          end
+          
           @full_customers = @customers
           
           @customers = @customers.paginate(:page => params[:page], :per_page => 20)
@@ -611,6 +620,7 @@ module Erp
           @datas = Erp::Contacts::Contact.general_liabilities_sales_details(@options)[:datas].sort_by { |n| n[:voucher_date] }#.reverse!
           @totals = Erp::Contacts::Contact.general_liabilities_sales_details(@options)[:totals]
         end
+        
         def liabilities_tracking_payment_records_list          
           @payment_records = Erp::Payments::PaymentRecord.all_done
             .where(customer_id: params[:customer_id])
@@ -956,6 +966,23 @@ module Erp
           respond_to do |format|
             format.xlsx {
               response.headers['Content-Disposition'] = "attachment; filename='Nhat ky thu tien.xlsx'"
+            }
+          end
+        end
+        
+        def liabilities_tracking_table_xlsx
+          data = YAML.load_file("tmp/liabilities_tracking_table_xlsx_#{current_user.id}.yml")
+          
+          @global_filters = data[:global_filters]
+          @from = data[:from_date].to_date.beginning_of_day
+          @to = data[:to_date].to_date.end_of_day
+          @customers = data[:customers]
+          
+          @customers = Erp::Contacts::Contact.where(id: (@customers.map{|i| i.id}))
+
+          respond_to do |format|
+            format.xlsx {
+              response.headers['Content-Disposition'] = 'attachment; filename="Danh sach cong no.xlsx"'
             }
           end
         end

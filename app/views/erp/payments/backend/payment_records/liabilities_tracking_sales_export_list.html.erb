@@ -30,7 +30,7 @@
                 <tr>
                     <td class="bg-grey bg-font-grey text-left text-nowrap bold"><%= order_link(order) %></td>
                     <td class="bg-grey bg-font-grey text-center bold"><%= format_date(order.order_date) %></td>
-                    <td class="bg-grey bg-font-grey text-left text-nowrap" colspan="2">
+                    <td class="bg-grey bg-font-grey text-left" colspan="2">
                         <% if Erp::Core.available?("ortho_k") %>
                             <% if order.patient.present? or order.patient_state.present? %>
                                 <strong>BN: </strong>
