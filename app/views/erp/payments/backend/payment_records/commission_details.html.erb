@@ -1,18 +1,61 @@
 <% uid = unique_id %>
-<div class="tabbable-custom ">
+<div class="tabbable-custom ">    
+    <div class="portlet m-grid m-grid-demo">
+        <div class="m-grid-row">
+            <div class="m-grid-col m-grid-col-middle m-grid-col-center bg-yellow bg-font-yellow">
+                <%= 'Hoa hồng trên đơn hàng:' %><br>
+                <strong>
+                    <%= format_price(@payment_for_order_sales_commission_amount) %>
+                </strong>
+            </div>
+            <div class="m-grid-col m-grid-col-middle m-grid-col-center bg-yellow bg-font-yellow">
+                <%= 'Hoa hồng thu công nợ:' %><br>
+                <strong>
+                    <%= format_price(@new_account_commission_amount + @payment_for_contact_sales_commission_amount) %>
+                </strong>
+            </div>
+            <div class="m-grid-col m-grid-col-middle m-grid-col-center bg-yellow bg-font-yellow">
+                <%= 'Thưởng theo target:' %><br>
+                <strong>
+                    <%= @target.present? ? format_price(@employee.employee_target_commission_amount(@options)) : '--' %>
+                </strong>
+            </div>
+            <div class="m-grid-col m-grid-col-middle m-grid-col-center bg-yellow bg-font-yellow">
+                <%= 'Thưởng doanh thu (1%):' %><br>
+                <strong>
+                    <%= @company_target.present? ? format_price(@company_target.commission_amount) : '--' %>
+                </strong>
+            </div>
+            <div class="m-grid-col m-grid-col-middle m-grid-col-center bg-yellow bg-font-yellow">
+                <%= 'Tổng hoa hồng:' %><br>
+                <strong class="bold font-lg">
+                    <%= format_price(@employee.commission_amount(@options)) %>
+                </strong>
+            </div>
+        </div>
+    </div>
+    
     <ul class="nav nav-tabs ">
         <li class="active">
-            <a href="#tab_<%= uid %>_1" data-toggle="tab">
+            <a href="#tab_<%= uid %>_0" data-toggle="tab">
                 <i class="glyphicon glyphicon-list-alt"></i>
-                Hoa hồng trên đơn hàng lẻ
+                HH thu công nợ
             </a>
         </li>
         <li>
-            <a href="#tab_<%= uid %>_2" data-toggle="tab">
-                <i class="icon-users"></i>
-                Hoa hồng thu công nợ
+            <a href="#tab_<%= uid %>_1" data-toggle="tab">
+                <i class="glyphicon glyphicon-list-alt"></i>
+                HH thu bán lẻ
             </a>
         </li>
+        <% if false %>
+            <li>
+                <a href="#tab_<%= uid %>_2" data-toggle="tab">
+                    <i class="icon-users"></i>
+                    Hoa hồng thu công nợ
+                </a>
+            </li>
+        <% end %>
         <li>
             <a href="#tab_<%= uid %>_3" data-toggle="tab">
                 <i class="icon-target"></i>
@@ -27,7 +70,15 @@
         </li>
     </ul>
     <div class="tab-content">
-        <div class="tab-pane active" id="tab_<%= uid %>_1">
+        <div class="tab-pane active" id="tab_<%= uid %>_0">
+            <%= erp_datalist(url: erp_payments.commission_from_debts_backend_payment_records_path(
+                    employee_id: params[:employee_id],
+                    from_date: @options[:from_date],
+                    to_date: @options[:to_date]
+                )
+            ) %>
+        </div>
+        <div class="tab-pane" id="tab_<%= uid %>_1">
             <% if @payment_for_order_sales_payment_records.count > 0 %>
                 <table class="table table-bordered table-advance order-column">
                     <thead class="flip-content">
@@ -226,44 +277,6 @@
                 </div>
             <% end %>
 
-        </div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-md-4">
-            <div class="portlet light">
-                <h4 class="text-left">
-                    <label style="width: 200px">Hoa hồng trên đơn hàng:</label>
-                    <strong style="width: 100px; display: inline-block" class="text- text-right">
-                        <%= format_price(@payment_for_order_sales_commission_amount) %>
-                    </strong>
-                </h4>
-                <h4 class="text-left">
-                    <label style="width: 200px">Hoa hồng thu công nợ:</label>
-                    <strong style="width: 100px; display: inline-block" class="text- text-right">
-                        <%= format_price(@new_account_commission_amount + @payment_for_contact_sales_commission_amount) %>
-                    </strong>
-                </h4>
-                <h4 class="text-left">
-                    <label style="width: 200px">Thưởng theo target:</label>
-                    <strong style="width: 100px; display: inline-block" class="text- text-right">
-                        <%= @target.present? ? format_price(@employee.employee_target_commission_amount(@options)) : '--' %>
-                    </strong>
-                </h4>
-                <h4 class="text-left">
-                    <label style="width: 200px">Thưởng doanh thu (1%):</label>
-                    <strong style="width: 100px; display: inline-block" class="text- text-right">
-                        <%= @company_target.present? ? format_price(@company_target.commission_amount) : '--' %>
-                    </strong>
-                </h4>
-                <hr />
-                <h4 class="text-left">
-                    <label style="width: 200px">Tổng hoa hồng:</label>
-                    <strong style="width: 100px; display: inline-block" class="text-danger text-right">
-                        <%= format_price(@employee.commission_amount(@options)) %>
-                    </strong>
-                </h4>
-            </div>
         </div>
     </div>
 </div

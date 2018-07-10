@@ -753,6 +753,18 @@ module Erp
         # commission / SALESPERSON
         def commission_table
           @global_filters = params.to_unsafe_hash[:global_filter]
+          
+          # Moi add them vao
+          if @global_filters[:period].present?
+            @period_name = Erp::Periods::Period.find(@global_filters[:period]).name
+            @from = Erp::Periods::Period.find(@global_filters[:period]).from_date.beginning_of_day
+            @to = Erp::Periods::Period.find(@global_filters[:period]).to_date.end_of_day
+          else
+            @period_name = nil
+            @from = (@global_filters.present? and @global_filters[:from_date].present?) ? @global_filters[:from_date].to_date : nil
+            @to = (@global_filters.present? and @global_filters[:to_date].present?) ? @global_filters[:to_date].to_date : nil
+          end
+          #
 
           # if has period
           if @global_filters[:period].present?
@@ -807,6 +819,11 @@ module Erp
             @target = @employee.target_by_period(@period)
             @company_target = Erp::Targets::CompanyTarget.get_by_period(@period)
           end
+        end
+        
+        def commission_from_debts
+          @from_date = params[:from_date].to_date
+          @to_date = params[:to_date].to_date
         end
 
         # commission / CUSTOMER

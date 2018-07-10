@@ -1,17 +1,18 @@
-<% if !@period.present? %>
-    <div class="alert alert-warning">
-        <p>Vui lòng chọn các tham số bắt buộc:
-            <br>- <strong>Chu kỳ thời gian</strong>
-        </p>
-    </div>
-<% else %>
+<% if params.to_unsafe_hash[:global_filter][:period].present? or
+    (params.to_unsafe_hash[:global_filter][:from_date].present? and
+     params.to_unsafe_hash[:global_filter][:to_date].present?) %>
+    
     <div class="custom-show text-center">
         <h4 class="font-blue-madison bold uppercase no-margin">
             Chi hoa hồng nhân viên
             <br>
-            <% if @period.present? %>
-                <span class="font-sm">(<%= @period.name %>)</span>
-            <% end %>
+            <span class="font-sm">
+                <% if @period_name.nil? %>
+                    (<%= 'Từ ' + @from.strftime('%d/%m/%Y') if !@from.nil? %> <%= ' Đến ' + @to.strftime('%d/%m/%Y') if !@to.nil? %>)
+                <% else %>
+                    (<%= @period_name %>)
+                <% end %>
+            </span>
         </h4>
     </div>
     
@@ -168,4 +169,10 @@
     <% end %>
     
     <%= erp_datalist_pagination(@employees) %>
+<% else %>
+    <div class="alert alert-warning">
+        <p>Vui lòng chọn các tham số bắt buộc:
+            <br>- <strong>Mốc thời gian (Từ ngày - đến ngày)</strong>
+        </p>
+    </div>
 <% end %>

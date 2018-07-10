@@ -1,0 +1,57 @@
+<table class="table table-bordered table-advance order-column">
+    <thead class="flip-content">
+        <tr>
+            <th rowspan="2" class="bg-green-jungle bg-font-green-jungle text-nowrap text-center" width="8%">Mã số KH</th>
+            <th rowspan="2" class="bg-green-jungle bg-font-green-jungle text-nowrap text-center">Tên khách hàng</th>
+            <th colspan="4" class="bg-green-jungle bg-font-green-jungle text-nowrap text-center">Thống kê công nợ</th>
+            
+            
+            <th rowspan="2" class="bg-green-jungle bg-font-green-jungle text-nowrap text-center">Ch.khấu KH</th>
+            <th rowspan="2" class="bg-green-jungle bg-font-green-jungle text-nowrap text-center">Phần trăm HH</th>
+            <th rowspan="2" class="bg-green-jungle bg-font-green-jungle text-nowrap text-center">Tiền hoa hồng</th>
+        </tr>
+        <tr>
+            <th class="bg-green-jungle bg-font-green-jungle text-nowrap text-center">Nợ đầu kỳ</th>
+            <th class="bg-green-jungle bg-font-green-jungle text-nowrap text-center">Nợ phát sinh</th>
+            <th class="bg-green-jungle bg-font-green-jungle text-nowrap text-center">Thanh toán</th>
+            <th class="bg-green-jungle bg-font-green-jungle text-nowrap text-center">Nợ cuối kỳ</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%
+            @customers = Erp::Contacts::Contact.where(salesperson_id: params[:employee_id])
+                .where('erp_contacts_contacts.commission_percent != ?', 0.0)
+        %>
+        <% @customers.each do |customer| %>
+            <tr>
+                <td class="text-center"><%= customer.code %></td>
+                <td class="text-left"><%= customer.contact_name %></td>
+                <td class="text-right">
+                    <%= format_number(customer.sales_debt_by_period_amount(to_date: (!@from_date.nil? ? (@from_date-1.day) : @from_date))) %>
+                </td>
+                <td class="text-right">
+                    <%= format_number(customer.sales_total_amount(from_date: @from_date, to_date: @to_date)) %>
+                </td>
+                <td class="text-right">
+                    <% sales_paid = customer.sales_paid_by_period_amount(from_date: @from_date, to_date: @to_date) %>
+                    <%= format_number(sales_paid) %>
+                </td>
+                <td class="text-right">
+                    <%= format_number(customer.sales_debt_by_period_amount(to_date: @to_date)) %>
+                </td>
+                <td class="text-right">
+                    <% customer_commission = customer.customer_commission_total_amount(from_date: @from_date, to_date: @to_date) %>
+                    <%= format_number(customer_commission) %>
+                </td>
+                <td class="text-center">
+                    <% commission_percent = customer.commission_percent %>
+                    <%= commission_percent %>%
+                </td>
+                <td class="text-right">
+                    <% commission = ((sales_paid - customer_commission)/100)*commission_percent %>
+                    <%= format_number(commission) %>
+                </td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>
