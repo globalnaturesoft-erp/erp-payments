@@ -43,7 +43,7 @@ module Erp
           @total_paid = @accounts.paid(from_date: @from, to_date: @to)
 
           # Begin of period amount
-          @begin_period_amount = @accounts.account_balance(to_date: (@from - 1.day))
+          @begin_period_amount = @accounts.account_balance(to_date: (@from - 1.day)) if @from.present?
 
           # End of period amount
           @end_period_amount = @accounts.account_balance(to_date: @to)

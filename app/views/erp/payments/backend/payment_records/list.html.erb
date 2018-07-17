@@ -14,7 +14,7 @@
     </h4>
 </div>
 
-<% if @from.present? %>
+<% if @from.present? && @to.present? %>
     <div class="text-right mb-10">
     <%= actions = []
         actions << {
