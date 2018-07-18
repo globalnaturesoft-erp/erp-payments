@@ -18,10 +18,6 @@
         </tr>
     </thead>
     <tbody>
-        <%
-            @customers = Erp::Contacts::Contact.where(salesperson_id: params[:employee_id])
-                .where('erp_contacts_contacts.commission_percent != ?', 0.0)
-        %>
         <% @customers.each do |customer| %>
             <tr>
                 <td class="text-center"><%= customer.code %></td>
@@ -48,7 +44,7 @@
                     <%= commission_percent %>%
                 </td>
                 <td class="text-right">
-                    <% commission = ((sales_paid - customer_commission)/100)*commission_percent %>
+                    <% commission = @employee.commission_amount_by_customer(customer, from_date: @from_date, to_date: @to_date) %>
                     <%= format_number(commission) %>
                 </td>
             </tr>

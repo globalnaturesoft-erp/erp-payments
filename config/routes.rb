@@ -62,7 +62,14 @@ Erp::Payments::Engine.routes.draw do
 					get 'commission'
 					post 'commission_table'
 					get 'commission_details'
+					post 'commission_from_retail'
 					post 'commission_from_debts'
+					
+					get 'target_commission'
+					post 'target_commission_table'
+					get 'target_commission_details'
+					post 'commission_from_staff_target'
+					post 'commission_from_company_target'
 					
 					get 'customer_commission'
 					post 'customer_commission_table'

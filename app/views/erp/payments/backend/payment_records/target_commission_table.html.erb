@@ -4,7 +4,7 @@
     
     <div class="custom-show text-center">
         <h4 class="font-blue-madison bold uppercase no-margin">
-            Bảng kê hoa hồng cho nhân viên
+            Bảng kê tiền thưởng theo Target cho nhân viên
             <br>
             <span class="font-sm">
                 <% if @period_name.nil? %>
@@ -87,9 +87,9 @@
             </tr>
         </thead>
         <tbody>
-            <% @employees.each do |employee| %>  <!-- todo update this function -->
+            <% @employees.each do |employee| %>
                 <tr class="odd gradeX has-child-table"
-                    data-url="<%= erp_payments.commission_details_backend_payment_records_path(params.to_unsafe_hash.merge({employee_id: employee.id})) %>"
+                    data-url="<%= erp_payments.target_commission_details_backend_payment_records_path(params.to_unsafe_hash.merge({employee_id: employee.id})) %>"
                 >
                     <td>
                         <%= erp_datalist_check_row(id: employee.id) %>
@@ -100,23 +100,14 @@
                             <strong><%= employee.name %></strong
                         </td>
                     <% end %>
-                    <% if get_columns(params).include?("total_revenue") %>
-                        <td class="text-right"><%= '??' %></td>
-                    <% end %>
-                    <% if get_columns(params).include?("total_received") %>
-                        <td class="text-right"><%= '??' %></td> <!-- todo count with params -->
-                    <% end %>
-                    <% if get_columns(params).include?("total_remain") %>
-                        <td class="text-right"><%= '??' %></td> <!-- todo count with params -->
-                    <% end %>
                     <% if get_columns(params).include?("total_commission") %>
-                        <td class="text-right"><%= format_price(employee.commission_amount(@options)) %></td>
+                        <td class="text-right"><%= format_price(employee.target_commission_amount(@options)) %></td>
                     <% end %>
                     <% if get_columns(params).include?("paid_commission") %>
-                        <td class="text-right"><%= format_price(employee.commission_paid_amount(@options)) %></td>
+                        <td class="text-right"><%= format_price(employee.target_commission_paid_amount(@options)) %></td>
                     <% end %>
                     <% if get_columns(params).include?("remain_commission") %>
-                        <td class="text-right"><%= format_price(employee.commission_remain_amount(@options)) %></td>
+                        <td class="text-right"><%= format_price(employee.target_commission_remain_amount(@options)) %></td>
                     <% end %>
                     <td>
                         <%=

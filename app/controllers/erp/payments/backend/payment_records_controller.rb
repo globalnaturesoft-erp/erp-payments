@@ -753,18 +753,6 @@ module Erp
         # commission / SALESPERSON
         def commission_table
           @global_filters = params.to_unsafe_hash[:global_filter]
-          
-          # Moi add them vao
-          if @global_filters[:period].present?
-            @period_name = Erp::Periods::Period.find(@global_filters[:period]).name
-            @from = Erp::Periods::Period.find(@global_filters[:period]).from_date.beginning_of_day
-            @to = Erp::Periods::Period.find(@global_filters[:period]).to_date.end_of_day
-          else
-            @period_name = nil
-            @from = (@global_filters.present? and @global_filters[:from_date].present?) ? @global_filters[:from_date].to_date : nil
-            @to = (@global_filters.present? and @global_filters[:to_date].present?) ? @global_filters[:to_date].to_date : nil
-          end
-          #
 
           # if has period
           if @global_filters[:period].present?
@@ -812,7 +800,7 @@ module Erp
             # payment for contact orders
             @payment_for_contact_sales_payment_records = @employee.payment_for_contact_sales_payment_records(@options).order('payment_date')
             @payment_for_contact_sales_paid_amount = @employee.payment_for_contact_sales_paid_amount(@options)
-            @payment_for_contact_sales_commission_amount = @employee.payment_for_contact_sales_commission_amount(@options)
+            @payment_for_contact_sales_commission_amount = @employee.commission_amount_by_customers(@options)  #@employee.payment_for_contact_sales_commission_amount(@options)
             @new_account_commission_amount = @employee.new_account_commission_amount(@options)
 
             # target
@@ -824,6 +812,69 @@ module Erp
         def commission_from_debts
           @from_date = params[:from_date].to_date
           @to_date = params[:to_date].to_date
+          
+          @employee = Erp::User.find(params[:employee_id])
+          
+          @customers = @employee.get_salesperson_contacts
+        end
+        
+        # commission // target bonus by salesperson
+        def target_commission_table
+          @global_filters = params.to_unsafe_hash[:global_filter]
+
+          # if has period
+          if @global_filters[:period].present?
+            @period = Erp::Periods::Period.find(@global_filters[:period])
+
+            @options = {
+              from_date: @period.from_date.beginning_of_day,
+              to_date: @period.to_date.end_of_day,
+              target_period: @period,
+            }
+
+            @company_target = Erp::Targets::CompanyTarget.get_by_period(@period)
+          end
+
+          @employees = Erp::User.search(params)
+          @employees = @employees.where('erp_users.id NOT IN (?)', Erp::User.first.id)
+          @employees = @employees.where(id: @global_filters[:employee]) if @global_filters[:employee].present?
+          
+          @employees = @employees.paginate(:page => params[:page], :per_page => 10)
+        end
+
+        def target_commission_details
+          @global_filters = params.to_unsafe_hash[:global_filter]
+
+          # if has period
+          if @global_filters[:period].present?
+            @period = Erp::Periods::Period.find(@global_filters[:period])
+
+            @orders = Erp::Orders::Order.where(payment_for: Erp::Orders::Order::PAYMENT_FOR_ORDER)
+            @contacts = Erp::Contacts::Contact.where('erp_contacts_contacts.id NOT IN (?)', Erp::Contacts::Contact.get_main_contact.id)
+            @employee = Erp::User.find(params[:employee_id])
+
+            @options = {
+              from_date: @period.from_date.beginning_of_day,
+              to_date: @period.to_date.end_of_day,
+              target_period: @period,
+            }
+
+            # payment for order orders
+            @payment_for_order_sales_payment_records = @employee.payment_for_order_sales_payment_records(@options)
+            @payment_for_order_sales_total = @employee.payment_for_order_sales_total(@options)
+            @payment_for_order_sales_paid_amount = @employee.payment_for_order_sales_paid_amount(@options)
+            @payment_for_order_sales_commission_amount = @employee.payment_for_order_sales_commission_amount(@options)
+
+            # payment for contact orders
+            @payment_for_contact_sales_payment_records = @employee.payment_for_contact_sales_payment_records(@options).order('payment_date')
+            @payment_for_contact_sales_paid_amount = @employee.payment_for_contact_sales_paid_amount(@options)
+            @payment_for_contact_sales_commission_amount = @employee.payment_for_contact_sales_commission_amount(@options)
+            @new_account_commission_amount = @employee.new_account_commission_amount(@options)
+
+            # target
+            @target = @employee.target_by_period(@period)
+            @company_target = Erp::Targets::CompanyTarget.get_by_period(@period)
+          end
         end
 
         # commission / CUSTOMER

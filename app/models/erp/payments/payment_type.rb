@@ -12,6 +12,7 @@ module Erp::Payments
     CODE_PRODUCT_RETURN = 'product_return'
     #CODE_SUPPLIER_PRODUCT_RETURN = 'supplier_product_return' Cập nhật thêm phần này
     CODE_COMMISSION = 'commission'
+    CODE_TARGET_COMMISSION = 'target_commission'
     CODE_CUSTOMER_COMMISSION = 'customer_commission'
     # hoat dong tai chinh, quan ly doanh nghiep
     CODE_FINANCIAL_EXPENSES = 'financial_expenses'
