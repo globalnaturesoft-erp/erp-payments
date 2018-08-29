@@ -1,39 +1,90 @@
-<table class="table table-advance table-hover table-striped order-column">
-    <thead>
-        <tr>
-            <th>
-                Kỳ công nợ
-            </th>
-            <th class="text-right">
-                Đầu kỳ
-            </th>
-            <th class="text-right">
-                Phát sinh trong kỳ
-            </th>
-            <th class="text-right">
-                Thanh toán trong kỳ
-            </th>
-            <th class="text-right">
-                Cuối kỳ
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <% @times.each do |time| %>
-            <tr>
-                <td>
-                    <strong>
-                        <%= "#{time[:name]}" %>
-                    </strong>
-                </td>
-                <td class="text-right">
-                    <%= format_price(@customer.sales_debt_amount(to_date: (time[:from_date] - 1.day))) %></td>
-                <td class="text-right"><%= format_price(@customer.sales_total_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
-                <td class="text-right"><%= format_price(@customer.sales_paid_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
-                <td class="text-right">
-                    <%= format_price(@customer.sales_debt_amount(to_date: time[:to_date])) %>
-                </td>
-            </tr>
-        <% end %>
-    </tbody>
-</table>
+<div class="portlet light portlet-fit bordered">
+    <div class="portlet-title">
+        <h4 class="font-blue bold bold"><i class="fa fa-circle-o"></i> Thống kê đổ dồn (cấn trừ nợ cũ)</h4>
+        <table class="table table-advance table-hover table-striped order-column">
+            <thead>
+                <tr>
+                    <th>
+                        Kỳ công nợ
+                    </th>
+                    <th class="text-right">
+                        Đầu kỳ
+                    </th>
+                    <th class="text-right">
+                        Phát sinh trong kỳ
+                    </th>
+                    <th class="text-right">
+                        Thanh toán trong kỳ
+                    </th>
+                    <th class="text-right">
+                        Cuối kỳ
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @times.each do |time| %>
+                    <tr>
+                        <td>
+                            <strong>
+                                <%= "#{time[:name]}" %>
+                            </strong>
+                        </td>
+                        <td class="text-right">
+                            <%= format_price(@customer.sales_debt_by_period_amount(to_date: (time[:from_date] - 1.day))) %></td>
+                        <td class="text-right"><%= format_price(@customer.sales_total_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
+                        <td class="text-right"><%= format_price(@customer.sales_paid_by_period_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
+                        <td class="text-right">
+                            <%= format_price(@customer.sales_debt_by_period_amount(to_date: time[:to_date])) %>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="portlet light portlet-fit bordered">
+    <div class="portlet-title">
+        <h4 class="font-blue bold bold"><i class="fa fa-circle-o"></i> Thống kê theo thực tế (không cấn trừ nợ cũ)</h4>
+        <table class="table table-advance table-hover table-striped order-column">
+            <thead>
+                <tr>
+                    <th>
+                        Kỳ công nợ
+                    </th>
+                    <th class="text-right">
+                        Đầu kỳ
+                    </th>
+                    <th class="text-right">
+                        Phát sinh trong kỳ
+                    </th>
+                    <th class="text-right">
+                        Thanh toán trong kỳ
+                    </th>
+                    <th class="text-right">
+                        Cuối kỳ
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @times.each do |time| %>
+                    <tr>
+                        <td>
+                            <strong>
+                                <%= "#{time[:name]}" %>
+                            </strong>
+                        </td>
+                        <td class="text-right">
+                            <%= format_price(@customer.sales_debt_amount(to_date: (time[:from_date] - 1.day))) %></td>
+                        <td class="text-right"><%= format_price(@customer.sales_total_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
+                        <td class="text-right"><%= format_price(@customer.sales_paid_amount(from_date: time[:from_date], to_date: time[:to_date])) %></td>
+                        <td class="text-right">
+                            <%= format_price(@customer.sales_debt_amount(to_date: time[:to_date])) %>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>
