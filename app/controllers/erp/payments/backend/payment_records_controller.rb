@@ -554,6 +554,14 @@ module Erp
           @customers = Erp::Contacts::Contact.search(params)
             .where.not(id: Erp::Contacts::Contact.get_main_contact.id)
             
+          if glb[:contact_group_id].present?
+            @customers = @customers.where(contact_group_id: glb[:contact_group_id])
+          end
+          
+          if glb[:salesperson_id].present?
+            @customers = @customers.where(salesperson_id: glb[:salesperson_id])
+          end
+            
           @customers = @customers.where(is_customer: true)
           
           if glb[:customer].present?
