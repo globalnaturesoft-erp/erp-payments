@@ -13,11 +13,16 @@
         </thead>
         <tbody>
             <% @payment_records.each do |payment_record| %>
+                <%
+                    class_amount = payment_record.is_payment_voucher? ? 'font-red-flamingo' : ''
+                %>
                 <tr>
                     <td class="text-left"><strong><%= payment_record.code %></strong></td>
                     <td class="text-left"><%= format_date(payment_record.payment_date) %></td>
                     <td class="text-left"><%= payment_record.customer_name %></td>
-                    <td class="text-right"><%= format_price(payment_record.amount) %></td>
+                    <td class="text-right <%= class_amount %>">
+                        <%= format_number(payment_record.amount) %>
+                    </td>
                     <td class="text-left"><%= t(".#{display_payment_record_type(payment_record)}") %></td>
                     <td class="text-justify"><%= raw payment_record.description %></td>
                     <td class="text-right">

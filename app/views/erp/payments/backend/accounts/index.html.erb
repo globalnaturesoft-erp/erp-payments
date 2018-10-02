@@ -7,11 +7,19 @@
 <% end %>
 
 <% content_for :page_toolbar do %>
-    <%= erp_component('button/create', {
-        text: t('.create'),
-        href: erp_payments.new_backend_account_path,
-        class: 'btn-sm'
-    }) %>
+    <% if Erp::Core.available?("ortho_k") %>
+        <%= erp_component('button/create', {
+            text: t('.create'),
+            href: erp_payments.new_backend_account_path,
+            class: 'btn-sm'
+        }) if can? :accounting_payments_accounts_create, nil %>
+    <% else %>
+        <%= erp_component('button/create', {
+            text: t('.create'),
+            href: erp_payments.new_backend_account_path,
+            class: 'btn-sm'
+        }) %>
+    <% end %>
 <% end %>
 
 <% content_for :global_filter do %>

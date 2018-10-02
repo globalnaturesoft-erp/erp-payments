@@ -1,36 +1,50 @@
 <%= form_for([erp_payments, :backend, account]) do |f| %>
-    <%= erp_form_control("text", {
-        name: 'account[name]',
-        value: account.name,
-        label: t('.name'),
-        required: true,
-        errors: account.errors.full_messages_for(:name)
-    }) %>
-    <%= erp_form_control("text", {
-        name: 'account[owner]',
-        value: account.owner,
-        label: t('.owner'),
-        errors: account.errors.full_messages_for(:owner)
-    }) %>
-    <%= erp_form_control("text", {
-        name: 'account[account_number]',
-        value: account.account_number,
-        label: t('.account_number'),
-        errors: account.errors.full_messages_for(:account_number)
-    }) %>
-    <% if Erp::Core.available?("ortho_k") %>
-        <%= erp_form_control("select", {
-            name: 'account[payment_method]',
-            value: account.payment_method,
-            text: account.payment_method,
-            placeholder: 'Chọn phương thức thanh toán',
-            label: 'Phương thức thanh toán',
-            options: [
-                {text: 'Tiền mặt', value: Erp::Payments::Account::PAYMENT_METHOD_CASH},
-                {text: 'Chuyển khoản', value: Erp::Payments::Account::PAYMENT_METHOD_ACCOUNT},
-            ]
-        }) %>
-    <% end %>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="portlet light bordered">
+                <div class="portlet-body">
+                    <%= erp_form_control("text", {
+                        name: 'account[name]',
+                        value: account.name,
+                        label: t('.name'),
+                        required: true,
+                        errors: account.errors.full_messages_for(:name)
+                    }) %>
+                    <%= erp_form_control("text", {
+                        name: 'account[owner]',
+                        value: account.owner,
+                        label: t('.owner'),
+                        errors: account.errors.full_messages_for(:owner)
+                    }) %>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="portlet light bordered">
+                <div class="portlet-body">
+                    <%= erp_form_control("text", {
+                        name: 'account[account_number]',
+                        value: account.account_number,
+                        label: t('.account_number'),
+                        errors: account.errors.full_messages_for(:account_number)
+                    }) %>
+                    <% if Erp::Core.available?("ortho_k") %>
+                        <%= erp_form_control("select", {
+                            name: 'account[payment_method]',
+                            value: account.payment_method,
+                            text: account.payment_method,
+                            placeholder: 'Chọn phương thức thanh toán',
+                            label: 'Phương thức thanh toán',
+                            options: [
+                                {text: 'Tiền mặt', value: Erp::Payments::Account::PAYMENT_METHOD_CASH},
+                                {text: 'Chuyển khoản', value: Erp::Payments::Account::PAYMENT_METHOD_ACCOUNT},
+                            ]
+                        }) %>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <%= erp_component('button/save', {
         text: t('submit')

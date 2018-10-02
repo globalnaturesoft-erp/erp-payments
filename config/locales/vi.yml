@@ -779,8 +779,9 @@ vi:
             accounts: "Tài khoản thanh toán"
             create: "Thêm tài khoản"
           edit:
-            edit: "Cập nhật"
             accounts: "Tài khoản thanh toán"
+            edit: "Cập nhật"
+            create: "Thêm tài khoản"
           form:
             name: "Tên tài khoản"
             owner: "Chủ tài khoản"
@@ -823,6 +824,7 @@ vi:
           edit:
             payment_types: "Loại thanh toán"
             edit: "Chỉnh sửa"
+            create: "Thêm loại thanh toán"
           form:
             name: "Tên loại"
             code: "Mã loại"

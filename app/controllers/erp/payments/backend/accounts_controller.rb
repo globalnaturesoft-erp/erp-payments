@@ -6,6 +6,8 @@ module Erp
         before_action :set_accounts, only: [:archive_all, :unarchive_all, :delete_all]
 
         def index
+          authorize! :accounting_payments_accounts_index, nil
+          
           # default from to date
           @from_date = Time.now.beginning_of_month
           @to_date = Time.now.end_of_day
@@ -13,6 +15,8 @@ module Erp
         
         # POST /debts/list
         def list
+          authorize! :accounting_payments_accounts_index, nil
+          
           @global_filters = params.to_unsafe_hash[:global_filter]
 
           # if has period
@@ -36,6 +40,8 @@ module Erp
         end
         
         def payment_records_by_account
+          authorize! :accounting_payments_accounts_payment_records_by_account, nil
+          
           @from_date = params[:from_date].to_date
           @to_date = params[:to_date].to_date
           
@@ -50,15 +56,21 @@ module Erp
         # GET /accounts/new
         def new
           @account = Account.new
+          
+          authorize! :create, @account
         end
 
         # GET /accounts/1/edit
         def edit
+          authorize! :update, @account
         end
 
         # POST /accounts
         def create
           @account = Account.new(account_params)
+          
+          authorize! :create, @account
+          
           @account.creator = current_user
           @account.set_active
 
@@ -79,6 +91,8 @@ module Erp
 
         # PATCH/PUT /accounts/1
         def update
+          authorize! :update, @account
+          
           if @account.update(account_params)
             if request.xhr?
               render json: {
@@ -95,22 +109,24 @@ module Erp
         end
 
         # DELETE /accounts/1
-        def destroy
-          @account.destroy
-
-          respond_to do |format|
-            format.html { redirect_to erp_payments.backend_accounts_path, notice: t('.success') }
-            format.json {
-              render json: {
-                'message': t('.success'),
-                'type': 'success'
-              }
-            }
-          end
-        end
+        #def destroy
+        #  @account.destroy
+        #
+        #  respond_to do |format|
+        #    format.html { redirect_to erp_payments.backend_accounts_path, notice: t('.success') }
+        #    format.json {
+        #      render json: {
+        #        'message': t('.success'),
+        #        'type': 'success'
+        #      }
+        #    }
+        #  end
+        #end
 
         # Archive /accounts/archive?id=1
         def archive
+          authorize! :archive, @account
+          
           @account.archive
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_accounts_path, notice: t('.success') }
@@ -125,6 +141,8 @@ module Erp
 
         # Unarchive /accounts/unarchive?id=1
         def unarchive
+          authorize! :unarchive, @account
+          
           @account.unarchive
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_accounts_path, notice: t('.success') }
@@ -138,18 +156,18 @@ module Erp
         end
 
         # DELETE /accounts/delete_all?ids=1,2,3
-        def delete_all
-          @accounts.destroy_all
-
-          respond_to do |format|
-            format.json {
-              render json: {
-                'message': t('.success'),
-                'type': 'success'
-              }
-            }
-          end
-        end
+        #def delete_all
+        #  @accounts.destroy_all
+        #
+        #  respond_to do |format|
+        #    format.json {
+        #      render json: {
+        #        'message': t('.success'),
+        #        'type': 'success'
+        #      }
+        #    }
+        #  end
+        #end
 
         # Archive /accounts/archive_all?ids=1,2,3
         def archive_all
@@ -181,6 +199,8 @@ module Erp
 
         # Set active /accounts/active?id=1
         def set_active
+          authorize! :set_active, @account
+          
           @account.set_active
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_accounts_path, notice: t('.success') }
@@ -195,6 +215,8 @@ module Erp
 
         # Set deleted /accounts/deleted?id=1
         def set_deleted
+          authorize! :set_deleted, @account
+          
           @account.set_deleted
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_accounts_path, notice: t('.success') }

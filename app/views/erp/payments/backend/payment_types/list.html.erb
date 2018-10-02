@@ -53,30 +53,7 @@
                 </td>
                 <% end %>
                 <td>
-                    <%= erp_datalist_row_actions(
-                        [
-                            {
-                                text: '<i class="fa fa-edit"></i> '+t('edit'),
-                                href: erp_payments.edit_backend_payment_type_path(payment_type)
-                            },
-                            {
-                                text: '<i class="fa fa-check"></i> '+t('.set_active'),
-                                url: erp_payments.set_active_backend_payment_types_path(id: payment_type),
-                                data_method: 'PUT',
-                                class: 'ajax-link',
-                                hide: payment_type.is_active?,
-                                data_confirm: t('.set_active_confirm')
-                            },
-                            {
-                                text: '<i class="fa fa-close"></i> '+t('.set_deleted'),
-                                url: erp_payments.set_deleted_backend_payment_types_path(id: payment_type),
-                                data_method: 'PUT',
-                                class: 'ajax-link',
-                                hide: payment_type.is_deleted?,
-                                data_confirm: t('.set_deleted_confirm')
-                            }
-                        ]
-                    ) %>
+                    <%= payment_type_dropdown_actions(payment_type) %>
                 </td>
             </tr>
         <% end.empty? %>

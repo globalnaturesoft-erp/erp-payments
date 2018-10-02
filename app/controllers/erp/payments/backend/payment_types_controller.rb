@@ -4,8 +4,18 @@ module Erp
       class PaymentTypesController < Erp::Backend::BackendController
         before_action :set_payment_type, only: [:edit, :update, :set_active, :set_deleted]
 
+        def index
+          if Erp::Core.available?("ortho_k")
+            authorize! :accounting_payments_payment_types_index, nil
+          end
+        end
+        
         # POST /payment_types/list
         def list
+          if Erp::Core.available?("ortho_k")
+            authorize! :accounting_payments_payment_types_index, nil
+          end
+          
           @payment_types = PaymentType.search(params).paginate(:page => params[:page], :per_page => 10)
 
           render layout: nil
@@ -14,16 +24,21 @@ module Erp
         # GET /payment_types/new
         def new
           @payment_type = PaymentType.new
+          
+          authorize! :create, @payment_type
           #@payment_type.code = Erp::Payments::PaymentType::CODE_CUSTOM
         end
 
         # GET /payment_types/1/edit
         def edit
+          authorize! :update, @payment_type
         end
 
         # POST /payment_types
         def create
           @payment_type = PaymentType.new(payment_type_params)
+          
+          authorize! :create, @payment_type
 
           if @payment_type.save
             @payment_type.set_code_is_custom
@@ -44,6 +59,8 @@ module Erp
 
         # PATCH/PUT /payment_types/1
         def update
+          authorize! :update, @payment_type
+          
           if @payment_type.update(payment_type_params)
             #@payment_type.set_code_is_custom
 
@@ -63,6 +80,8 @@ module Erp
 
         # ACTIVE /payment_records/1
         def set_active
+          authorize! :set_active, @payment_type
+          
           @payment_type.set_active
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_payment_types_path, notice: t('.success') }
@@ -77,6 +96,8 @@ module Erp
 
         # DELETED /payment_records/1
         def set_deleted
+          authorize! :set_deleted, @payment_type
+          
           @payment_type.set_deleted
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_payment_types_path, notice: t('.success') }
