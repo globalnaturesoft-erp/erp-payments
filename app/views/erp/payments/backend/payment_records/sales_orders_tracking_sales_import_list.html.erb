@@ -30,9 +30,7 @@
                     <td class="bg-grey bg-font-grey text-left text-nowrap bold"><%= qdelivery_link(product_return) %></td>
                     <td class="bg-grey bg-font-grey text-center bold"><%= format_date(product_return.date) %></td>
                     <td class="bg-grey bg-font-grey text-center bold" colspan="2">
-                        <span title="
-                            <%= t(".#{product_return.cache_payment_status}") %> <%= "(Còn lại: #{format_number(product_return.remain_amount)})" if product_return.remain_amount != 0 %>
-                        ">
+                        <span title="<%= t(".#{product_return.cache_payment_status}") %> <%= "(Còn lại: #{format_number(product_return.remain_amount)})" if product_return.remain_amount != 0 %>">
                             <%= status_label(product_return.cache_payment_status) %>
                         </span>
                     </td>

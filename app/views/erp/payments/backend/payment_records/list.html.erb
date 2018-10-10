@@ -45,7 +45,7 @@
             text: 'Xuất excel',
             class: 'btn-primary',
             icon: 'fa fa-file-excel-o'
-        }) %>
+        }) if can? :accounting_payments_payment_records_export_to_excel, nil %>
     </div>
 
     <div class="portlet m-grid m-grid-demo">
@@ -139,7 +139,7 @@
     </thead>
     <tbody>
         <% @payment_records.each do |payment_record| %>
-            <tr class="odd gradeX">
+            <tr class="<%= 'blurred' if payment_record.is_deleted? %> odd gradeX">
                 <% if get_columns(params).include?("code") %>
                     <td class="title"><%= payment_record.code %></td>
                 <% end %>
@@ -178,11 +178,7 @@
                 <% end %>
                 <% if get_columns(params).include?("status") %>
                 <td>
-                    <% if payment_record.is_done? == true %>
-                    <span class="label label-sm label-success"><%= t('.done') %></span>
-                    <% else %>
-                    <span class="label label-sm label-deleted"><%= t('.deleted') %></span>
-                    <% end %>
+                    <%= status_label(payment_record.status) %>
                 </td>
                 <% end %>
                 <% if get_columns(params).include?("creator") %>
@@ -196,47 +192,7 @@
                     <td><%= format_date(payment_record.created_at) %></td>
                 <% end %>
                 <td>
-                    <%
-                        actions = []
-                        
-                        actions << {
-                            text: '<i class="fa fa-print"></i> '+t('.view_print'),
-                            url: erp_payments.backend_payment_record_path(payment_record),
-                            class: 'modal-link'
-                        }
-                        
-                        actions << {
-                            text: '<i class="fa fa-edit"></i> '+t('.edit'),
-                            url: erp_payments.edit_backend_payment_record_path(payment_record),
-                            class: 'modal-link has-form'
-                        }
-                        
-                        actions << {
-                            text: '<i class="fa fa-check"></i> '+t('confirm'),
-                            url: erp_payments.set_done_backend_payment_records_path(id: payment_record),
-                            data_method: 'PUT',
-                            hide: payment_record.is_done?,
-                            class: 'ajax-link',
-                            data_confirm: t('.confirm_confirm')
-                        }
-                        
-                        actions << {
-                            text: '<i class="fa fa-exchange"></i> Chuyển phiếu',
-                            url: erp_payments.change_payment_type_backend_payment_records_path(id: payment_record)
-                        } if can? :change_payment_type, payment_record
-                        
-                        actions << { divider: true }
-                        
-                        actions << {
-                            text: '<i class="fa fa-trash"></i> '+t('.delete'),
-                            url: erp_payments.set_deleted_backend_payment_records_path(id: payment_record),
-                            data_method: 'PUT',
-                            class: 'ajax-link',
-                            data_confirm: t('.delete_confirm')
-                        }
-                        
-                    %>
-                    <%= erp_datalist_row_actions(actions) %>
+                    <%= payment_record_dropdown_actions(payment_record) %>
                 </td>
             </tr>
         <% end %>

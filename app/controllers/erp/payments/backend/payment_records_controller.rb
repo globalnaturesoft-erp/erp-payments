@@ -7,6 +7,10 @@ module Erp
 
         # GET /payment_records
         def index
+          if Erp::Core.available?("ortho_k")
+            authorize! :accounting_payments_payment_records_index, nil
+          end
+          
           # default from to date
           @from_date = Time.now.beginning_of_month
           @to_date = Time.now.end_of_day
@@ -14,6 +18,10 @@ module Erp
 
         # POST /payment_records/list
         def list
+          if Erp::Core.available?("ortho_k")
+            authorize! :accounting_payments_payment_records_index, nil
+          end
+          
           glb = params.to_unsafe_hash[:global_filter]
           if glb[:period].present?
             @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
@@ -62,6 +70,7 @@ module Erp
         # GET /payment_records/new
         def new
           @payment_record = PaymentRecord.new
+          
           @payment_record.payment_date = Time.now
           @payment_record.payment_date = params[:payment_date] if params[:payment_date].present?
           @payment_record.accountant = current_user
@@ -109,14 +118,19 @@ module Erp
               @payment_record.order = Erp::Orders::Order.find(params[:order_id])
             end
           end
+          
+          authorize! :create, @payment_record
         end
 
         # GET /payment_records/1/edit
         def edit
+          authorize! :update, @payment_record
         end
 
         # GET /payment_records/1/show
         def show
+          authorize! :print, @payment_record
+          
           respond_to do |format|
             format.html
             format.pdf do
@@ -131,6 +145,7 @@ module Erp
 
         # GET /orders/1
         def pdf
+          authorize! :print, @payment_record
 
           respond_to do |format|
             format.html
@@ -153,6 +168,9 @@ module Erp
         # POST /payment_records
         def create
           @payment_record = PaymentRecord.new(payment_record_params)
+          
+          authorize! :create, @payment_record
+          
           @payment_record.creator = current_user
           @payment_record.status = PaymentRecord::STATUS_DONE
 
@@ -178,6 +196,8 @@ module Erp
 
         # PATCH/PUT /payment_records/1
         def update
+          authorize! :update, @payment_record
+          
           if @payment_record.update(payment_record_params)
             if request.xhr?
               render json: {
@@ -199,7 +219,11 @@ module Erp
 
         # DONE /payment_records/1
         def set_done
+          authorize! :set_done, @payment_record
+          
           @payment_record.set_done
+          @payment_record.update_confirmed_at
+          
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_payment_records_path, notice: t('.success') }
             format.json {
@@ -213,6 +237,8 @@ module Erp
 
         # DELETED /payment_records/1
         def set_deleted
+          authorize! :set_deleted, @payment_record
+          
           @payment_record.set_deleted
           respond_to do |format|
             format.html { redirect_to erp_payments.backend_payment_records_path, notice: t('.success') }
@@ -255,6 +281,7 @@ module Erp
         
         def change_payment_type
           authorize! :change_payment_type, @payment_record
+          
           if params.has_key? :payment_record
             if params[:payment_record][:payment_type_id].present?
               @payment_record.update_attributes(payment_type_id: params[:payment_record][:payment_type_id])

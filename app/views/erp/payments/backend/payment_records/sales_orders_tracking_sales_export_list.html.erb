@@ -29,9 +29,7 @@
                     <td class="bg-grey bg-font-grey text-left text-nowrap bold"><%= order_link(order) %></td>
                     <td class="bg-grey bg-font-grey text-center bold"><%= format_date(order.order_date) %></td>
                     <td class="bg-grey bg-font-grey text-center bold" colspan="2">
-                        <span title="
-                            <%= t(".#{order.cache_payment_status}") %> <%= "(Còn lại: #{format_number(order.remain_amount)})" if order.remain_amount != 0 %>
-                        ">
+                        <span title="<%= t(".#{order.cache_payment_status}") %> <%= "(Còn lại: #{format_number(order.remain_amount)})" if order.remain_amount != 0 %>">
                             <%= status_label(order.cache_payment_status) %>
                         </span>
                     </td>

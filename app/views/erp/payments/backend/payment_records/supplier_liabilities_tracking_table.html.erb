@@ -111,26 +111,31 @@
                     <td class="text-right"><%= format_price(supplier.purchase_debt_amount(to_date: @to)) %></td>
                 <% end %>
                 <td>
-                    <%= erp_datalist_row_actions(
-                        [
-                            {
-                                text: '<i class="fa fa-angle-double-right"></i> '+t('.create_pay_for_contact'),
-                                url: erp_payments.new_backend_payment_record_path(
-                                    pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
-                                    payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER),
-                                    supplier_id: supplier.id
-                                )
-                            },
-                            {
-                                text: '<i class="fa fa-angle-double-left"></i> '+t('.create_receive_for_contact'),
-                                url: erp_payments.new_backend_payment_record_path(
-                                    pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
-                                    payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER),
-                                    customer_id: supplier.id
-                                )
-                            }
-                        ]
-                    ) %>
+                    <%=
+                        actions = []
+                        
+                        actions << {
+                            text: '<i class="fa fa-level-up"></i> '+t('.create_pay_for_contact'),
+                            url: erp_payments.new_backend_payment_record_path(
+                                pay_receive: Erp::Payments::PaymentRecord::TYPE_PAY,
+                                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER),
+                                supplier_id: supplier.id
+                            ),
+                            class: 'modal-link has-form'
+                        } if can? :accounting_payments_payment_records_create, nil
+                        
+                        actions << {
+                            text: '<i class="fa fa-level-down"></i> '+t('.create_receive_for_contact'),
+                            url: erp_payments.new_backend_payment_record_path(
+                                pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
+                                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER),
+                                supplier_id: supplier.id
+                            ),
+                            class: 'modal-link has-form'
+                        } if can? :accounting_payments_payment_records_create, nil
+                        
+                        erp_datalist_row_actions(actions)
+                    %>
                 </td>
             </tr>
         <% end %>

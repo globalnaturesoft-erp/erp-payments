@@ -9,6 +9,8 @@ vi:
   pay: "Phiếu chi"
   confirm: "Xác nhận"
   view_print: "Xem & In"
+  confirm_cancellation_the_pay: "Hãy thận trọng! Bạn có thực sự muốn hủy phiếu chi này không?"
+  confirm_cancellation_the_receive: "Hãy thận trọng! Bạn có thực sự muốn hủy phiếu thu này không?"
   layouts:
     erp:
       backend:
@@ -396,6 +398,8 @@ vi:
             overdue: "Chưa thanh toán"
             debt: "Đang ghi nợ"
             overpaid: "Thanh toán dư"
+            delete: "Hủy đơn hàng"
+            delete_confirm: "Bạn chắc chắn muốn hủy đơn hàng này?"
           sales_orders_tracking_sales_import_list:
             actions: "Hành động"
             paid: "Đã thanh toán"
@@ -403,6 +407,8 @@ vi:
             owing: "Đang còn nợ"
             overpaid: "Thanh toán dư"
             pay_product_return: "Chi tiền hàng trả lại"
+            delete: "Hủy phiếu trả"
+            delete_confirm: "Bạn chắc chắn muốn hủy phiếu trả hàng (hoàn kho) này?"
           liabilities_tracking:
             liabilities_tracking: "Theo dõi công nợ"
             customer_code: "Mã KH"
@@ -433,8 +439,8 @@ vi:
             paid_amount: "Đã thanh toán"
             period_amount: "Nợ tăng trong kỳ"
             salesperson: "N.viên k.doanh"
-            create_receive_for_contact: "Tạo phiếu thu"
-            create_pay_for_contact: "Trả lại tiền cho KH"
+            create_receive_for_contact: "Thu tiền công nợ (PT)"
+            create_pay_for_contact: "Hoàn lại tiền công nợ (PC)"
             total_begin_of_period_amount: "Tổng nợ đầu kỳ"
             total_period_amount: "Tổng phát sinh trong kỳ"
             total_paid_amount: "Tổng thu trong kỳ"
@@ -454,12 +460,16 @@ vi:
             debt: "Đang ghi nợ"
             overpaid: "Thanh toán dư"
             actions: "Hành động"
+            delete: "Hủy đơn hàng"
+            delete_confirm: "Hãy thận trọng! Bạn có thực sự chắc chắn muốn hủy đơn hàng này không?"
           liabilities_tracking_sales_import_list:
             paid: "Đã thanh toán"
             overdue: "Chưa thanh toán"
             owing: "Đang ghi nợ"
             overpaid: "Thanh toán dư"
             actions: "Hành động"
+            delete: "Hủy phiếu trả"
+            delete_confirm: "Hãy thận trọng! Bạn có thực sự chắc chắn muốn hủy phiếu trả hàng (hoàn kho) này không?"
           liabilities_tracking_general_list:
             for_contact: "Ghi vào công nợ"
             for_order: "Trả theo chứng từ"
@@ -524,6 +534,14 @@ vi:
             actions: "Hành động"
             pay_ncc: "Chi tiền nhập hàng"
             receive_ncc: "Thu hoàn tiền hàng"
+            delete: "Hủy phiếu trả"
+            delete_confirm: "Hãy thận trọng! Bạn có thực sự chắc chắn muốn hủy phiếu nhập hàng này không?"
+          supplier_liabilities_tracking_purchase_export_list:
+            actions: "Hành động"
+            pay_ncc: "Chi tiền nhập hàng"
+            receive_ncc: "Thu hoàn tiền hàng"
+            delete: "Hủy phiếu trả"
+            delete_confirm: "Hãy thận trọng! Bạn có thực sự chắc chắn muốn hủy phiếu nhập hàng này không?"
           commission:
             commission: "Bảng kê hoa hồng"
             from_date: "Từ ngày"

@@ -14,29 +14,33 @@
         text: t('.edit'),
         href: erp_payments.edit_backend_payment_record_path(@payment_record)
     }) %>
-    <%= erp_component('button/actions', {
-        actions:
-        [
-            {
-                text: '<i class="fa fa-check"></i> '+t('confirm'),
-                url: erp_payments.set_done_backend_payment_records_path(id: @payment_record),
-                data_method: 'PUT',
-                hide: @payment_record.is_done?,
-                class: 'ajax-link',
-                data_confirm: t('.confirm_confirm')
-            },
-            {
-                text: '<i class="glyphicon glyphicon-trash"></i> '+t('.delete'),
-                href: erp_payments.set_deleted_backend_payment_records_path(id: @payment_record),
-                data_method: 'PUT',
-                hide: @payment_record.is_deleted?,
-                data_confirm: t('.delete_confirm'),
-                class: 'link-method'
-            }
-        ],
-        text: t('actions'),
-        class: 'btn-noborder'
-    }) %>
+    <%=
+        actions = []
+        
+        actions << {
+            text: '<i class="fa fa-check"></i> '+t('confirm'),
+            url: erp_payments.set_done_backend_payment_records_path(id: @payment_record),
+            data_method: 'PUT',
+            hide: @payment_record.is_done?,
+            class: 'ajax-link',
+            data_confirm: t('.confirm_confirm')
+        } if can? :set_done, @payment_record
+        
+        actions << {
+            text: '<i class="glyphicon glyphicon-trash"></i> '+t('.delete'),
+            href: erp_payments.set_deleted_backend_payment_records_path(id: @payment_record),
+            data_method: 'PUT',
+            hide: @payment_record.is_deleted?,
+            data_confirm: t('.delete_confirm'),
+            class: 'link-method'
+        } if can? :set_deleted, @payment_record
+        
+        erp_component('button/actions', {
+            actions: actions,
+            text: t('actions'),
+            class: 'btn-noborder'
+        }) if !actions.empty?
+    %>
 <% end %>
 
 <%= erp_datalist(

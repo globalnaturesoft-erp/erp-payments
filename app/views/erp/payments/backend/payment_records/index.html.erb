@@ -64,11 +64,12 @@
             }
         end
         erp_component('button/actions', {
-        actions: actions,
-        text: t('.create_receive'),
-        class: 'btn-noborder btn-sm',
-        icon: 'fa fa-calendar-plus-o'
-    }) %>
+            actions: actions,
+            text: t('.create_receive'),
+            class: 'btn-noborder btn-sm',
+            icon: 'fa fa-calendar-plus-o'
+        }) if can? :accounting_payments_payment_records_create, nil
+    %>
 
     <!-- create pay -->
     <%=
@@ -123,7 +124,7 @@
             text: t('.create_pay'),
             class: 'btn-noborder btn-sm',
             icon: 'fa fa-calendar-minus-o'
-        })
+        }) if can? :accounting_payments_payment_records_create, nil
     %>
 <% end %>
 

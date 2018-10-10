@@ -314,6 +314,11 @@ module Erp::Payments
         employee.name
       end
     end
+    
+    # update confirmed at
+    def update_confirmed_at
+      self.update_columns(confirmed_at: Time.now)
+    end
 
     # Generate code
     after_create :generate_code
