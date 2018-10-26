@@ -198,7 +198,23 @@ module Erp
         def update
           authorize! :update, @payment_record
           
+          # store old contact for updating cache
+          prev_customer = nil
+          prev_supplier = nil
+          if @payment_record.payment_type.present? and [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER)].include?(@payment_record.payment_type)
+            prev_customer = @payment_record.customer
+          end
+          if @payment_record.payment_type.present? and [Erp::Payments::PaymentType::find_by_code(Erp::Payments::PaymentType::CODE_SUPPLIER)].include?(@payment_record.payment_type)
+            prev_supplier = @payment_record.supplier
+          end
+          
           if @payment_record.update(payment_record_params)
+            
+            # update cache
+            # update cache for old contact
+            prev_customer.update_cache_sales_debt_amount if (prev_customer.present? and @payment_record.customer != prev_customer)
+            prev_supplier.update_cache_purchase_debt_amount if (prev_supplier.present? and @payment_record.supplier != prev_supplier)
+            
             if request.xhr?
               render json: {
                 status: 'success',
