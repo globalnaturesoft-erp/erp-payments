@@ -1115,15 +1115,18 @@ module Erp
             params[:to_date] = period.to_date
           end
           
+          @from_date = params[:from_date].to_date
+          @to_date = params[:to_date].to_date
+          
           # periods
-          current_month = Time.now.month
-          current_year = Time.now.year
+          current_month = @to_date.month
+          current_year = @to_date.year
           @times = []
           @times << {
             name: "Tháng #{current_month}/#{current_year}",
-            from_date: Time.now.beginning_of_month.beginning_of_day,
-            to_date: Time.now.end_of_month.end_of_day,
-            period: Erp::Periods::Period.find_month_by_times(from_date: Time.now.beginning_of_month.beginning_of_day, to_date: Time.now.end_of_month.end_of_day)
+            from_date: @to_date.beginning_of_month.beginning_of_day,
+            to_date: @to_date.end_of_month.end_of_day,
+            period: Erp::Periods::Period.find_month_by_times(from_date: @to_date.beginning_of_month.beginning_of_day, to_date: @to_date.end_of_month.end_of_day)
           }
           
           month = current_month - 1
@@ -1137,7 +1140,7 @@ module Erp
             month -= 1
           end
           
-          @times << {name: "Năm #{current_year-1}", from_date: (Time.now - 1.year).beginning_of_year.beginning_of_day, to_date: (Time.now - 1.year).end_of_year.end_of_day}
+          @times << {name: "Năm #{current_year-1}", from_date: (@to_date - 1.year).beginning_of_year.beginning_of_day, to_date: (@to_date - 1.year).end_of_year.end_of_day}
           @times = @times.reverse!
         end
         
@@ -1150,15 +1153,18 @@ module Erp
             params[:to_date] = period.to_date
           end
           
+          @from_date = params[:from_date].to_date
+          @to_date = params[:to_date].to_date
+          
           # periods
-          current_month = Time.now.month
-          current_year = Time.now.year
+          current_month = @to_date.month
+          current_year = @to_date.year
           @times = []
           @times << {
             name: "Tháng #{current_month}/#{current_year}",
-            from_date: Time.now.beginning_of_month.beginning_of_day,
-            to_date: Time.now.end_of_month.end_of_day,
-            period: Erp::Periods::Period.find_month_by_times(from_date: Time.now.beginning_of_month.beginning_of_day, to_date: Time.now.end_of_month.end_of_day)
+            from_date: @to_date.beginning_of_month.beginning_of_day,
+            to_date: @to_date.end_of_month.end_of_day,
+            period: Erp::Periods::Period.find_month_by_times(from_date: @to_date.beginning_of_month.beginning_of_day, to_date: @to_date.end_of_month.end_of_day)
           }
           
           month = current_month - 1
@@ -1172,7 +1178,7 @@ module Erp
             month -= 1
           end
           
-          @times << {name: "Năm #{current_year-1}", from_date: (Time.now - 1.year).beginning_of_year.beginning_of_day, to_date: (Time.now - 1.year).end_of_year.end_of_day}
+          @times << {name: "Năm #{current_year-1}", from_date: (@to_date - 1.year).beginning_of_year.beginning_of_day, to_date: (@to_date - 1.year).end_of_year.end_of_day}
           @times = @times.reverse!
         end
         
