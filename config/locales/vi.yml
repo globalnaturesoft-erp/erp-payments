@@ -112,6 +112,17 @@ vi:
             eye_positions_left: 'MP'
             eye_positions_both: 'MP/MT'
             eye_positions_: ''
+            sales_order: "Tiền bán lẻ"
+            purchase_order: "Tiền mua lẻ"
+            customer: "Công nợ khách hàng"
+            supplier: "Công nợ nhà CC"
+            custom: "Khác/Tùy chỉnh"
+          export_xlsx_all_details:
+            sales_order: "Tiền bán lẻ"
+            purchase_order: "Tiền mua lẻ"
+            customer: "Công nợ khách hàng"
+            supplier: "Công nợ nhà CC"
+            custom: "Khác/Tùy chỉnh"
           create:
             success: "Phiếu thu/chi được tạo thành công."
           update:
