@@ -1042,7 +1042,7 @@ module Erp
 
           respond_to do |format|
             format.xlsx {
-              response.headers['Content-Disposition'] = "attachment; filename='Tong hop thu chi.xlsx'"
+              response.headers['Content-Disposition'] = "attachment; filename=\"Tong hop thu chi.xlsx\""
             }
           end
         end
@@ -1063,7 +1063,7 @@ module Erp
 
           respond_to do |format|
             format.xlsx {
-              response.headers['Content-Disposition'] = "attachment; filename='Nhat ky chi tien.xlsx'"
+              response.headers['Content-Disposition'] = "attachment; filename=\"Nhat ky chi tien.xlsx\""
             }
           end
         end
@@ -1084,7 +1084,7 @@ module Erp
 
           respond_to do |format|
             format.xlsx {
-              response.headers['Content-Disposition'] = "attachment; filename='Nhat ky thu tien.xlsx'"
+              response.headers['Content-Disposition'] = "attachment; filename=\"Nhat ky thu tien.xlsx\""
             }
           end
         end
