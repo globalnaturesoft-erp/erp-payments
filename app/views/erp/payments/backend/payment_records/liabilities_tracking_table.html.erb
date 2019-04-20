@@ -101,6 +101,12 @@
     </thead>
     <tbody>
         <% @customers.each do |customer| %>  <!-- todo update this function -->
+            <%
+                begin_of_period_amount = customer.sales_debt_amount(to_date: (@from - 1.day))
+                period_amount = customer.sales_total_amount(from_date: @from, to_date: @to)
+                paid_amount = customer.sales_paid_amount(from_date: @from, to_date: @to)
+                end_of_period_amount = customer.sales_debt_amount(to_date: @to)
+            %>
             <tr class="odd gradeX has-child-table"
                 data-url="<%= erp_payments.liabilities_tracking_table_details_backend_payment_records_path(
                     customer_id: customer.id,
@@ -122,16 +128,16 @@
                     </td>
                 <% end %>
                 <% if get_columns(params).include?("begin_of_period_amount") %>
-                    <td class="text-right"><%= format_price(customer.sales_debt_amount(to_date: (@from - 1.day))) %></td>
+                    <td class="text-right"><%= format_price(begin_of_period_amount) %></td>
                 <% end %>
                 <% if get_columns(params).include?("period_amount") %>
-                    <td class="text-right"><%= format_price(customer.sales_total_amount(from_date: @from, to_date: @to)) %></td>
+                    <td class="text-right"><%= format_price(period_amount) %></td>
                 <% end %>
                 <% if get_columns(params).include?("paid_amount") %>
-                    <td class="text-right"><%= format_price(customer.sales_paid_amount(from_date: @from, to_date: @to)) %></td>
+                    <td class="text-right"><%= format_price(paid_amount) %></td>
                 <% end %>
                 <% if get_columns(params).include?("end_of_period_amount") %>
-                    <td class="text-right"><%= format_price(customer.sales_debt_amount(to_date: @to)) %>
+                    <td class="text-right"><%= format_price(end_of_period_amount) %>
                         <% customer_commission = customer.customer_commission_debt_amount %>
                         <% if customer_commission > 0 %>
                             <div class="text-small text-danger">(chiết khấu nợ: <%= format_price(customer_commission) %>)</div>
