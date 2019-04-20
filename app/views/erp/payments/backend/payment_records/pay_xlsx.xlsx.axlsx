@@ -25,7 +25,7 @@ wb.styles do |s|
       date = @period_name
     end
     
-    sheet.add_row ['NHẬT KÝ THU TIỀN'], sz: 16, b: true, style: (s.add_style text_center)
+    sheet.add_row ['NHẬT KÝ CHI TIỀN'], sz: 16, b: true, style: (s.add_style text_center)
     sheet.add_row ['(' + date + ')'], sz: 14, b: true, style: (s.add_style text_center)
     
     # add empty row
