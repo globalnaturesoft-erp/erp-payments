@@ -84,12 +84,12 @@
                             placeholder: 'Chọn tài khoản nợ',
                             label: 'Tài khoản nợ',
                             url: erp_payments.dataselect_backend_accounting_accounts_path(format: 'json'),
-                            create: {
-                                url: erp_payments.new_backend_accounting_account_path,
-                                title: t('.create'),
-                                container_selector: '.new_accounting_account',
-                                input_selector: 'input[name="accounting_account[name]"]'
-                            },
+                            #create: {
+                            #    url: erp_payments.new_backend_accounting_account_path,
+                            #    title: t('.create'),
+                            #    container_selector: '.new_accounting_account',
+                            #    input_selector: 'input[name="accounting_account[name]"]'
+                            #},
                             required: true,
                             errors: payment_record.errors.full_messages_for(:debit_account_id)
                         }) %>
@@ -102,12 +102,12 @@
                             placeholder: 'Chọn tài khoản có',
                             label: 'Tài khoản có',
                             url: erp_payments.dataselect_backend_accounting_accounts_path(format: 'json'),
-                            create: {
-                                url: erp_payments.new_backend_accounting_account_path,
-                                title: t('.create'),
-                                container_selector: '.new_accounting_account',
-                                input_selector: 'input[name="accounting_account[name]"]'
-                            },
+                            #create: {
+                            #    url: erp_payments.new_backend_accounting_account_path,
+                            #    title: t('.create'),
+                            #    container_selector: '.new_accounting_account',
+                            #    input_selector: 'input[name="accounting_account[name]"]'
+                            #},
                             required: true,
                             errors: payment_record.errors.full_messages_for(:credit_account_id)
                         }) %>
