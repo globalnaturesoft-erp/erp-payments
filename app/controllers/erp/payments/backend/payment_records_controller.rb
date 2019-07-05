@@ -34,7 +34,12 @@ module Erp
           end
           
           @payment_records = PaymentRecord.search(params)
-          @accounts = Account.where(id: @payment_records.select(:account_id))
+          #@accounts = Account.where(id: @payment_records.select(:account_id))
+          @accounts = Account.all_active # Hiện số dư tài khoản thu chi
+          # truong hop nguoi dung chon tai khoan cu the
+          if glb[:account].present?
+            @accounts = @accounts.where(id: glb[:account])
+          end
           
           ## Recieved total
           #@total_received = records.received_amount(from_date: @from, to_date: @to)
