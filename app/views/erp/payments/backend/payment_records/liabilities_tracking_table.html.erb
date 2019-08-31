@@ -32,6 +32,7 @@
     </div>
 </div>
 
+<% if @full_customers.count > 0 %>
 <div class="text-right mb-20">
     <%= actions = []
     actions << {
@@ -54,6 +55,7 @@
         icon: 'fa fa-file-excel-o'
     }) %>
 </div>
+<% end %>
 
 <table class="table table-advance table-hover table-striped order-column">
     <thead>

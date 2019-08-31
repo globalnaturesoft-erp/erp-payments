@@ -609,6 +609,14 @@ module Erp
           if glb[:salesperson_id].present?
             @customers = @customers.where(salesperson_id: glb[:salesperson_id])
           end
+          
+          # phân quyền cho phép nhân viên kinh doanh xem danh sách công nợ khách hàng
+          if can? :accounting_chase_liabilities_tracking_customer_list_all, nil
+            @customers = @customers
+          end
+          if can? :accounting_chase_liabilities_tracking_customer_list_own, nil
+            @customers = @customers.where(salesperson_id: current_user.id)
+          end
             
           @customers = @customers.where(is_customer: true)
           
