@@ -144,7 +144,15 @@
                     <td class="title"><%= payment_record.code %></td>
                 <% end %>
                 <% if get_columns(params).include?("payment_date") %>
-                    <td><%= format_date(payment_record.payment_date) %></td>
+                    <td>
+                        <%= format_date(payment_record.payment_date) %>
+                        <% if payment_record.due_date.present? %>
+                            <br>
+                            <span class="font-red font-xs">
+                                <i class="fa fa-clock-o"></i> Due: <%= format_date(payment_record.due_date) %>
+                            </span>
+                        <% end %>
+                    </td>
                 <% end %>
                 <% if get_columns(params).include?("payment_type") %>
                     <td>

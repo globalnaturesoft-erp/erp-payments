@@ -319,6 +319,7 @@ vi:
             choose_bank_account_pay: "Chọn tài khoản chi (trích ra)"
             pay: "chi"
             receive: "thu"
+            due_date: "Ngày đáo hạn"
           ajax_employee_field:
             employee: "Nhân viên bán hàng"
             choose_employee: "Vui lòng chọn nhân viên bán hàng"
@@ -859,6 +860,7 @@ vi:
             code: "Mã loại"
             is_payable: "Cho phép chi"
             is_receivable: "Cho phép thu"
+            have_due_date: "Hiển thị \"ngày đáo hạn\""
   activerecord:
     errors:
       models:

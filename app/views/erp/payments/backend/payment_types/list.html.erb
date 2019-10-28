@@ -34,7 +34,12 @@
                     <%= erp_datalist_check_row(id: payment_type.id) %>
                 </td>
                 <% if get_columns(params).include?("name") %>
-                    <td><%= payment_type.name %></td>
+                    <td>
+                        <%= payment_type.name %>
+                        <% if payment_type.have_due_date? %>
+                            <br><span class="font-green-jungle font-xs"><i class="fa fa-quote-left"></i> Có "ngày đáo hạn"</span>
+                        <% end %>
+                    </td>
                 <% end %>
                 <% if get_columns(params).include?("code") %>
                     <td><%= payment_type.code %></td>

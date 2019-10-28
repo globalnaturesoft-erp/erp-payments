@@ -2,16 +2,16 @@
     <div class="portlet light bordered">
         <div class="portlet-body">
             <div class="row">
-                <div class="col-md-6 col-sm-6 col-xs-6">
+                <div class="col-md-4 col-sm-4 col-xs-6">
                     <%= erp_form_control("text", {
                         name: 'payment_type[name]',
                         value: payment_type.name,
                         label: t('.name')
                     }) %>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-6">
+                <div class="col-md-8 col-sm-8 col-xs-6">
                     <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="col-md-4 col-sm-4 col-xs-6">
                             <%= erp_form_control('checkbox', {
                                 name: 'payment_type[is_payable]',
                                 id: 'payment_type_is_payable',
@@ -23,7 +23,7 @@
                                 label: 'Sử dụng để chi trả?'
                             }) %>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="col-md-4 col-sm-4 col-xs-6">
                             <%= erp_form_control('checkbox', {
                                 name: 'payment_type[is_receivable]',
                                 id: 'payment_type_is_receivable',
@@ -31,6 +31,16 @@
                                 not_selected_value: 'false',
                                 options: [{value: 'true', text: t('.is_receivable')}],
                                 label: 'Sử dụng để thu tiền?'
+                            }) %>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-6">
+                            <%= erp_form_control('checkbox', {
+                                name: 'payment_type[have_due_date]',
+                                id: 'payment_type_have_due_date',
+                                value: payment_type.have_due_date,
+                                not_selected_value: 'false',
+                                options: [{value: 'true', text: t('.have_due_date')}],
+                                label: 'Sử dụng ngày đáo hạn?'
                             }) %>
                         </div>
                     </div>

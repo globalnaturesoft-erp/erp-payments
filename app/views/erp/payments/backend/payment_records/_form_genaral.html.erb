@@ -14,26 +14,58 @@
                 <div class="row">
                     <input type="hidden" name="payment_record[payment_type_id]" value="<%= @payment_record.payment_type.id %>">
                     <input type="hidden" name="payment_record[pay_receive]" value="<%= payment_record.pay_receive %>">
-                    <div class="col-md-6">
-                        <%= erp_form_control("text", {
-                            name: 'payment_record[code]',
-                            value: payment_record.code,
-                            label: t('.payment_code'),
-                            help: 'Mã phiếu sẽ tự động tạo nếu bạn để trống',
-                            placeholder: t('.placeholder_payment_code'),
-                            required: !payment_record.id.nil?,
-                            errors: payment_record.errors.full_messages_for(:code)
-                        }) %>
-                    </div>
-                    <div class="col-md-6">
-                        <%= erp_form_control("datetime", {
-                            name: 'payment_record[payment_date]',
-                            value: payment_record.payment_date,
-                            label: t('.payment_date'),
-                            required: true,
-                            errors: payment_record.errors.full_messages_for(:payment_date),
-                        }) %>
-                    </div>
+                    <% if @payment_record.payment_type.have_due_date? %>
+                        <div class="col-md-4">
+                            <%= erp_form_control("text", {
+                                name: 'payment_record[code]',
+                                value: payment_record.code,
+                                label: t('.payment_code'),
+                                help: 'Mã phiếu sẽ tự động tạo nếu bạn để trống',
+                                placeholder: t('.placeholder_payment_code'),
+                                required: !payment_record.id.nil?,
+                                errors: payment_record.errors.full_messages_for(:code)
+                            }) %>
+                        </div>
+                        <div class="col-md-4">
+                            <%= erp_form_control("datetime", {
+                                name: 'payment_record[payment_date]',
+                                value: payment_record.payment_date,
+                                label: t('.payment_date'),
+                                required: true,
+                                errors: payment_record.errors.full_messages_for(:payment_date),
+                            }) %>
+                        </div>
+                        <div class="col-md-4">
+                            <%= erp_form_control("datetime", {
+                                name: 'payment_record[due_date]',
+                                value: payment_record.due_date,
+                                label: t('.due_date'),
+                                required: true,
+                                errors: payment_record.errors.full_messages_for(:due_date),
+                            }) %>
+                        </div>
+                    <% else %>
+                        <div class="col-md-6">
+                            <%= erp_form_control("text", {
+                                name: 'payment_record[code]',
+                                value: payment_record.code,
+                                label: t('.payment_code'),
+                                help: 'Mã phiếu sẽ tự động tạo nếu bạn để trống',
+                                placeholder: t('.placeholder_payment_code'),
+                                required: !payment_record.id.nil?,
+                                errors: payment_record.errors.full_messages_for(:code)
+                            }) %>
+                        </div>
+                        <div class="col-md-6">
+                            <%= erp_form_control("datetime", {
+                                name: 'payment_record[payment_date]',
+                                value: payment_record.payment_date,
+                                label: t('.payment_date'),
+                                required: true,
+                                errors: payment_record.errors.full_messages_for(:payment_date),
+                            }) %>
+                        </div>
+                    <% end %>
                 </div>
 
                 <div class="ajax-box"
