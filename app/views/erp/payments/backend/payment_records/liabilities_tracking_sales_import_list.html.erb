@@ -4,11 +4,22 @@
         <thead class="flip-content">
             <tr>
                 <td class="text-center bold" colspan="4">Tổng trả</td>
-                <td class="stock-num text-center bold font-red-thunderbird"><%= @full_product_returns.total_delivery_quantity %></td>
-                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:discount)) %></td>
-                <td class="stock-num text-center bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:total_without_tax)) %></td>
-                <td class="stock-num text-center bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:tax_amount)) %></td>
-                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_product_returns.sum(&:cache_total)) %></td> <!-- @todo sum total for orders -->
+                <td class="stock-num text-center bold font-red-thunderbird">
+                    <%= @full_product_returns.total_delivery_quantity %>
+                </td>
+                <td class="stock-num text-right bold font-red-thunderbird">
+                    <%= format_number(@full_product_returns.sum(&:discount)) %>
+                </td>
+                <td class="stock-num text-center bold font-red-thunderbird">
+                    <%= format_number(@full_product_returns.sum(&:total_without_tax)) %>
+                </td>
+                <td class="stock-num text-center bold font-red-thunderbird">
+                    <%= format_number(@full_product_returns.sum(&:tax_amount)) %>
+                </td>
+                <td class="stock-num text-right bold font-red-thunderbird">
+                    <%= format_number(@full_product_returns.sum(&:total)) %>
+                    <span style="display: none" data-cache="<%= format_number(@full_product_returns.sum(&:cache_total)) %>"></span>
+                </td>
                 <td colspan="2"></td>
             </tr>
             <tr>

@@ -4,11 +4,22 @@
         <thead class="flip-content">
             <tr>
                 <td class="text-center bold" colspan="4">Tổng cộng</td>
-                <td class="stock-num text-center bold font-red-thunderbird"><%= @full_orders.sum(&:items_count) %></td>
-                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:discount_amount)) %></td>
-                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:total_without_tax)) %></td>
-                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:tax_amount)) %></td>
-                <td class="stock-num text-right bold font-red-thunderbird"><%= format_number(@full_orders.sum(&:cache_total)) %></td> <!-- @todo sum total for orders -->
+                <td class="stock-num text-center bold font-red-thunderbird">
+                    <%= @full_orders.sum(&:items_count) %>
+                </td>
+                <td class="stock-num text-right bold font-red-thunderbird">
+                    <%= format_number(@full_orders.sum(&:discount_amount)) %>
+                </td>
+                <td class="stock-num text-right bold font-red-thunderbird">
+                    <%= format_number(@full_orders.sum(&:total_without_tax)) %>
+                </td>
+                <td class="stock-num text-right bold font-red-thunderbird">
+                    <%= format_number(@full_orders.sum(&:tax_amount)) %>
+                </td>
+                <td class="stock-num text-right bold font-red-thunderbird">
+                    <%= format_number(@full_orders.sum(&:total)) %>
+                    <span style="display: none" data-cache="<%= format_number(@full_orders.sum(&:cache_total)) %>"></span>
+                </td>
                 <td colspan="2"></td>
             </tr>
             <tr>
@@ -46,7 +57,7 @@
                     <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.discount_amount) %></td>
                     <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.total_without_tax) %></td>
                     <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.tax_amount) %></td>
-                    <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.cache_total) %></td>
+                    <td class="bg-grey bg-font-grey text-right bold"><%= format_number(order.total) %></td>
                     <td class="bg-grey bg-font-grey text-left"><%= order.employee_name %></td>
                     <td class="bg-grey text-right">
                         <%= accounting_order_dropdown_actions(order) %>
