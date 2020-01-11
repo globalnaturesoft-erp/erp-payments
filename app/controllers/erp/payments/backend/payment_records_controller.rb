@@ -180,6 +180,8 @@ module Erp
           @payment_record.status = PaymentRecord::STATUS_DONE
 
           if @payment_record.save
+            # Update time confirmed
+            @payment_record.update_confirmed_at
 
             if request.xhr?
               render json: {
