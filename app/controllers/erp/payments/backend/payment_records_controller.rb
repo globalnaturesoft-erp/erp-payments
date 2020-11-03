@@ -1112,7 +1112,7 @@ module Erp
           @to = data[:to_date].to_date.end_of_day
           @customers = data[:customers]
           
-          @customers = Erp::Contacts::Contact.where(id: (@customers.map{|i| i.id}))
+          @customers = Erp::Contacts::Contact.where(id: (@customers.map{|i| i.id})).order(:name)
 
           respond_to do |format|
             format.xlsx {
