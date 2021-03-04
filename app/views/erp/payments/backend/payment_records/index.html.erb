@@ -53,6 +53,13 @@
                 payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER)
             )
         }
+        actions << {
+            text: '<i class=""></i> '+t('.receive_customer_commission'),
+            url: erp_payments.new_backend_payment_record_path(
+                pay_receive: Erp::Payments::PaymentRecord::TYPE_RECEIVE,
+                payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION)
+            )
+        }
         actions << {divider: true} if !Erp::Payments::PaymentType.get_custom_payment_types.receivables.empty?
         Erp::Payments::PaymentType.get_custom_payment_types.receivables.each do |pt|
             actions << {

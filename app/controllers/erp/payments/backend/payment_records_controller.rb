@@ -409,7 +409,7 @@ module Erp
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_SUPPLIER
               @amount = @supplier.purchase_debt_amount(from_date: @from_date, to_date: @to_date) if @supplier.present?
             end
-            if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION
+            if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_CUSTOMER_COMMISSION and params[:pay_receive] == Erp::Payments::PaymentRecord::TYPE_PAY
               @amount = @customer.customer_commission_debt_amount(to_date: Time.now) if @customer.present?
             end
             if params[:payment_type_code] == Erp::Payments::PaymentType::CODE_PRODUCT_RETURN

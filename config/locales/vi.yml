@@ -161,6 +161,7 @@ vi:
             receiver_payer: "Người nộp/nhận"
             receive_for_order: "Hóa đơn bán hàng"
             receive_for_contact: "Công nợ khách hàng"
+            receive_customer_commission: "Chiết khấu khách hàng (PT)"
             receive_custom: "Lập phiếu thu khác"
             pay_for_order: "Hóa đơn nhập hàng"
             pay_for_contact: "Công nợ cho NCC"
