@@ -100,8 +100,12 @@ Erp::Payments::Engine.routes.draw do
 
 					get 'xlsx_export_liabilities' # bang chi tiet cong no (tren tung khach hang)
 					post 'xlsx_export_liabilities'
+
+					get 'xlsx_export_supplier_liabilities' # bang chi tiet cong no (tren tung nha cung cap)
+					post 'xlsx_export_supplier_liabilities'
 					
-					get 'liabilities_tracking_table_xlsx' # bang danh sach tong hop cong no (danh sach cong no)
+					get 'liabilities_tracking_table_xlsx' # bang danh sach tong hop cong no (danh sach cong no - KH)
+					get 'supplier_liabilities_tracking_table_xlsx' # bang danh sach tong hop cong no (danh sach cong no - NCC )
 					
 					get 'export_pdf_files'
 					post 'export_pdf_files'

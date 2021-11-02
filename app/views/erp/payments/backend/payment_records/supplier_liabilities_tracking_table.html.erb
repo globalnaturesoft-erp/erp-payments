@@ -32,6 +32,29 @@
     </div>
 </div>
 
+<div class="text-right mb-20">
+    <%= actions = []
+    actions << {
+        text: 'Danh sách công nợ',
+        url: erp_payments.supplier_liabilities_tracking_table_xlsx_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'xlsx'})),
+        target: "_blank",
+    }
+    actions << {
+        text: 'Chi tiết công nợ (*.zip)',
+        url: erp_payments.export_xlsx_all_supplier_details_backend_payment_records_path(params.to_unsafe_hash.merge({format: 'xlsx'})),
+        target: "_blank",
+        class: 'with-checkboxes-link',
+        data_checkboxes: 'purchase_discount_col|MH: Giảm giá|checked,purchase_total_without_tax_col|MH: Thành tiền|checked,purchase_tax_col|MH: Tiền thuế|checked,purchase_total_col|MH: Tổng cộng|checked,return_discount_col|HK: Giảm giá|checked,return_total_without_tax_col|HK: Thành tiền|checked,return_tax_col|HK: Tiền thuế|checked,return_total_col|HK: Tổng cộng|checked,product_state_col|Tình trạng sản phẩm|checked,warehouse_col|Kho xuất/nhập',
+        data_checkboxes_desc: 'Chọn cột muốn thêm vào chi tiết',
+    }
+    erp_component('button/actions', {
+        actions: actions,
+        text: 'Xuất excel',
+        class: 'btn-primary',
+        icon: 'fa fa-file-excel-o'
+    }) %>
+</div>
+
 <table class="table table-advance table-hover table-striped order-column">
     <thead>
         <tr>
@@ -133,6 +156,24 @@
                             ),
                             class: 'modal-link has-form'
                         } if can? :accounting_payments_payment_records_create, nil
+
+                        top_acctions = actions
+                        
+                        actions << { divider: true } if !top_acctions.empty?
+                        
+                        actions << {
+                            text: '<i class="fa fa-file-excel-o"></i> Xuất chi tiết công nợ (excel)',
+                            url: erp_payments.xlsx_export_supplier_liabilities_backend_payment_records_path(
+                                supplier_id: supplier.id,
+                                from_date: @from,
+                                to_date: @to,
+                                format: 'xlsx',
+                            ),
+                            target: '_blank',
+                            class: 'with-checkboxes-link',
+                            data_checkboxes: 'purchase_discount_col|MH: Giảm giá|checked,purchase_total_without_tax_col|MH: Thành tiền|checked,purchase_tax_col|MH: Tiền thuế|checked,purchase_total_col|MH: Tổng cộng|checked,return_discount_col|HK: Giảm giá|checked,return_total_without_tax_col|HK: Thành tiền|checked,return_tax_col|HK: Tiền thuế|checked,return_total_col|HK: Tổng cộng|checked,product_state_col|Tình trạng sản phẩm|checked,warehouse_col|Kho xuất/nhập',
+                            data_checkboxes_desc: 'Chọn cột thêm vào sổ chi tiết',
+                        }
                         
                         erp_datalist_row_actions(actions)
                     %>

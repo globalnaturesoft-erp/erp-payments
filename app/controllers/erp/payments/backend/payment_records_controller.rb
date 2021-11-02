@@ -727,7 +727,7 @@ module Erp
         end
 
         # SUPPLIER / liabilities tracking table
-        def supplier_liabilities_tracking_table          
+        def supplier_liabilities_tracking_table
           glb = params.to_unsafe_hash[:global_filter]
           if glb[:period].present?
             @from = Erp::Periods::Period.find(glb[:period]).from_date.beginning_of_day
@@ -764,6 +764,17 @@ module Erp
                 end
               end
             end
+          end
+
+          @suppliers = @suppliers.order(:name)
+          
+          File.open("tmp/supplier_liabilities_tracking_table_xlsx_#{current_user.id}.yml", "w+") do |f|
+            f.write({
+              global_filters: glb,
+              from_date: @from,
+              to_date: @to,
+              suppliers: @suppliers
+            }.to_yaml)
           end
           
           @full_suppliers = @suppliers
@@ -1104,6 +1115,7 @@ module Erp
           end
         end
         
+        # danh sach cong no khach hang
         def liabilities_tracking_table_xlsx
           data = YAML.load_file("tmp/liabilities_tracking_table_xlsx_#{current_user.id}.yml")
           
@@ -1117,6 +1129,24 @@ module Erp
           respond_to do |format|
             format.xlsx {
               response.headers['Content-Disposition'] = 'attachment; filename="Danh sach cong no.xlsx"'
+            }
+          end
+        end
+
+        # danh sach cong no nha cung cap
+        def supplier_liabilities_tracking_table_xlsx
+          data = YAML.load_file("tmp/supplier_liabilities_tracking_table_xlsx_#{current_user.id}.yml")
+          
+          @global_filters = data[:global_filters]
+          @from = data[:from_date].to_date.beginning_of_day
+          @to = data[:to_date].to_date.end_of_day
+          @suppliers = data[:suppliers]
+          
+          @suppliers = Erp::Contacts::Contact.where(id: (@suppliers.map{|i| i.id})).order(:name)
+
+          respond_to do |format|
+            format.xlsx {
+              response.headers['Content-Disposition'] = 'attachment; filename="Danh sach cong no NCC.xlsx"'
             }
           end
         end

@@ -117,6 +117,16 @@ vi:
             customer: "Công nợ khách hàng"
             supplier: "Công nợ nhà CC"
             custom: "Khác/Tùy chỉnh"
+          xlsx_export_supplier_liabilities:
+            eye_positions_left: 'MT'
+            eye_positions_left: 'MP'
+            eye_positions_both: 'MP/MT'
+            eye_positions_: ''
+            sales_order: "Tiền bán lẻ"
+            purchase_order: "Tiền mua lẻ"
+            customer: "Công nợ khách hàng"
+            supplier: "Công nợ nhà CC"
+            custom: "Khác/Tùy chỉnh"
           export_xlsx_all_details:
             sales_order: "Tiền bán lẻ"
             purchase_order: "Tiền mua lẻ"
@@ -555,6 +565,15 @@ vi:
             receive_ncc: "Thu hoàn tiền hàng"
             delete: "Hủy phiếu trả"
             delete_confirm: "Hãy thận trọng! Bạn có thực sự chắc chắn muốn hủy phiếu nhập hàng này không?"
+          supplier_liabilities_tracking_table_xlsx:
+            ordinal_number: "STT"
+            supplier_code: "Mã NCC"
+            supplier_name: "Tên NCC"
+            begin_debt_amount: "Nợ đầu kỳ"
+            total_debt_amount: "Nợ tăng trong kỳ"
+            total_paid_amount: "Thanh toán trong kỳ"
+            end_debt_amount: "Nợ cuối kỳ"
+            salesperson: "N.viên k.doanh"
           commission:
             commission: "Bảng kê hoa hồng"
             from_date: "Từ ngày"
