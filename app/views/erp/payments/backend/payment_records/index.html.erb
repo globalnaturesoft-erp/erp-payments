@@ -74,7 +74,8 @@
             actions: actions,
             text: t('.create_receive'),
             class: 'btn-noborder btn-sm',
-            icon: 'fa fa-calendar-plus-o'
+            icon: 'fa fa-calendar-plus-o',
+            searchbox: 'Nhập để tìm loại phiếu'
         }) if can? :accounting_payments_payment_records_create, nil
     %>
 
@@ -130,7 +131,8 @@
             actions: actions,
             text: t('.create_pay'),
             class: 'btn-noborder btn-sm',
-            icon: 'fa fa-calendar-minus-o'
+            icon: 'fa fa-calendar-minus-o',
+            searchbox: 'Nhập để tìm loại phiếu'
         }) if can? :accounting_payments_payment_records_create, nil
     %>
 <% end %>
