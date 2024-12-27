@@ -23,26 +23,26 @@ Erp::Contacts::Contact.class_eval do
     query = Erp::Contacts::Contact.purchase_orders.where(supplier_id: self.id)
     return query
   end
-  
+
   # Get sales product returns
   def self.sales_product_returns
     query = Erp::Qdeliveries::Delivery.all_delivered.sales_import_deliveries
       .where(customer_id: self.select(:id))
     return query
   end
-  
+
   def sales_product_returns
     query = Erp::Contacts::Contact.sales_product_returns.where(customer_id: self.id)
     return query
   end
-  
+
   # Get purchase product returns
   def self.purchase_product_returns
     query = Erp::Qdeliveries::Delivery.all_delivered.purchase_export_deliveries
       .where(supplier_id: self.select(:id))
     return query
   end
-  
+
   def purchase_product_returns
     query = Erp::Contacts::Contact.purchase_product_returns.where(supplier_id: self.id)
     return query
@@ -53,22 +53,22 @@ Erp::Contacts::Contact.class_eval do
     query = self.sales_orders.payment_for_contact_orders(params)
       .where(customer_id: self.select(:id))
 
-    total = query.sum(:cache_total)
-    
+    total = query.sum(&:total)
+
     return total
   end
-  
+
   # Tong hang ban bi tra lai
   def self.sales_return_total_amount(params={})
     query = self.sales_product_returns.get_deliveries_with_payment_for_contact(params)
-    return query.sum(:cache_total)
+    return query.sum(&:total)
   end
 
   # Tong ban hang sau khi da tru hang bi tra lai
   def self.sales_total_amount(params={})
-    total = self.sales_order_total_amount(params)    
+    total = self.sales_order_total_amount(params)
     total -= self.sales_return_total_amount(params)
-    
+
     # init debt amount
     query = self.where.not(init_debt_date: nil).where(id: self.select(:id))
     if params[:from_date].present?
@@ -76,30 +76,30 @@ Erp::Contacts::Contact.class_eval do
     end
     if params[:to_date].present?
       query = query.where("init_debt_date <= ?", params[:to_date].to_date.end_of_day)
-    end    
+    end
     total += query.sum(:init_debt_amount)
 
     return total
   end
-  
+
   # Tong tien hoa don ban hang
   def sales_order_total_amount(params={})
     query = self.sales_orders.payment_for_contact_orders(params)
-    return query.sum(:cache_total)
+    return query.sum(&:total)
   end
-  
+
   # Tong tien hang ban bi tra lai
   def sales_return_total_amount(params={})
     query = self.sales_product_returns.get_deliveries_with_payment_for_contact(params)
-    return query.sum(:cache_total)
+    return query.sum(&:total)
   end
 
   # Tong doanh thu ban hang (sau khi da tru hang bi tra lai)
   def sales_total_amount(params={})
     total = self.sales_order_total_amount(params)
-    
+
     total -= self.sales_return_total_amount(params)
-    
+
     if self.init_debt_date.present? and
       (!params[:from_date].present? or params[:from_date].to_date.beginning_of_day <= self.init_debt_date) and
       (!params[:to_date].present? or params[:to_date].to_date.end_of_day >= self.init_debt_date)
@@ -108,7 +108,7 @@ Erp::Contacts::Contact.class_eval do
 
     return total
   end
-  
+
   # Sales total amount for contact without commission
   def sales_total_without_commission_amount(params={})
     return self.sales_total_amount(params) - self.customer_commission_total_amount(params)
@@ -145,36 +145,36 @@ Erp::Contacts::Contact.class_eval do
   def sales_debt_amount(params={})
     self.sales_total_amount(params) - self.sales_paid_amount(params)
   end
-  
-  
-  #==============================================================
-  #==============================================================
-  #==============================================================
-  #==============================================================
-  
 
-  
+
+  #==============================================================
+  #==============================================================
+  #==============================================================
+  #==============================================================
+
+
+
   # Tong tien nhap hang
   def self.purchase_order_total_amount(params={})
     query = self.purchase_orders.payment_for_contact_orders(params)
       .where(supplier_id: self.select(:id))
 
-    total = query.sum(:cache_total)
-    
+    total = query.sum(&:total)
+
     return total
   end
-  
+
   # Tong hang nhap tra lai cho ncc
   def self.purchase_return_total_amount(params={})
     query = self.purchase_product_returns.get_deliveries_with_payment_for_contact(params)
-    return query.sum(:cache_total)
+    return query.sum(&:total)
   end
 
   # Purchase total amount for contact // đã trừ cho hàng trả lại
-  def self.purchase_total_amount(params={})    
-    total = self.purchase_order_total_amount(params)    
+  def self.purchase_total_amount(params={})
+    total = self.purchase_order_total_amount(params)
     total -= self.purchase_return_total_amount(params)
-    
+
     # init debt amount
     query = self.where.not(init_supplier_debt_date: nil).where(id: self.select(:id))
     if params[:from_date].present?
@@ -182,7 +182,7 @@ Erp::Contacts::Contact.class_eval do
     end
     if params[:to_date].present?
       query = query.where("init_supplier_debt_date <= ?", params[:to_date].to_date.end_of_day)
-    end    
+    end
     total += query.sum(:init_supplier_debt_amount)
 
     return total
@@ -191,21 +191,21 @@ Erp::Contacts::Contact.class_eval do
   # Tong tien hoa don mua/nhap hang
   def purchase_order_total_amount(params={})
     query = self.purchase_orders.payment_for_contact_orders(params)
-    return query.sum(:cache_total)
+    return query.sum(&:total)
   end
-  
+
   # Tong tien hang mua/nhap tra lai cho ncc
   def purchase_return_total_amount(params={})
     query = self.purchase_product_returns.get_deliveries_with_payment_for_contact(params)
-    return query.sum(:cache_total)
+    return query.sum(&:total)
   end
 
   # Tong tien mua/nhap hang (sau khi da tru hang tra lai cho ncc)
   def purchase_total_amount(params={})
     total = self.purchase_order_total_amount(params)
-    
+
     total -= self.purchase_return_total_amount(params)
-    
+
     if self.init_supplier_debt_date.present? and
       (!params[:from_date].present? or params[:from_date].to_date.beginning_of_day <= self.init_supplier_debt_date) and
       (!params[:to_date].present? or params[:to_date].to_date.end_of_day >= self.init_supplier_debt_date)
@@ -246,7 +246,7 @@ Erp::Contacts::Contact.class_eval do
   def purchase_debt_amount(params={})
     self.purchase_total_amount(params) - self.purchase_paid_amount(params)
   end
-  
+
   # Sales paid amount by period //customers
   def self.sales_paid_by_period_amount(options={})
     #query = Erp::Payments::PaymentRecord.all_done
@@ -272,7 +272,7 @@ Erp::Contacts::Contact.class_eval do
     #
     #if to_date.present?
     #  sales_total = self.sales_total_amount(to_date: to_date)
-    #  
+    #
     #  if sales_total >= 0 and paid_total >= 0
     #    if paid_total >= sales_total
     #      to_amount = sales_total
@@ -294,33 +294,33 @@ Erp::Contacts::Contact.class_eval do
     #  return from_amount
     #elsif !from_date.present? and to_date.present?
     #  return to_amount
-    #else from_date.present? and to_date.present?      
-    #  from_amount = self.sales_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)      
+    #else from_date.present? and to_date.present?
+    #  from_amount = self.sales_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)
     #  return to_amount - from_amount
     #end
-    
+
     total = 0.0
     self.all.each do |c|
       total += c.sales_paid_by_period_amount(options)
     end
-    
+
     return total
   end
-  
+
   # Sales paid amount by period //customer
   def sales_paid_by_period_amount(options={})
     query = Erp::Payments::PaymentRecord.all_done
       .includes(:payment_type)
       .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_CUSTOMER})
       .where(customer_id: self.id)
-      
+
     paid_total = - query.all_paid.sum(:amount) + query.all_received.sum(:amount)
-    
+
     from_date = options[:from_date].present? ? options[:from_date].to_date.beginning_of_day : nil
     to_date = options[:to_date].present? ? options[:to_date].to_date.end_of_day : (Time.now + 1.year)
     from_amount = 0
     to_amount = 0
-    
+
     if from_date.present?
       sales_total = self.sales_total_amount(to_date: from_date)
       if paid_total >= sales_total
@@ -329,17 +329,17 @@ Erp::Contacts::Contact.class_eval do
         from_amount = 0
       end
     end
-    
+
     if to_date.present?
       sales_total = self.sales_total_amount(to_date: to_date)
-      
+
       if sales_total >= 0 and paid_total >= 0
         if paid_total >= sales_total
           to_amount = sales_total
         else
           to_amount = paid_total
         end
-        
+
         # Truong hop thanh toan dư
         if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = paid_total - sales_total
@@ -347,15 +347,15 @@ Erp::Contacts::Contact.class_eval do
             to_amount += res
           end
         end
-        
-        
+
+
       elsif sales_total <= 0 and  paid_total <= 0
         if paid_total >= sales_total
           to_amount = paid_total
         else
           to_amount = sales_total
         end
-        
+
         # Truong hop thanh toan dư
         if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = - paid_total + sales_total
@@ -363,32 +363,32 @@ Erp::Contacts::Contact.class_eval do
             to_amount += res
           end
         end
-        
+
       else
         to_amount = 0
       end
     end
-    
+
     if from_date.present? and !to_date.present?
       return from_amount
     elsif !from_date.present? and to_date.present?
       return to_amount
-    else from_date.present? and to_date.present?      
-      from_amount = self.sales_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)      
+    else from_date.present? and to_date.present?
+      from_amount = self.sales_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)
       return to_amount - from_amount
     end
   end
-  
+
   # Sales debt amount by period
   def self.sales_debt_by_period_amount(options={})
     self.sales_total_amount(options) - self.sales_paid_by_period_amount(options)
   end
-  
+
   # Sales debt amount by period
   def sales_debt_by_period_amount(options={})
     self.sales_total_amount(options) - self.sales_paid_by_period_amount(options)
   end
-  
+
   # Purchase paid amount by period //customers
   def self.purchase_paid_by_period_amount(options={})
     #query = Erp::Payments::PaymentRecord.all_done
@@ -399,15 +399,15 @@ Erp::Contacts::Contact.class_eval do
     #result = - query.all_paid_by_period(options).sum(:amount) + query.all_received_by_period(options).sum(:amount)
     #
     #return result
-    
+
     total = 0.0
     self.all.each do |c|
       total += c.purchase_paid_by_period_amount(options)
     end
-    
+
     return total
   end
-  
+
   # Purchase paid amount by period //customer
   def purchase_paid_by_period_amount(options={})
     query = Erp::Payments::PaymentRecord.all_done
@@ -416,12 +416,12 @@ Erp::Contacts::Contact.class_eval do
       .where(supplier_id: self.id)
 
     paid_total = query.all_paid.sum(:amount) - query.all_received.sum(:amount)
-    
+
     from_date = options[:from_date].present? ? options[:from_date].to_date.beginning_of_day : nil
     to_date = options[:to_date].present? ? options[:to_date].to_date.end_of_day : (Time.now + 1.year)
     from_amount = 0
     to_amount = 0
-    
+
     if from_date.present?
       purchase_total = self.purchase_total_amount(to_date: from_date)
       if paid_total >= purchase_total
@@ -430,17 +430,17 @@ Erp::Contacts::Contact.class_eval do
         from_amount = 0
       end
     end
-    
+
     if to_date.present?
       purchase_total = self.purchase_total_amount(to_date: to_date)
-      
+
       if purchase_total >= 0 and paid_total >= 0
         if paid_total >= purchase_total
           to_amount = purchase_total
         else
           to_amount = paid_total
         end
-        
+
         # Truong hop thanh toan dư
         if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = paid_total - purchase_total
@@ -448,14 +448,14 @@ Erp::Contacts::Contact.class_eval do
             to_amount += res
           end
         end
-        
+
       elsif purchase_total <= 0 and  paid_total <= 0
         if paid_total >= purchase_total
           to_amount = paid_total
         else
           to_amount = purchase_total
         end
-        
+
         # Truong hop thanh toan dư
         if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = - paid_total + purchase_total
@@ -463,27 +463,27 @@ Erp::Contacts::Contact.class_eval do
             to_amount += res
           end
         end
-        
+
       else
         to_amount = 0
       end
     end
-    
+
     if from_date.present? and !to_date.present?
       return from_amount
     elsif !from_date.present? and to_date.present?
       return to_amount
-    else from_date.present? and to_date.present?      
-      from_amount = self.purchase_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)      
+    else from_date.present? and to_date.present?
+      from_amount = self.purchase_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)
       return to_amount - from_amount
     end
   end
-  
+
   # Purchase debt amount by period
   def self.purchase_debt_by_period_amount(options={})
     self.purchase_total_amount(options) - self.purchase_paid_by_period_amount(options)
   end
-  
+
   # Purchase debt amount by period
   def purchase_debt_by_period_amount(options={})
     self.purchase_total_amount(options) - self.purchase_paid_by_period_amount(options)
@@ -512,7 +512,7 @@ Erp::Contacts::Contact.class_eval do
   def customer_commission_debt_amount(params={})
     self.customer_commission_total_amount(params) - self.customer_commission_paid_amount(params)
   end
-  
+
   # Customer commission paid amount
   def customer_commission_paid_by_period_amount(options={})
     query = Erp::Payments::PaymentRecord.all_done
@@ -521,12 +521,12 @@ Erp::Contacts::Contact.class_eval do
       .where(customer_id: self.id)
 
     paid_total = query.all_paid.sum(:amount) - query.all_received.sum(:amount)
-    
+
     from_date = options[:from_date].present? ? options[:from_date].to_date.beginning_of_day : nil
     to_date = options[:to_date].present? ? options[:to_date].to_date.end_of_day : (Time.now + 1.year)
     from_amount = 0
     to_amount = 0
-    
+
     if from_date.present?
       customer_commission_total = self.customer_commission_total_amount(to_date: from_date)
       if paid_total >= customer_commission_total
@@ -535,17 +535,17 @@ Erp::Contacts::Contact.class_eval do
         from_amount = 0
       end
     end
-    
+
     if to_date.present?
       customer_commission_total = self.customer_commission_total_amount(to_date: to_date)
-      
+
       if customer_commission_total >= 0 and paid_total >= 0
         if paid_total >= customer_commission_total
           to_amount = customer_commission_total
         else
           to_amount = paid_total
         end
-        
+
         # Truong hop thanh toan dư
         if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = paid_total - customer_commission_total
@@ -553,14 +553,14 @@ Erp::Contacts::Contact.class_eval do
             to_amount += res
           end
         end
-        
+
       elsif customer_commission_total <= 0 and  paid_total <= 0
         if paid_total >= customer_commission_total
           to_amount = paid_total
         else
           to_amount = customer_commission_total
         end
-        
+
         # Truong hop thanh toan dư
         if to_date.month >= Time.now.month and to_date.year >= Time.now.year
           res = - paid_total + customer_commission_total
@@ -568,18 +568,18 @@ Erp::Contacts::Contact.class_eval do
             to_amount += res
           end
         end
-        
+
       else
         to_amount = 0
       end
     end
-    
+
     if from_date.present? and !to_date.present?
       return from_amount
     elsif !from_date.present? and to_date.present?
       return to_amount
-    else from_date.present? and to_date.present?      
-      from_amount = self.customer_commission_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)      
+    else from_date.present? and to_date.present?
+      from_amount = self.customer_commission_paid_by_period_amount(to_date: (from_date - 1.day).end_of_day)
       return to_amount - from_amount
     end
   end
@@ -588,92 +588,92 @@ Erp::Contacts::Contact.class_eval do
   def customer_commission_debt_by_period_amount(options={})
     self.customer_commission_total_amount(options) - self.customer_commission_paid_by_period_amount(options)
   end
-  
-  
+
+
   # ====== CONG NO PHONG KHAM ====== Orders Tracking
   if Erp::Core.available?("ortho_k")
     # Tong ban hang
     def self.orders_tracking_sales_order_total_amount(params={})
       query = self.sales_orders.payment_for_order_orders(params)
         .where(customer_id: self.select(:id))
-  
-      return query.sum(:cache_total)
+
+      return query.sum(&:total)
     end
-    
+
     # Tong hang ban bi tra lai
     def self.orders_tracking_sales_return_total_amount(params={})
       query = self.sales_product_returns.get_deliveries_with_payment_for_order(params)
-      return query.sum(:cache_total)
+      return query.sum(&:total)
     end
-  
+
     # Tong ban hang sau khi da tru hang bi tra lai
     def self.orders_tracking_sales_total_amount(params={})
       total = self.orders_tracking_sales_order_total_amount(params)
-      
+
       total -= self.orders_tracking_sales_return_total_amount(params)
-  
+
       return total
     end
-    
+
     # Tong /Ban hang
     def orders_tracking_sales_order_total_amount(params={})
       query = self.sales_orders.payment_for_order_orders(params)
-      return query.sum(:cache_total)
+      return query.sum(&:total)
     end
-    
+
     # Tong /Hang bi tra lai
     def orders_tracking_sales_return_total_amount(params={})
       query = self.sales_product_returns.get_deliveries_with_payment_for_order(params)
-      return query.sum(:cache_total)
+      return query.sum(&:total)
     end
-  
+
     # Tong /Ban hang sau khi tru hang bi tra lai
     def orders_tracking_sales_total_amount(params={})
       total = self.orders_tracking_sales_order_total_amount(params)
-      
+
       total -= self.orders_tracking_sales_return_total_amount(params)
-  
+
       return total
     end
-    
+
     # Sales paid amount for contact
     def self.orders_tracking_sales_paid_amount(params={})
       query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
         .includes(:payment_type)
         .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SALES_ORDER})
         .where(customer_id: self.select(:id))
-  
+
       result = - query.all_paid(params).sum(:amount) + query.all_received(params).sum(:amount)
-  
+
       return result
     end
-  
+
     def orders_tracking_sales_paid_amount(params={})
       query = Erp::Payments::PaymentRecord.where(status: Erp::Payments::PaymentRecord::STATUS_DONE)
         .includes(:payment_type)
         .where(erp_payments_payment_types: {code: Erp::Payments::PaymentType::CODE_SALES_ORDER})
         .where(customer_id: self.id)
-  
+
       result = - query.all_paid(params).sum(:amount) + query.all_received(params).sum(:amount)
-  
+
       return result
     end
-  
+
     # Sales debt amount for contact
     def self.orders_tracking_sales_debt_amount(params={})
       self.orders_tracking_sales_total_amount(params) - self.orders_tracking_sales_paid_amount(params)
     end
-  
+
     def orders_tracking_sales_debt_amount(params={})
       self.orders_tracking_sales_total_amount(params) - self.orders_tracking_sales_paid_amount(params)
-    end    
+    end
   end
-  
+
   # Get liabilities tracking general list
   def self.general_liabilities_sales_details(params={}, limit=nil)
     totals = {}
     datas = []
-    
+
     # --- sales export ---
     query = Erp::Orders::Order.where(supplier_id: Erp::Contacts::Contact.get_main_contact.id)
       .where(status: Erp::Orders::Order::STATUS_CONFIRMED)
@@ -685,11 +685,11 @@ Erp::Contacts::Contact.class_eval do
     if params[:to_date].present?
       query = query.where('erp_orders_orders.order_date <= ?', params[:to_date].to_date.end_of_day)
     end
-    
+
     if params[:customer_id].present?
       query = query.where(customer_id: params[:customer_id])
     end
-    
+
     query.each do |order|
       datas << {
         record_type: 'sales_order',
@@ -700,12 +700,12 @@ Erp::Contacts::Contact.class_eval do
         customer_name: order.customer_name,
         description: order.note,
         sales_total_amount: order.total
-      }      
+      }
     end
-    
+
     # count sales_total_amount
     totals[:sales_total_amount] = query.sum(&:total)
-    
+
     # --- sales import ---
     query = Erp::Qdeliveries::Delivery.where(delivery_type: Erp::Qdeliveries::Delivery::TYPE_SALES_IMPORT)
       .where(status: Erp::Qdeliveries::Delivery::STATUS_DELIVERED)
@@ -717,11 +717,11 @@ Erp::Contacts::Contact.class_eval do
     if params[:to_date].present?
       query = query.where('erp_qdeliveries_deliveries.date <= ?', params[:to_date].to_date.end_of_day)
     end
-    
+
     if params[:customer_id].present?
       query = query.where(customer_id: params[:customer_id])
     end
-    
+
     query.each do |delivery|
       datas << {
         record_type: delivery.delivery_type,
@@ -734,26 +734,26 @@ Erp::Contacts::Contact.class_eval do
         return_total_amount: delivery.total
       }
     end
-    
+
     # count return_total_amount
     totals[:return_total_amount] = query.sum(&:total)
-    
+
     # --- payment record ---
     query = Erp::Payments::PaymentRecord.all_done
       .where(payment_type_id: Erp::Payments::PaymentType.find_by_code(Erp::Payments::PaymentType::CODE_CUSTOMER).id)
-    
+
     if params[:from_date].present?
       query = query.where('payment_date >= ?', params[:from_date].to_date.beginning_of_day)
     end
-    
+
     if params[:to_date].present?
       query = query.where('payment_date <= ?', params[:to_date].to_date.end_of_day)
     end
-    
+
     if params[:customer_id].present?
       query = query.where(customer_id: params[:customer_id])
     end
-    
+
     totals[:payment_total_amount] = 0
     query.each do |payment_record|
       if [Erp::Payments::PaymentRecord::TYPE_RECEIVE].include?(payment_record.pay_receive)
@@ -771,16 +771,16 @@ Erp::Contacts::Contact.class_eval do
         description: payment_record.description,
         payment_total_amount: payment_record.amount
       }
-    
+
       # count return_total_amount
       totals[:payment_total_amount] += payment_total_amount
     end
-    
+
     result = {
       datas: datas,
       totals: totals,
     }
-    
+
     return result
   end
 end
